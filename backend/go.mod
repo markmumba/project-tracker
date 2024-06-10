@@ -3,6 +3,7 @@ module github.com/markmumba/project-tracker
 go 1.22.2
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.12.0
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.10
