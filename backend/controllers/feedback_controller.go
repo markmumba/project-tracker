@@ -2,28 +2,37 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
+	"github.com/markmumba/project-tracker/services"
 )
 
 func CreateFeedback(c echo.Context) error {
-	var feedback models.Feedback
-	if err := c.Bind(&feedback); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-	if err := database.DB.Create(&feedback).Error; err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
-	}
-	return c.JSON(http.StatusOK, feedback)
+    var feedback models.Feedback
+    if err := c.Bind(&feedback); err != nil {
+        return c.JSON(http.StatusBadRequest, err.Error())
+    }
+
+    if err := services.CreateFeedback(&feedback); err != nil {
+        return c.JSON(http.StatusInternalServerError, err.Error())
+    }
+
+    return c.JSON(http.StatusCreated, feedback)
 }
 
 func GetFeedback(c echo.Context) error {
-	id := c.Param("id")
-	var feedback models.Feedback
-	if err := database.DB.First(&feedback, id).Error; err != nil {
-		return c.JSON(http.StatusNotFound, map[string]string{"error": "Feedback not found"})
-	}
-	return c.JSON(http.StatusOK, feedback)
+    idStr := c.Param("id")
+    id, err := strconv.Atoi(idStr)
+    if err != nil {
+        return c.JSON(http.StatusBadRequest, "Invalid ID")
+    }
+
+    feedback, err := services.GetFeedback(uint(id))
+    if err != nil {
+        return c.JSON(http.StatusNotFound, err.Error())
+    }
+
+    return c.JSON(http.StatusOK, feedback)
 }

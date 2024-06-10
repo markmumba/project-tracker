@@ -2,28 +2,37 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
+	"github.com/markmumba/project-tracker/services"
 )
 
 func CreateUser(c echo.Context) error {
-	var user models.User
-	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
-	}
-	if err := database.DB.Create(&user).Error; err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
-	}
-	return c.JSON(http.StatusOK, user)
+    var user models.User
+    if err := c.Bind(&user); err != nil {
+        return c.JSON(http.StatusBadRequest, err.Error())
+    }
+
+    if err := services.CreateUser(&user); err != nil {
+        return c.JSON(http.StatusInternalServerError, err.Error())
+    }
+
+    return c.JSON(http.StatusCreated, user)
 }
 
 func GetUser(c echo.Context) error {
-	id := c.Param("id")
-	var user models.User
-	if err := database.DB.First(&user, id).Error; err != nil {
-		return c.JSON(http.StatusNotFound, map[string]string{"error": "User not found"})
-	}
-	return c.JSON(http.StatusOK, user)
+    idStr := c.Param("id")
+    id, err := strconv.Atoi(idStr)
+    if err != nil {
+        return c.JSON(http.StatusBadRequest, "Invalid ID")
+    }
+
+    user, err := services.GetUser(uint(id))
+    if err != nil {
+        return c.JSON(http.StatusNotFound, err.Error())
+    }
+
+    return c.JSON(http.StatusOK, user)
 }
