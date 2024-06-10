@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-
 	database.ConnectDB()
 	database.DB.AutoMigrate(
 		&models.User{},
