@@ -1,10 +1,15 @@
 package routes
 
 import (
+	"os"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/markmumba/project-tracker/controllers"
+	"github.com/markmumba/project-tracker/custommiddleware"
 )
+
+var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 func SetupRouter() *echo.Echo {
 	e := echo.New()
@@ -14,31 +19,35 @@ func SetupRouter() *echo.Echo {
 	}))
 	e.Use(middleware.Recover())
 
-	userGroup := e.Group("/users")
+	e.POST("/register", controllers.CreateUser)
+	e.POST("/login", controllers.Login)
+
+	r := e.Group("")
+	r.Use(custommiddleware.Authentication)
+	userGroup := r.Group("/users")
 	{
-		userGroup.POST("/", controllers.CreateUser)
 		userGroup.GET("/:id", controllers.GetUser)
 	}
 
-	projectGroup := e.Group("/projects")
+	projectGroup := r.Group("/projects")
 	{
 		projectGroup.POST("/", controllers.CreateProject)
 		projectGroup.GET("/:id", controllers.GetProject)
 	}
 
-	submissionGroup := e.Group("/submissions")
+	submissionGroup := r.Group("/submissions")
 	{
 		submissionGroup.POST("/", controllers.CreateSubmission)
 		submissionGroup.GET("/:id", controllers.GetSubmission)
 	}
 
-	feedbackGroup := e.Group("/feedbacks")
+	feedbackGroup := r.Group("/feedbacks")
 	{
 		feedbackGroup.POST("/", controllers.CreateFeedback)
 		feedbackGroup.GET("/:id", controllers.GetFeedback)
 	}
 
-	communicationGroup := e.Group("/communications")
+	communicationGroup := r.Group("/communications")
 	{
 		communicationGroup.POST("/", controllers.CreateMessage)
 		communicationGroup.GET("/:project_id", controllers.GetCommunicationHistory)
