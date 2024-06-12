@@ -15,6 +15,7 @@ import (
 )
 
 func main() {
+
 	if err := godotenv.Load(); err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
@@ -26,7 +27,7 @@ func main() {
 		&models.Feedback{},
 		&models.CommunicationHistory{},
 	)
-
+	
 	handler := routes.SetupRouter()
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 
