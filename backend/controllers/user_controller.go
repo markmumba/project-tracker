@@ -10,19 +10,6 @@ import (
 	"github.com/markmumba/project-tracker/services"
 )
 
-func CreateUser(c echo.Context) error {
-	var user models.User
-	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
-
-	if err := services.CreateUser(&user); err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusCreated, user)
-}
-
 func Login(c echo.Context) error {
 	var credentials struct {
 		Email    string `json:"email"`
@@ -50,6 +37,31 @@ func Login(c echo.Context) error {
 		"token": token,
 	})
 }
+func Logout(c echo.Context) error {
+	cookie := &http.Cookie{
+		Name:    "token",
+		Value:   "",
+		Expires: time.Now().Add(-time.Hour),
+	}
+
+	c.SetCookie(cookie)
+	return c.JSON(http.StatusOK, echo.Map{
+		"message": "Logout successful",
+	})
+}
+
+func CreateUser(c echo.Context) error {
+	var user models.User
+	if err := c.Bind(&user); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if err := services.CreateUser(&user); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusCreated, user)
+}
 
 func GetUser(c echo.Context) error {
 
@@ -64,17 +76,4 @@ func GetUser(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
 	return c.JSON(http.StatusOK, user)
-}
-
-func Logout(c echo.Context) error {
-	cookie := &http.Cookie{
-		Name:    "token",
-		Value:   "",
-		Expires: time.Now().Add(-time.Hour),
-	}
-
-	c.SetCookie(cookie)
-	return c.JSON(http.StatusOK, echo.Map{
-		"message": "Logout successful",
-	})
 }

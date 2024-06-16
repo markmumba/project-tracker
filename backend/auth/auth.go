@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 	"time"
@@ -13,7 +14,7 @@ import (
 var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 type JwtCustomClaims struct {
-	UserId string `json:"id"`
+	UserId int `json:"id"`
 	jwt.RegisteredClaims
 }
 
@@ -31,7 +32,7 @@ func GenerateJWT(user *models.User) (string, error) {
 	stringId := strconv.Itoa(int(user.ID))
 
 	claims := &JwtCustomClaims{
-		stringId,
+		int(user.ID),
 		jwt.RegisteredClaims{
 			Issuer:    stringId,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),

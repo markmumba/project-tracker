@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"os"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -9,7 +9,6 @@ import (
 	"github.com/markmumba/project-tracker/custommiddleware"
 )
 
-var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 func SetupRouter() *echo.Echo {
 	e := echo.New()
@@ -18,9 +17,14 @@ func SetupRouter() *echo.Echo {
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
 	e.Use(middleware.Recover())
-
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+			AllowOrigins: []string{"https://labstack.com", "https://labstack.net"},
+			AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+		}))
+	
 	e.POST("/register", controllers.CreateUser)
 	e.POST("/login", controllers.Login)
+	e.GET("/logout", controllers.Logout)
 
 	r := e.Group("")
 	r.Use(custommiddleware.Authentication)
