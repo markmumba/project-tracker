@@ -10,11 +10,12 @@ import (
 )
 
 func CreateSubmission(c echo.Context) error {
+    userId := c.Get("userId").(uint)
     var submission models.Submission
     if err := c.Bind(&submission); err != nil {
         return c.JSON(http.StatusBadRequest, err.Error())
     }
-
+    submission.StudentID = userId
     if err := services.CreateSubmission(&submission); err != nil {
         return c.JSON(http.StatusInternalServerError, err.Error())
     }

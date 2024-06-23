@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -10,11 +11,12 @@ import (
 )
 
 func CreateProject(c echo.Context) error {
+    userId := c.Get("userId").(uint)
     var project models.Project
     if err := c.Bind(&project); err != nil {
         return c.JSON(http.StatusBadRequest, err.Error())
     }
-
+    project.StudentID = userId
     if err := services.CreateProject(&project); err != nil {
         return c.JSON(http.StatusInternalServerError, err.Error())
     }
@@ -25,6 +27,7 @@ func CreateProject(c echo.Context) error {
 func GetProject(c echo.Context) error {
     idStr := c.Param("id")
     id, err := strconv.Atoi(idStr)
+    fmt.Println(id)
     if err != nil {
         return c.JSON(http.StatusBadRequest, "Invalid ID")
     }

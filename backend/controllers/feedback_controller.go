@@ -10,11 +10,12 @@ import (
 )
 
 func CreateFeedback(c echo.Context) error {
+    userId := c.Get("userId").(uint)
     var feedback models.Feedback
     if err := c.Bind(&feedback); err != nil {
         return c.JSON(http.StatusBadRequest, err.Error())
     }
-
+    feedback.LecturerID = userId
     if err := services.CreateFeedback(&feedback); err != nil {
         return c.JSON(http.StatusInternalServerError, err.Error())
     }

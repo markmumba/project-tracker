@@ -14,3 +14,5 @@ type Submission struct {
     Project       Project `gorm:"foreignKey:ProjectID"`
     Student       User    `gorm:"foreignKey:StudentID"`
 }
+
+ 
