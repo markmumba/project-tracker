@@ -30,3 +30,13 @@ func GetProject(id uint) (*models.Project, error) {
 	result := database.DB.First(&project, id)
 	return &project, result.Error
 }
+func DeleteProject(id uint) error {
+	var project models.Project
+	result := database.DB.Delete(&project, id)
+	return result.Error
+}
+func GetProjectsByLecturerId(lecturerId uint) ([]models.Project, error) {
+	var projects []models.Project
+	result := database.DB.Where("lecturer_id = ?", lecturerId).Find(&projects)
+	return projects, result.Error
+}

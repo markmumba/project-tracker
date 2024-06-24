@@ -21,7 +21,7 @@ func CreateProject(c echo.Context) error {
         return c.JSON(http.StatusInternalServerError, err.Error())
     }
 
-    return c.JSON(http.StatusCreated, project)
+    return c.JSON(http.StatusCreated, models.ProjectToDTO(&project))
 }
 
 func GetProject(c echo.Context) error {
@@ -37,5 +37,33 @@ func GetProject(c echo.Context) error {
         return c.JSON(http.StatusNotFound, err.Error())
     }
 
-    return c.JSON(http.StatusOK, project)
+    return c.JSON(http.StatusOK, models.ProjectToDTO(project)) 
+}
+
+func GetAllProjectByLecturerId(c echo.Context) error {
+    
+    if c.Get("UserRole") != "lecturer" {
+        return c.JSON(http.StatusUnauthorized, "Unauthorized")
+    }
+    userId := c.Get("userId").(uint)
+    projects, err := services.GetProjectsByLecturerId(userId)
+    if err != nil {
+        return c.JSON(http.StatusInternalServerError, err.Error())
+    }
+    return c.JSON(http.StatusOK, models.ProjectToDTOs(projects))
+}
+
+func DeleteProject(c echo.Context) error {
+    idStr := c.Param("id")
+    id, err := strconv.Atoi(idStr)
+    if err != nil {
+        return c.JSON(http.StatusBadRequest, "Invalid ID")
+    }
+
+    err = services.DeleteProject(uint(id))
+    if err != nil {
+        return c.JSON(http.StatusNotFound, err.Error())
+    }
+
+    return c.JSON(http.StatusOK, "Project deleted successfully")
 }

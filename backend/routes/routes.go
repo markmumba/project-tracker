@@ -9,6 +9,7 @@ import (
 	"github.com/markmumba/project-tracker/custommiddleware"
 )
 
+
 func SetupRouter() *echo.Echo {
 	e := echo.New()
 
@@ -36,50 +37,18 @@ func SetupRouter() *echo.Echo {
 	projectGroup := r.Group("/projects")
 	{
 		projectGroup.POST("", controllers.CreateProject)
-
-		// Restrict GET project by ID to lecturers only
-		projectGroup.GET("/:id", func(c echo.Context) error {
-			userRole := c.Get("userRole").(string)
-			if userRole != "lecturer" {
-				return c.JSON(http.StatusForbidden, echo.Map{
-					"message": "Forbidden",
-				})
-			}
-			return controllers.GetProject(c)
-		})
+		projectGroup.GET("/:id", controllers.GetProject, custommiddleware.CheckUserRole("lecturer"))
 	}
 
 	submissionGroup := r.Group("/submissions")
 	{
 		submissionGroup.POST("", controllers.CreateSubmission)
-
-		// Restrict GET submission by ID to students only
-		submissionGroup.GET("/:id", func(c echo.Context) error {
-			userRole := c.Get("userRole").(string)
-			if userRole != "student" {
-				return c.JSON(http.StatusForbidden, echo.Map{
-					"message": "Forbidden",
-				})
-			}
-			return controllers.GetSubmission(c)
-		})
+		submissionGroup.GET("/:id", controllers.GetSubmission, custommiddleware.CheckUserRole("student"))
 	}
 
 	feedbackGroup := r.Group("/feedbacks")
 	{
-		// Middleware to restrict access to lecturers only
-		feedbackGroup.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
-			return func(c echo.Context) error {
-				userRole := c.Get("userRole").(string)
-				if userRole != "lecturer" {
-					return c.JSON(http.StatusForbidden, echo.Map{
-						"message": "Forbidden",
-					})
-				}
-				return next(c)
-			}
-		})
-
+		feedbackGroup.Use(custommiddleware.CheckUserRole("lecturer"))
 		feedbackGroup.POST("", controllers.CreateFeedback)
 		feedbackGroup.GET("/:id", controllers.GetFeedback)
 	}

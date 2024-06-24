@@ -10,30 +10,58 @@ import (
 )
 
 func CreateSubmission(c echo.Context) error {
-    userId := c.Get("userId").(uint)
-    var submission models.Submission
-    if err := c.Bind(&submission); err != nil {
-        return c.JSON(http.StatusBadRequest, err.Error())
-    }
-    submission.StudentID = userId
-    if err := services.CreateSubmission(&submission); err != nil {
-        return c.JSON(http.StatusInternalServerError, err.Error())
-    }
+	userId := c.Get("userId").(uint)
+	var submission models.Submission
+	if err := c.Bind(&submission); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	submission.StudentID = userId
+	if err := services.CreateSubmission(&submission); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
 
-    return c.JSON(http.StatusCreated, submission)
+	return c.JSON(http.StatusCreated, models.SubmissionToDTO(&submission))
 }
 
 func GetSubmission(c echo.Context) error {
-    idStr := c.Param("id")
-    id, err := strconv.Atoi(idStr)
-    if err != nil {
-        return c.JSON(http.StatusBadRequest, "Invalid ID")
-    }
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "Invalid ID")
+	}
 
-    submission, err := services.GetSubmission(uint(id))
-    if err != nil {
-        return c.JSON(http.StatusNotFound, err.Error())
-    }
+	submission, err := services.GetSubmission(uint(id))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
 
-    return c.JSON(http.StatusOK, submission)
+	return c.JSON(http.StatusOK, models.SubmissionToDTO(submission))
+}
+
+func GetAllSubmissionByStudentId(c echo.Context) error {
+    
+	if c.Get("UserRole") != "student" {
+		return c.JSON(http.StatusUnauthorized, "Unauthorized")
+	}
+	userId := c.Get("userId").(uint)
+	submissions, err := services.GetAllSubmissionByStudentId(userId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, models.SubmissionToDTOs(submissions))
+}
+
+func DeleteSubmission(c echo.Context) error {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "Invalid ID")
+	}
+
+	err = services.DeleteSubmission(uint(id))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, "Submission deleted successfully")
 }

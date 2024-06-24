@@ -43,3 +43,17 @@ func Authentication(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 	}
 }
+
+func CheckUserRole(requiredRole string) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			userRole := c.Get("userRole").(string)
+			if userRole != requiredRole {
+				return c.JSON(http.StatusForbidden, echo.Map{
+					"message": "Forbidden",
+				})
+			}
+			return next(c)
+		}
+	}
+}

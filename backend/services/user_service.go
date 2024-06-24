@@ -40,3 +40,14 @@ func GetUser(id uint) (*models.User, error) {
 	result := database.DB.First(&user, id)
 	return &user, result.Error
 }
+func GetStudentsByLecturerId(lecturerId uint) ([]models.User, error) {
+	var students []models.User
+	result := database.DB.Where("lecturer_id = ?", lecturerId).Find(&students)
+	return students, result.Error
+}
+
+func DeleteUser(id uint) error {
+	var user models.User
+	result := database.DB.Delete(&user, id)
+	return result.Error
+}

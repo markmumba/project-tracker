@@ -60,7 +60,7 @@ func CreateUser(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusCreated, user)
+	return c.JSON(http.StatusCreated, models.UserToDTO(&user))
 }
 
 func GetUser(c echo.Context) error {
@@ -75,5 +75,30 @@ func GetUser(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
-	return c.JSON(http.StatusOK, user)
+	return c.JSON(http.StatusOK, models.UserToDTO(user))
+}
+
+func GetStudentsByLecturerId(c echo.Context) error {
+	if c.Get("UserRole") != "lecturer" {
+		return c.JSON(http.StatusUnauthorized, "Unauthorized")
+	}
+	userId := c.Get("userId").(uint)
+	users, err := services.GetStudentsByLecturerId(userId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, models.UserToDTOs(users))
+}
+
+func DeleteUser (c echo.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "Invalid ID")
+	}
+	err = services.DeleteUser(uint(id))
+	if err != nil {
+		c.JSON(http.StatusNotFound, err.Error())
+	}
+	c.JSON(http.StatusOK, "User deleted successfully")
 }

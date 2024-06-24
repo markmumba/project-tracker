@@ -26,3 +26,9 @@ func GetFeedback(id uint) (*models.Feedback, error) {
     result := database.DB.First(&feedback, id)
     return &feedback, result.Error
 }
+
+func GetAllFeedback() ([]models.Feedback, error) {
+    var feedbacks []models.Feedback
+    result := database.DB.Find(&feedbacks)
+    return feedbacks, result.Error
+}

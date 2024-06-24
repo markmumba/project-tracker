@@ -20,7 +20,7 @@ func CreateFeedback(c echo.Context) error {
         return c.JSON(http.StatusInternalServerError, err.Error())
     }
 
-    return c.JSON(http.StatusCreated, feedback)
+    return c.JSON(http.StatusCreated, models.FeedbackToDTO(&feedback));
 }
 
 func GetFeedback(c echo.Context) error {
@@ -35,5 +35,13 @@ func GetFeedback(c echo.Context) error {
         return c.JSON(http.StatusNotFound, err.Error())
     }
 
-    return c.JSON(http.StatusOK, feedback)
+    return c.JSON(http.StatusOK, models.FeedbackToDTO(feedback))
+}
+
+func GetAllFeedback (c echo.Context) error {
+    feedbacks, err := services.GetAllFeedback()
+    if err != nil {
+        return c.JSON(http.StatusInternalServerError, err.Error())
+    }
+    return c.JSON(http.StatusOK, models.FeedbackToDTOs(feedbacks))
 }
