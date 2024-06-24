@@ -1,7 +1,6 @@
 package models
 
 import (
-
 	"gorm.io/gorm"
 )
 
@@ -10,23 +9,23 @@ type User struct {
 	Name     string `json:"name"`
 	Email    string `json:"email" gorm:"unique"`
 	Password string `json:"password"`
-	Role     string `json:"role"`
+	RoleId   uint   `json:"role_id"`
+	Role     Role   `json:"role"`
 }
 
 type UserDTO struct {
-	Id 	 uint   `json:"id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Role     string `json:"role"`
+	Id     uint   `json:"id"`
+	Name   string `json:"name"`
+	Email  string `json:"email"`
+	RoleId uint   `json:"role"`
 }
-
 
 func UserToDTO(u *User) UserDTO {
 	return UserDTO{
-		Id : u.ID,
+		Id:    u.ID,
 		Name:  u.Name,
 		Email: u.Email,
-		Role:  u.Role,
+		RoleId: u.RoleId,
 	}
 }
 func UserToDTOs(users []User) []UserDTO {

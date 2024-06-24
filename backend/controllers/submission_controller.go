@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/markmumba/project-tracker/models"
@@ -24,13 +23,15 @@ func CreateSubmission(c echo.Context) error {
 }
 
 func GetSubmission(c echo.Context) error {
-	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
+	var submissionParams models.Submission
+
+	err := c.Bind(&submissionParams)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, "Invalid ID")
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	submission, err := services.GetSubmission(uint(id))
+	id := submissionParams.ID
+	submission, err := services.GetSubmission(id)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
@@ -39,10 +40,6 @@ func GetSubmission(c echo.Context) error {
 }
 
 func GetAllSubmissionByStudentId(c echo.Context) error {
-    
-	if c.Get("UserRole") != "student" {
-		return c.JSON(http.StatusUnauthorized, "Unauthorized")
-	}
 	userId := c.Get("userId").(uint)
 	submissions, err := services.GetAllSubmissionByStudentId(userId)
 	if err != nil {
@@ -52,13 +49,13 @@ func GetAllSubmissionByStudentId(c echo.Context) error {
 }
 
 func DeleteSubmission(c echo.Context) error {
-	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
+	var submissionParams models.Submission
+	err := c.Bind(&submissionParams)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, "Invalid ID")
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-
-	err = services.DeleteSubmission(uint(id))
+	id := submissionParams.ID
+	err = services.DeleteSubmission(id)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}

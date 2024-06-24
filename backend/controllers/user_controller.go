@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -64,13 +63,12 @@ func CreateUser(c echo.Context) error {
 }
 
 func GetUser(c echo.Context) error {
-
-	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
+	var userParams models.User
+	err := c.Bind(&userParams)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, "Invalid ID")
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-
+	id := userParams.ID
 	user, err := services.GetUser(uint(id))
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
@@ -79,23 +77,27 @@ func GetUser(c echo.Context) error {
 }
 
 func GetStudentsByLecturerId(c echo.Context) error {
-	if c.Get("UserRole") != "lecturer" {
-		return c.JSON(http.StatusUnauthorized, "Unauthorized")
-	}
-	userId := c.Get("userId").(uint)
-	users, err := services.GetStudentsByLecturerId(userId)
+	var userParams models.User
+	err := c.Bind(&userParams)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	return c.JSON(http.StatusOK, models.UserToDTOs(users))
+	id := userParams.ID
+	students, err := services.GetStudentsByLecturerId(uint(id))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
+	return c.JSON(http.StatusOK, models.UserToDTOs(students))
 }
 
-func DeleteUser (c echo.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
+func DeleteUser(c echo.Context)  {
+	var userParams models.User
+	err := c.Bind(&userParams)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, "Invalid ID")
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
 	}
+	id := userParams.ID
 	err = services.DeleteUser(uint(id))
 	if err != nil {
 		c.JSON(http.StatusNotFound, err.Error())

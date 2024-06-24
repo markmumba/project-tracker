@@ -32,7 +32,6 @@ func Authentication(next echo.HandlerFunc) echo.HandlerFunc {
 
 		if claims, ok := token.Claims.(*auth.JwtCustomClaims); ok && token.Valid {
 			c.Set("userId", uint(claims.UserId))
-			c.Set("userRole", claims.UserRole)
 			return next(c)
 
 		} else {
@@ -44,16 +43,3 @@ func Authentication(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func CheckUserRole(requiredRole string) echo.MiddlewareFunc {
-	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			userRole := c.Get("userRole").(string)
-			if userRole != requiredRole {
-				return c.JSON(http.StatusForbidden, echo.Map{
-					"message": "Forbidden",
-				})
-			}
-			return next(c)
-		}
-	}
-}

@@ -1,14 +1,13 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/markmumba/project-tracker/models"
 	"github.com/markmumba/project-tracker/services"
 )
+
 
 func CreateProject(c echo.Context) error {
     userId := c.Get("userId").(uint)
@@ -25,14 +24,13 @@ func CreateProject(c echo.Context) error {
 }
 
 func GetProject(c echo.Context) error {
-    idStr := c.Param("id")
-    id, err := strconv.Atoi(idStr)
-    fmt.Println(id)
+    var projectParams models.Project
+    err := c.Bind(&projectParams)
     if err != nil {
-        return c.JSON(http.StatusBadRequest, "Invalid ID")
+        return c.JSON(http.StatusBadRequest, err.Error())
     }
-
-    project, err := services.GetProject(uint(id))
+    id := projectParams.ID
+    project, err := services.GetProject(id)
     if err != nil {
         return c.JSON(http.StatusNotFound, err.Error())
     }
@@ -41,10 +39,6 @@ func GetProject(c echo.Context) error {
 }
 
 func GetAllProjectByLecturerId(c echo.Context) error {
-    
-    if c.Get("UserRole") != "lecturer" {
-        return c.JSON(http.StatusUnauthorized, "Unauthorized")
-    }
     userId := c.Get("userId").(uint)
     projects, err := services.GetProjectsByLecturerId(userId)
     if err != nil {
@@ -54,13 +48,13 @@ func GetAllProjectByLecturerId(c echo.Context) error {
 }
 
 func DeleteProject(c echo.Context) error {
-    idStr := c.Param("id")
-    id, err := strconv.Atoi(idStr)
+    var projectParams models.Project
+    err := c.Bind(&projectParams)
     if err != nil {
-        return c.JSON(http.StatusBadRequest, "Invalid ID")
+        return c.JSON(http.StatusBadRequest, err.Error())
     }
-
-    err = services.DeleteProject(uint(id))
+    id := projectParams.ID
+    err = services.DeleteProject(id)
     if err != nil {
         return c.JSON(http.StatusNotFound, err.Error())
     }

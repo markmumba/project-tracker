@@ -32,3 +32,15 @@ func GetAllFeedback() ([]models.Feedback, error) {
     result := database.DB.Find(&feedbacks)
     return feedbacks, result.Error
 }
+
+func GetFeedbackBySubmissionId(submissionId uint) ([]models.Feedback, error) {
+    var feedbacks []models.Feedback
+    result := database.DB.Where("submission_id = ?", submissionId).Find(&feedbacks)
+    return feedbacks, result.Error
+}
+
+func DeleteFeedback(id uint) error {
+    var feedback models.Feedback
+    result := database.DB.Delete(&feedback, id)
+    return result.Error
+}

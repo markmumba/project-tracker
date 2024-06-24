@@ -14,7 +14,6 @@ var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 type JwtCustomClaims struct {
 	UserId int `json:"id"`
-	UserRole string `json:"role"`
 	jwt.RegisteredClaims
 }
 
@@ -33,7 +32,6 @@ func GenerateJWT(user *models.User) (string, error) {
 
 	claims := &JwtCustomClaims{
 		int(user.ID),
-		user.Role,
 		jwt.RegisteredClaims{
 			Issuer:    stringId,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),

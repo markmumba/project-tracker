@@ -21,6 +21,7 @@ func main() {
 	}
 	database.ConnectDB()
 	database.DB.AutoMigrate(
+		&models.Role{},
 		&models.User{},
 		&models.Project{},
 		&models.Submission{},
@@ -40,7 +41,7 @@ func main() {
 	fmt.Println()
 	err := srv.ListenAndServe()
 	if err != nil {
-		fmt.Println("server failed")
+		fmt.Println("server failed" , err.Error())
 	}
 
 }
