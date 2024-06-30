@@ -21,6 +21,7 @@ func main() {
 	}
 	database.ConnectDB()
 	database.DB.AutoMigrate(
+		&models.Role{},
 		&models.User{},
 		&models.Project{},
 		&models.Submission{},

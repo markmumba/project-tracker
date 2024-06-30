@@ -1,5 +1,8 @@
+package models
 
+import "gorm.io/gorm"
 
-type Type struct {
-	
+type Role struct {
+	gorm.Model
+	Name string `json:"name"`
 }
