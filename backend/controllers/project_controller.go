@@ -8,56 +8,71 @@ import (
 	"github.com/markmumba/project-tracker/services"
 )
 
-
 func CreateProject(c echo.Context) error {
-    userId := c.Get("userId").(uint)
-    var project models.Project
-    if err := c.Bind(&project); err != nil {
-        return c.JSON(http.StatusBadRequest, err.Error())
-    }
-    project.StudentID = userId
-    if err := services.CreateProject(&project); err != nil {
-        return c.JSON(http.StatusInternalServerError, err.Error())
-    }
+	userId := c.Get("userId").(uint)
+	var project models.Project
+	if err := c.Bind(&project); err != nil {
+		return c.Render(http.StatusBadRequest, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+	project.StudentID = userId
+	if err := services.CreateProject(&project); err != nil {
+		return c.Render(http.StatusInternalServerError, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
 
-    return c.JSON(http.StatusCreated, models.ProjectToDTO(&project))
+	return c.Redirect(http.StatusFound, "/projects")
 }
 
 func GetProject(c echo.Context) error {
-    var projectParams models.Project
-    err := c.Bind(&projectParams)
-    if err != nil {
-        return c.JSON(http.StatusBadRequest, err.Error())
-    }
-    id := projectParams.ID
-    project, err := services.GetProject(id)
-    if err != nil {
-        return c.JSON(http.StatusNotFound, err.Error())
-    }
+	var projectParams models.Project
+	err := c.Bind(&projectParams)
+	if err != nil {
+		return c.Render(http.StatusBadRequest, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+	id := projectParams.ID
+	project, err := services.GetProject(id)
+	if err != nil {
+		return c.Render(http.StatusNotFound, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
 
-    return c.JSON(http.StatusOK, models.ProjectToDTO(project)) 
+	return c.Render(http.StatusOK, "project.html", models.ProjectToDTO(project))
 }
 
 func GetAllProjectByLecturerId(c echo.Context) error {
-    userId := c.Get("userId").(uint)
-    projects, err := services.GetProjectsByLecturerId(userId)
-    if err != nil {
-        return c.JSON(http.StatusInternalServerError, err.Error())
-    }
-    return c.JSON(http.StatusOK, models.ProjectToDTOs(projects))
+	userId := c.Get("userId").(uint)
+	projects, err := services.GetProjectsByLecturerId(userId)
+	if err != nil {
+		return c.Render(http.StatusInternalServerError, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+	return c.Render(http.StatusOK, "projects.html", models.ProjectToDTOs(projects))
 }
 
 func DeleteProject(c echo.Context) error {
-    var projectParams models.Project
-    err := c.Bind(&projectParams)
-    if err != nil {
-        return c.JSON(http.StatusBadRequest, err.Error())
-    }
-    id := projectParams.ID
-    err = services.DeleteProject(id)
-    if err != nil {
-        return c.JSON(http.StatusNotFound, err.Error())
-    }
+	var projectParams models.Project
+	err := c.Bind(&projectParams)
+	if err != nil {
+		return c.Render(http.StatusBadRequest, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+	id := projectParams.ID
+	err = services.DeleteProject(id)
+	if err != nil {
+		return c.Render(http.StatusNotFound, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
 
-    return c.JSON(http.StatusOK, "Project deleted successfully")
+	return c.Render(http.StatusOK, "delete_success.html", map[string]interface{}{
+		"message": "Project deleted successfully",
+	})
 }

@@ -12,14 +12,18 @@ func CreateSubmission(c echo.Context) error {
 	userId := c.Get("userId").(uint)
 	var submission models.Submission
 	if err := c.Bind(&submission); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.Render(http.StatusBadRequest, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 	submission.StudentID = userId
 	if err := services.CreateSubmission(&submission); err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return c.Render(http.StatusInternalServerError, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 
-	return c.JSON(http.StatusCreated, models.SubmissionToDTO(&submission))
+	return c.Redirect(http.StatusFound, "/submissions")
 }
 
 func GetSubmission(c echo.Context) error {
@@ -27,38 +31,50 @@ func GetSubmission(c echo.Context) error {
 
 	err := c.Bind(&submissionParams)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.Render(http.StatusBadRequest, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 
 	id := submissionParams.ID
 	submission, err := services.GetSubmission(id)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err.Error())
+		return c.Render(http.StatusNotFound, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 
-	return c.JSON(http.StatusOK, models.SubmissionToDTO(submission))
+	return c.Render(http.StatusOK, "submission.html", models.SubmissionToDTO(submission))
 }
 
 func GetAllSubmissionByStudentId(c echo.Context) error {
 	userId := c.Get("userId").(uint)
 	submissions, err := services.GetAllSubmissionByStudentId(userId)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return c.Render(http.StatusInternalServerError, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
-	return c.JSON(http.StatusOK, models.SubmissionToDTOs(submissions))
+	return c.Render(http.StatusOK, "submissions.html", models.SubmissionToDTOs(submissions))
 }
 
 func DeleteSubmission(c echo.Context) error {
 	var submissionParams models.Submission
 	err := c.Bind(&submissionParams)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.Render(http.StatusBadRequest, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 	id := submissionParams.ID
 	err = services.DeleteSubmission(id)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err.Error())
+		return c.Render(http.StatusNotFound, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 
-	return c.JSON(http.StatusOK, "Submission deleted successfully")
+	return c.Render(http.StatusOK, "delete_success.html", map[string]interface{}{
+		"message": "Submission deleted successfully",
+	})
 }

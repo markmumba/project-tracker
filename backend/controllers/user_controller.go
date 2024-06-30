@@ -1,6 +1,7 @@
 package controllers
 
 import (
+
 	"net/http"
 	"time"
 
@@ -8,6 +9,9 @@ import (
 	"github.com/markmumba/project-tracker/models"
 	"github.com/markmumba/project-tracker/services"
 )
+func HomePage (c echo.Context) error {
+	return c.Render(http.StatusOK, "base", nil)
+}
 
 func Login(c echo.Context) error {
 	var credentials struct {
@@ -16,12 +20,16 @@ func Login(c echo.Context) error {
 	}
 
 	if err := c.Bind(&credentials); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.Render(http.StatusBadRequest, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 
 	token, err := services.LoginUser(credentials.Email, credentials.Password)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, err.Error())
+		return c.Render(http.StatusUnauthorized, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 	c.SetCookie(&http.Cookie{
 		Name:     "token",
@@ -29,13 +37,11 @@ func Login(c echo.Context) error {
 		Expires:  time.Now().Add(time.Hour * 72),
 		SameSite: http.SameSiteNoneMode,
 		HttpOnly: true, // Disallow JavaScript access
-
 	})
 
-	return c.JSON(http.StatusOK, echo.Map{
-		"token": token,
-	})
+	return c.Redirect(http.StatusFound, "/")
 }
+
 func Logout(c echo.Context) error {
 	cookie := &http.Cookie{
 		Name:    "token",
@@ -44,7 +50,7 @@ func Logout(c echo.Context) error {
 	}
 
 	c.SetCookie(cookie)
-	return c.JSON(http.StatusOK, echo.Map{
+	return c.Render(http.StatusOK, "logout_success.html", map[string]interface{}{
 		"message": "Logout successful",
 	})
 }
@@ -52,55 +58,72 @@ func Logout(c echo.Context) error {
 func CreateUser(c echo.Context) error {
 	var user models.User
 	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.Render(http.StatusBadRequest, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 
 	if err := services.CreateUser(&user); err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return c.Render(http.StatusInternalServerError, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 
-	return c.JSON(http.StatusCreated, models.UserToDTO(&user))
+	return c.Redirect(http.StatusFound, "/")
 }
 
 func GetUser(c echo.Context) error {
 	var userParams models.User
 	err := c.Bind(&userParams)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.Render(http.StatusBadRequest, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 	id := userParams.ID
 	user, err := services.GetUser(uint(id))
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err.Error())
+		return c.Render(http.StatusNotFound, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
-	return c.JSON(http.StatusOK, models.UserToDTO(user))
+	return c.Render(http.StatusOK, "user_details.html", models.UserToDTO(user))
 }
 
 func GetStudentsByLecturerId(c echo.Context) error {
 	var userParams models.User
 	err := c.Bind(&userParams)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.Render(http.StatusBadRequest, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 	id := userParams.ID
 	students, err := services.GetStudentsByLecturerId(uint(id))
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err.Error())
+		return c.Render(http.StatusNotFound, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
-	return c.JSON(http.StatusOK, models.UserToDTOs(students))
+	return c.Render(http.StatusOK, "students_list.html", models.UserToDTOs(students))
 }
 
-func DeleteUser(c echo.Context)  {
+func DeleteUser(c echo.Context) error {
 	var userParams models.User
 	err := c.Bind(&userParams)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
+		return c.Render(http.StatusBadRequest, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
 	id := userParams.ID
 	err = services.DeleteUser(uint(id))
 	if err != nil {
-		c.JSON(http.StatusNotFound, err.Error())
+		return c.Render(http.StatusNotFound, "error.html", map[string]interface{}{
+			"error": err.Error(),
+		})
 	}
-	c.JSON(http.StatusOK, "User deleted successfully")
+	return c.Render(http.StatusOK, "delete_success.html", map[string]interface{}{
+		"message": "User deleted successfully",
+	})
 }
