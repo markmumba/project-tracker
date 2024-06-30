@@ -11,7 +11,7 @@ type User struct {
 	Email    string `json:"email" gorm:"unique"`
 	Password string `json:"password"`
 	RoleID   uint   `json:"role_id"`
-	Role     string `gorm:"foreignKey:RoleID"`
+	Role     Role `gorm:"foreignKey:RoleID"`
 }
 
 type UserDTO struct {
@@ -27,7 +27,7 @@ func UserToDTO(u *User) UserDTO {
 		Id : u.ID,
 		Name:  u.Name,
 		Email: u.Email,
-		Role:  u.Role,
+		Role:  u.Role.Name,
 	}
 }
 func UserToDTOs(users []User) []UserDTO {

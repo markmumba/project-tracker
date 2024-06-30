@@ -37,18 +37,17 @@ func SetupRouter() *echo.Echo {
 	projectGroup := r.Group("/projects")
 	{
 		projectGroup.POST("", controllers.CreateProject)
-		projectGroup.GET("/:id", controllers.GetProject, custommiddleware.CheckUserRole("lecturer"))
+		projectGroup.GET("/:id", controllers.GetProject)
 	}
 
 	submissionGroup := r.Group("/submissions")
 	{
 		submissionGroup.POST("", controllers.CreateSubmission)
-		submissionGroup.GET("/:id", controllers.GetSubmission, custommiddleware.CheckUserRole("student"))
+		submissionGroup.GET("/:id", controllers.GetSubmission)
 	}
 
 	feedbackGroup := r.Group("/feedbacks")
 	{
-		feedbackGroup.Use(custommiddleware.CheckUserRole("lecturer"))
 		feedbackGroup.POST("", controllers.CreateFeedback)
 		feedbackGroup.GET("/:id", controllers.GetFeedback)
 	}

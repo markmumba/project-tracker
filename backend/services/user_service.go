@@ -41,10 +41,18 @@ func GetUser(id uint) (*models.User, error) {
 	return &user, result.Error
 }
 func GetStudentsByLecturerId(lecturerId uint) ([]models.User, error) {
+	user, err := GetUser(lecturerId)
+	if err != nil {
+		return nil, err
+	}
+	if user.Role.Name != "lecturer" {
+		return nil, errors.New("user is not a lecturer")
+	}
 	var students []models.User
 	result := database.DB.Where("lecturer_id = ?", lecturerId).Find(&students)
 	return students, result.Error
 }
+
 
 func DeleteUser(id uint) error {
 	var user models.User

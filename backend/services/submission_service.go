@@ -31,10 +31,18 @@ func GetSubmission(id uint) (*models.Submission, error) {
 }
 
 func GetAllSubmissionByStudentId(studentId uint) ([]models.Submission, error) {
+	user ,err := GetUser(studentId)
+	if err != nil {
+		return nil, err
+	}
+	if user.Role.Name != "student" {
+		return nil, nil
+	}
 	var submissions []models.Submission
 	result := database.DB.Where("student_id = ?", studentId).Find(&submissions)
 	return submissions, result.Error
 }
+
 
 func DeleteSubmission(id uint) error {
 	var submission models.Submission

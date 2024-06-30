@@ -7,28 +7,38 @@ import (
 )
 
 func CreateFeedback(feedback *models.Feedback) error {
-    result := database.DB.Create(feedback)
-    if result.Error != nil {
-        return result.Error
-    }
+	result := database.DB.Create(feedback)
+	if result.Error != nil {
+		return result.Error
+	}
 
-    err := database.DB.Preload("Submission").Preload("Lecturer", func(db *gorm.DB) *gorm.DB {
-        return db.Select("ID", "Name", "Email", "Role")
-    }).First(feedback, feedback.ID).Error
+	err := database.DB.Preload("Submission").Preload("Lecturer", func(db *gorm.DB) *gorm.DB {
+		return db.Select("ID", "Name", "Email", "Role")
+	}).First(feedback, feedback.ID).Error
 
-    if err != nil {
-        return err
-    }
-    return nil
+	if err != nil {
+		return err
+	}
+	return nil
 }
 func GetFeedback(id uint) (*models.Feedback, error) {
-    var feedback models.Feedback
-    result := database.DB.First(&feedback, id)
-    return &feedback, result.Error
+	var feedback models.Feedback
+	result := database.DB.First(&feedback, id)
+	return &feedback, result.Error
 }
 
 func GetAllFeedback() ([]models.Feedback, error) {
-    var feedbacks []models.Feedback
-    result := database.DB.Find(&feedbacks)
-    return feedbacks, result.Error
+	var feedbacks []models.Feedback
+	result := database.DB.Find(&feedbacks)
+	return feedbacks, result.Error
+}
+func GetFeedbackBySubmissionId(submissionId uint) ([]models.Feedback, error) {
+	var feedbacks []models.Feedback
+	result := database.DB.Where("submission_id = ?", submissionId).Find(&feedbacks)
+	return feedbacks, result.Error
+}
+
+func DeleteFeedback(id uint) error {
+	result := database.DB.Delete(&models.Feedback{}, id)
+	return result.Error
 }

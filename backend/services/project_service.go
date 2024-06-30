@@ -36,6 +36,13 @@ func DeleteProject(id uint) error {
 	return result.Error
 }
 func GetProjectsByLecturerId(lecturerId uint) ([]models.Project, error) {
+	user, err := GetUser(lecturerId)
+	if err != nil {
+		return nil, err
+	}
+	if user.Role.Name != "lecturer" {
+		return nil, nil
+	}
 	var projects []models.Project
 	result := database.DB.Where("lecturer_id = ?", lecturerId).Find(&projects)
 	return projects, result.Error
