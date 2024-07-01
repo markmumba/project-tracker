@@ -1,27 +1,22 @@
-'use client'
-import { useState } from "react";
-import RegisterForm from "../UI/registerForm";
-import { axiosInstance } from "../fetcher/fetcher";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { axiosInstance } from "../fetcher/fetcher";
+import LoginForm from "../UI/loginForm";
 import { useAuthStore } from "../shared/store";
 
-
-interface registerFormData {
-    name: string;
+interface loginFormData {
     email: string;
     password: string;
-    role_id: number;
 }
-
-function Register() {
+function Login() {
     const router = useRouter();
+    const successMessage = useAuthStore(state => state.successMessage);
     const setSuccessMessage = useAuthStore(state => state.setSuccessMessage);
 
-    const [formData, setFormData] = useState<registerFormData>({
-        name: '',
+    const [formData, setFormData] = useState<loginFormData>({
         email: '',
         password: '',
-        role_id: 2
+
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,24 +32,33 @@ function Register() {
         console.log(formData);
         try {
             const requestBody = JSON.stringify(formData);
-            const response = await axiosInstance.post('/register', requestBody, {
+            const response = await axiosInstance.post('/login', requestBody, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-            setSuccessMessage('Registration successful, please login');
 
-            router.push('/login');
+            router.push('/dashboard');
 
 
         } catch (error) {
             console.log(error);
         }
     };
+    useEffect(() => {
+        if (successMessage) {
+            setTimeout(() => {
+                setSuccessMessage(null);
+            }, 3000);
+        }
+    });
+
     return (
+
         <>
-            <RegisterForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
+            <LoginForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} successMessage={successMessage} />
         </>
     )
 }
-export default Register;
+
+export default Login;
