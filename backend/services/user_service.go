@@ -40,6 +40,14 @@ func GetUser(id uint) (*models.User, error) {
 	result := database.DB.First(&user, id)
 	return &user, result.Error
 }
+
+func GetAllUsers() ([]models.User, error) {
+	var users []models.User
+	result := database.DB.Find(&users)
+	return users, result.Error
+}
+
+
 func GetStudentsByLecturerId(lecturerId uint) ([]models.User, error) {
 	user, err := GetUser(lecturerId)
 	if err != nil {
@@ -51,6 +59,11 @@ func GetStudentsByLecturerId(lecturerId uint) ([]models.User, error) {
 	var students []models.User
 	result := database.DB.Where("lecturer_id = ?", lecturerId).Find(&students)
 	return students, result.Error
+}
+
+func UpdateUser(user *models.User) error {
+	result := database.DB.Save(user)
+	return result.Error
 }
 
 

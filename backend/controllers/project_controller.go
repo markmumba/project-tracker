@@ -45,6 +45,19 @@ func GetAllProjectByLecturerId(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.ProjectToDTOs(projects))
 }
 
+func UpdateProject(c echo.Context) error {
+	var project models.Project
+	if err := c.Bind(&project); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if err := services.UpdateProject(&project); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, models.ProjectToDTO(&project))
+}
+
 func DeleteProject(c echo.Context) error {
 	var projectParams models.Project
 	err := c.Bind(&projectParams)

@@ -43,6 +43,11 @@ func GetAllSubmissionByStudentId(studentId uint) ([]models.Submission, error) {
 	return submissions, result.Error
 }
 
+func UpdateSubmission(submission *models.Submission) error {
+	result := database.DB.Save(submission)
+	return result.Error
+}
+
 
 func DeleteSubmission(id uint) error {
 	var submission models.Submission

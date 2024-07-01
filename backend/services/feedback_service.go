@@ -38,6 +38,11 @@ func GetFeedbackBySubmissionId(submissionId uint) ([]models.Feedback, error) {
 	return feedbacks, result.Error
 }
 
+func UpdateFeedback(feedback *models.Feedback) error {
+	result := database.DB.Save(feedback)
+	return result.Error
+}
+
 func DeleteFeedback(id uint) error {
 	result := database.DB.Delete(&models.Feedback{}, id)
 	return result.Error

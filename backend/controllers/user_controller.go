@@ -76,6 +76,15 @@ func GetUser(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, models.UserToDTO(user))
 }
+
+func GetAllUsers(c echo.Context) error {
+	users, err := services.GetAllUsers()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, models.UserToDTOs(users))
+}
+
 func GetStudentsByLecturerId(c echo.Context) error {
 	var userParams models.User
 	err := c.Bind(&userParams)
@@ -89,17 +98,29 @@ func GetStudentsByLecturerId(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, models.UserToDTOs(students))
 }
+func UpdateUser(c echo.Context) error {
+	var user models.User
+	if err := c.Bind(&user); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
 
-func DeleteUser(c echo.Context) {
+	if err := services.UpdateUser(&user); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, models.UserToDTO(&user))
+}
+
+func DeleteUser(c echo.Context) error {
 	var userParams models.User
 	err := c.Bind(&userParams)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	id := userParams.ID
 	err = services.DeleteUser(uint(id))
 	if err != nil {
-		c.JSON(http.StatusNotFound, err.Error())
+		return c.JSON(http.StatusNotFound, err.Error())
 	}
-	c.JSON(http.StatusOK, "User deleted successfully")
+	return c.JSON(http.StatusOK, "User deleted successfully")
 }

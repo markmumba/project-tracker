@@ -32,24 +32,34 @@ func SetupRouter() *echo.Echo {
 	userGroup := r.Group("/users")
 	{
 		userGroup.GET("/:id", controllers.GetUser)
+		userGroup.GET("", controllers.GetAllUsers)
+		userGroup.PUT("/:id", controllers.UpdateUser)
+		userGroup.DELETE("/:id", controllers.DeleteUser)
 	}
 
 	projectGroup := r.Group("/projects")
 	{
 		projectGroup.POST("", controllers.CreateProject)
 		projectGroup.GET("/:id", controllers.GetProject)
+		projectGroup.PUT("/:id", controllers.UpdateProject)
+		projectGroup.DELETE("/:id", controllers.DeleteProject)
 	}
 
 	submissionGroup := r.Group("/submissions")
 	{
 		submissionGroup.POST("", controllers.CreateSubmission)
 		submissionGroup.GET("/:id", controllers.GetSubmission)
+		submissionGroup.PUT("/:id", controllers.UpdateSubmission)
+		submissionGroup.DELETE("/:id", controllers.DeleteSubmission)
 	}
 
 	feedbackGroup := r.Group("/feedbacks")
 	{
 		feedbackGroup.POST("", controllers.CreateFeedback)
 		feedbackGroup.GET("/:id", controllers.GetFeedback)
+		feedbackGroup.GET("", controllers.GetAllFeedback)
+		feedbackGroup.PUT("/:id", controllers.UpdateFeedback)
+		feedbackGroup.DELETE("/:id", controllers.DeleteFeedback)
 	}
 
 	communicationGroup := r.Group("/communications")
@@ -58,5 +68,5 @@ func SetupRouter() *echo.Echo {
 		communicationGroup.GET("/:project_id", controllers.GetCommunicationHistory)
 	}
 
-	return e
+	return e	
 }

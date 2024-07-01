@@ -38,6 +38,7 @@ func GetSubmission(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.SubmissionToDTO(submission))
 }
 
+
 func GetAllSubmissionByStudentId(c echo.Context) error {
 	userId := c.Get("userId").(uint)
 	submissions, err := services.GetAllSubmissionByStudentId(userId)
@@ -46,6 +47,20 @@ func GetAllSubmissionByStudentId(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, models.SubmissionToDTOs(submissions))
 }
+
+func UpdateSubmission(c echo.Context) error {
+	var submission models.Submission
+	if err := c.Bind(&submission); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if err := services.UpdateSubmission(&submission); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, models.SubmissionToDTO(&submission))
+}
+
 
 func DeleteSubmission(c echo.Context) error {
 	var submissionParams models.Submission

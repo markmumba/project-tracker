@@ -44,6 +44,18 @@ func GetAllFeedback(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, models.FeedbackToDTOs(feedbacks))
 }
+func UpdateFeedback(c echo.Context) error {
+	var feedback models.Feedback
+	if err := c.Bind(&feedback); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if err := services.UpdateFeedback(&feedback); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, models.FeedbackToDTO(&feedback))
+}
 
 func DeleteFeedback(c echo.Context) error {
 	var feedbackParams models.Feedback
