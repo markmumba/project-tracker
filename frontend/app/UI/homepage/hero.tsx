@@ -5,12 +5,13 @@ import Link from 'next/link';
 
 const Hero: React.FC = () => {
     return (
-        <div className="relative h-screen">
+        <div className="relative h-screen w-full">
             <Image
                 src={heroImage}
                 alt="Background Image"
+                className="object-cover h-full w-full"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black  to-transparent"></div>
+            <div className="absolute h-screen inset-0 bg-gradient-to-r from-black  to-transparent"></div>
             <div className="absolute inset-0 flex items-center ">
                 <div className="text-white p-8 max-w-4xl">
                     <h1 className="text-4xl md:text-6xl font-bold mb-4">ProjectTracker: Bridging the Gap Between Students and Lecturers</h1>

@@ -8,6 +8,7 @@ import (
 	"github.com/markmumba/project-tracker/models"
 	"github.com/markmumba/project-tracker/services"
 )
+ // TODO : Get all the lecturers that is get all users where role id is 1 
 
 func Login(c echo.Context) error {
 	var credentials struct {

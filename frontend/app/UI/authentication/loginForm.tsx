@@ -3,11 +3,10 @@ import Image from "next/image";
 import registerImage from "../../public/images/Sandy_Bus-05_Single-08.jpg"
 import Link from "next/link";
 
-function LoginForm({ formData, handleChange, handleSubmit, successMessage }: {
+function LoginForm({ formData, handleChange, handleSubmit }: {
     formData: { email: string; password: string; };
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-    successMessage: string | null;
 }) {
     return (
         <>
@@ -15,7 +14,7 @@ function LoginForm({ formData, handleChange, handleSubmit, successMessage }: {
                 <div className="md:w-1/2 bg-gray-200 flex items-center justify-center">
                     <div className="max-w-md w-full p-8">
                         <h2 className="text-4xl font-bold text-center">Student</h2>
-                        <h2 className="text-3xl font-bold mb-6 text-center">Register</h2>
+                        <h2 className="text-3xl font-bold mb-6 text-center">Login</h2>
                         <form onSubmit={handleSubmit}>
 
                             <div className="mb-4">

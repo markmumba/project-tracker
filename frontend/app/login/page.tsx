@@ -1,7 +1,8 @@
-import { useRouter } from "next/router";
+'use client'
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../fetcher/fetcher";
-import LoginForm from "../UI/loginForm";
+import LoginForm from "../UI/authentication/loginForm";
 import { useAuthStore } from "../shared/store";
 
 interface loginFormData {
@@ -29,7 +30,6 @@ function Login() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(formData);
         try {
             const requestBody = JSON.stringify(formData);
             const response = await axiosInstance.post('/login', requestBody, {
@@ -56,7 +56,8 @@ function Login() {
     return (
 
         <>
-            <LoginForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} successMessage={successMessage} />
+            {successMessage && <div className="bg-green-500 text-white text-center p-3">{successMessage}</div>}
+            <LoginForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
         </>
     )
 }

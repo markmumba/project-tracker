@@ -1,12 +1,13 @@
-import Navbar from "../UI/navbar";
+import SideNav from "../UI/dashboard/sidebar";
 
 function Dashboard() {
   return (
-    <>
-    <Navbar />
+    <div >
+      <h1>This is the dashboard page </h1>
 
-    </>
+    </div>
   )
+
 
 }
 

@@ -1,4 +1,4 @@
-import Hero from "./UI/hero";
+import Hero from "./UI/homepage/hero";
 import Dashboard from "./dashboard/page";
 
 // create the homepage a hero section 

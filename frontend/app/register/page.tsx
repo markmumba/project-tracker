@@ -1,8 +1,8 @@
 'use client'
 import { useState } from "react";
-import RegisterForm from "../UI/registerForm";
+import RegisterForm from "../UI/authentication/registerForm";
 import { axiosInstance } from "../fetcher/fetcher";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useAuthStore } from "../shared/store";
 
 
@@ -15,7 +15,7 @@ interface registerFormData {
 
 function Register() {
     const router = useRouter();
-    const setSuccessMessage = useAuthStore(state => state.setSuccessMessage);
+    const setSuccessMessage = useAuthStore((state) => state.setSuccessMessage);
 
     const [formData, setFormData] = useState<registerFormData>({
         name: '',
@@ -42,8 +42,7 @@ function Register() {
                     'Content-Type': 'application/json'
                 }
             });
-            setSuccessMessage('Registration successful, please login');
-
+            setSuccessMessage('Registration successful! Please log in.');
             router.push('/login');
 
 
