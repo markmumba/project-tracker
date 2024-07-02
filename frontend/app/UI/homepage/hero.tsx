@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
-import heroImage from '../../public/images/alvaro-reyes-qWwpHwip31M-unsplash.jpg';
+import heroImage from '/public/images/alvaro-reyes-qWwpHwip31M-unsplash.jpg';
 import Link from 'next/link';
 
-const Hero: React.FC = () => {
+function Hero() {
     return (
         <div className="relative h-screen w-full">
             <Image

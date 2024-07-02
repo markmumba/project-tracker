@@ -33,6 +33,7 @@ function Login() {
         try {
             const requestBody = JSON.stringify(formData);
             const response = await axiosInstance.post('/login', requestBody, {
+                withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json'
                 }

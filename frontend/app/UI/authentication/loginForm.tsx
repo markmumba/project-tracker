@@ -1,6 +1,6 @@
 
 import Image from "next/image";
-import registerImage from "../../public/images/Sandy_Bus-05_Single-08.jpg"
+import registerImage from "/public/images/Sandy_Bus-05_Single-08.jpg"
 import Link from "next/link";
 
 function LoginForm({ formData, handleChange, handleSubmit }: {
@@ -47,13 +47,13 @@ function LoginForm({ formData, handleChange, handleSubmit }: {
                             </div>
                             <button
                                 type="submit"
-                                className="w-full bg-indigo-500 text-white py-3 px-4 rounded hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
+                                className="w-full mb-4 bg-indigo-500 text-white py-3 px-4 rounded hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
                             >
                                 Login
                             </button>
                         </form>
                         <Link href="/register">
-                            <p>Don't have an account ? register</p>
+                            <p className="text-blue-500">Don't have an account ? Register</p>
                         </Link>
                     </div>
                 </div>

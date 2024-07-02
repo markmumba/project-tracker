@@ -8,7 +8,8 @@ import (
 	"github.com/markmumba/project-tracker/models"
 	"github.com/markmumba/project-tracker/services"
 )
- // TODO : Get all the lecturers that is get all users where role id is 1 
+
+// TODO : Get all the lecturers that is get all users where role id is 1
 
 func Login(c echo.Context) error {
 	var credentials struct {
@@ -64,14 +65,8 @@ func CreateUser(c echo.Context) error {
 }
 
 func GetUser(c echo.Context) error {
-
-	var userParams models.User
-	err := c.Bind(&userParams)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
-	id := userParams.ID
-	user, err := services.GetUser(uint(id))
+	userID := c.Get("userId").(uint)
+	user, err := services.GetUser(userID)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
@@ -100,16 +95,16 @@ func GetStudentsByLecturerId(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.UserToDTOs(students))
 }
 func UpdateUser(c echo.Context) error {
-	var user models.User
-	if err := c.Bind(&user); err != nil {
+	userId := c.Get("userId").(uint)
+	var updateUser models.User
+	if err := c.Bind(&updateUser); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-
-	if err := services.UpdateUser(&user); err != nil {
+	if err := services.UpdateUser(userId,&updateUser); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, models.UserToDTO(&user))
+	return c.JSON(http.StatusOK, models.UserToDTO(&updateUser))
 }
 
 func DeleteUser(c echo.Context) error {

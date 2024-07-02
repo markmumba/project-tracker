@@ -20,6 +20,7 @@ func SetupRouter() *echo.Echo {
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+		AllowCredentials: true,
 	}))
 
 	e.POST("/register", controllers.CreateUser)
@@ -31,10 +32,10 @@ func SetupRouter() *echo.Echo {
 
 	userGroup := r.Group("/users")
 	{
-		userGroup.GET("/:id", controllers.GetUser)
-		userGroup.GET("", controllers.GetAllUsers)
-		userGroup.PUT("/:id", controllers.UpdateUser)
-		userGroup.DELETE("/:id", controllers.DeleteUser)
+		userGroup.GET("", controllers.GetUser)
+		userGroup.GET("/all", controllers.GetAllUsers)
+		userGroup.PUT("", controllers.UpdateUser)
+		userGroup.DELETE("", controllers.DeleteUser)
 	}
 
 	projectGroup := r.Group("/projects")
