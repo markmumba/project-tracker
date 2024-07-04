@@ -41,9 +41,9 @@ func SetupRouter() *echo.Echo {
 	projectGroup := r.Group("/projects")
 	{
 		projectGroup.POST("", controllers.CreateProject)
-		projectGroup.GET("/:id", controllers.GetProject)
-		projectGroup.PUT("/:id", controllers.UpdateProject)
-		projectGroup.DELETE("/:id", controllers.DeleteProject)
+		projectGroup.GET("", controllers.GetProject)
+		projectGroup.PUT("", controllers.UpdateProject)
+		projectGroup.DELETE("", controllers.DeleteProject)
 	}
 
 	submissionGroup := r.Group("/submissions")

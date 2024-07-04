@@ -19,6 +19,7 @@ type Project struct {
 type ProjectDTO struct {
     StudentID    uint   `json:"student_id"`
     LecturerID   uint   `json:"lecturer_id"`
+    LecturerName string `json:"lecturer_name"`
     Title        string `json:"title"`
     Description  string `json:"description"`
     StartDate    string `json:"start_date"`
@@ -29,6 +30,7 @@ func   ProjectToDTO(p *Project) ProjectDTO {
     return ProjectDTO{
         StudentID:    p.StudentID,
         LecturerID:   p.LecturerID,
+        LecturerName: p.Lecturer.Name,
         Title:        p.Title,
         Description:  p.Description,
         StartDate:    p.StartDate,

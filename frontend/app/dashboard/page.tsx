@@ -1,3 +1,5 @@
+'use client';
+import { useEffect, useState } from "react";
 import SideNav from "../UI/dashboard/sidebar";
 import UserCard from "../UI/dashboard/userCard";
 import { axiosInstance } from "../fetcher/fetcher";
@@ -10,8 +12,18 @@ interface user {
   supervisorName: string;
   submissions: number;
 }
+interface userDetails {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+
+}
 
 function Dashboard() {
+
+  const [userDetalis, setUserDetails] = useState<userDetails>();
+  const [projectDetails, setProjectDetails] = useState(); 
 
   const getUserDetails = async () => {
     try {
@@ -21,7 +33,40 @@ function Dashboard() {
           'Content-Type': 'application/json'
         }
       });
+
+      console.log(response);
       const data = response.data;
+      setUserDetails(data);
+      console.log(data);
+
+    } catch (error: any) {
+      if (error.response) {
+        // Server responded with a status other than 2xx
+        console.error("Error response data:", error.response.data);
+        console.error("Error response status:", error.response.status);
+        console.error("Error response headers:", error.response.headers);
+      } else if (error.request) {
+        // Request was made but no response was received
+        console.error("Error request data:", error.request);
+      } else {
+        // Something else happened in making the request that triggered an error
+        console.error("Error message:", error.message);
+      }
+      console.error("Axios config:", error.config);
+    }
+  };
+  const getProjectDetails = async () => {
+    try {
+      const response = await axiosInstance.get("/projects", {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log(response);
+      const data = response.data;
+      setProjectDetails(data);
       console.log(data);
     } catch (error) {
       console.error(error);
@@ -36,6 +81,9 @@ function Dashboard() {
     submissions: 5,
   };
 
+  useEffect(() => {
+    getUserDetails();
+  }, []);
   return (
     <div className="border p-4">
       <div className="flex flex-col md:flex-row justify-between">
@@ -47,13 +95,15 @@ function Dashboard() {
           </p>
         </div>
         <div className="md:w-1/4 border  p-4">
-          <UserCard
-            avatar={user.avatar}
-            userName={user.userName}
-            projectName={user.projectName}
-            supervisorName={user.supervisorName}
-            submissions={user.submissions}
-          />
+          {userDetalis &&
+            <UserCard
+              avatar={user.avatar}
+              userName={userDetalis.name}
+              projectName={user.projectName}
+              supervisorName={user.supervisorName}
+              submissions={user.submissions}
+            />
+          }
         </div>
       </div>
     </div>

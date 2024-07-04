@@ -26,7 +26,7 @@ func CreateProject(project *models.Project) error {
 }
 func GetProject(id uint) (*models.Project, error) {
 	var project models.Project
-	result := database.DB.First(&project, id)
+	result := database.DB.First(&project).Where("student_id = ?", id)
 	return &project, result.Error
 }
 func GetProjectsByLecturerId(lecturerId uint) ([]models.Project, error) {

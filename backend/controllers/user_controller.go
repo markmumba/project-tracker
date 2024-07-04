@@ -30,7 +30,7 @@ func Login(c echo.Context) error {
 		Value:    token,
 		Expires:  time.Now().Add(time.Hour * 72),
 		SameSite: http.SameSiteNoneMode,
-		HttpOnly: true, // Disallow JavaScript access
+		HttpOnly: true, 
 
 	})
 
@@ -70,6 +70,7 @@ func GetUser(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
+	
 	return c.JSON(http.StatusOK, models.UserToDTO(user))
 }
 

@@ -22,13 +22,8 @@ func CreateProject(c echo.Context) error {
 }
 
 func GetProject(c echo.Context) error {
-	var projectParams models.Project
-	err := c.Bind(&projectParams)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
-	id := projectParams.ID
-	project, err := services.GetProject(uint(id))
+	userId := c.Get("userId").(uint)
+	project, err := services.GetProject(userId)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}

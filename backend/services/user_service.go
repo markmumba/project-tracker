@@ -37,7 +37,7 @@ func LoginUser(email, password string) (string, error) {
 }
 func GetUser(id uint) (*models.User, error) {
 	var user models.User
-	result := database.DB.First(&user, id)
+	result := database.DB.Preload("Role").First(&user, id)
 	return &user, result.Error
 }
 
