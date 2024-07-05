@@ -8,18 +8,22 @@ import (
 	"github.com/markmumba/project-tracker/models"
 	"github.com/markmumba/project-tracker/services"
 )
-// TODO : update the update project function to use the id and the new data 
-// TODO : update the delete project function to use the id
-// TODO : update all remaining functions to use the helper function 
 
+// TODO : update the update project function to use the id and the new data
+// TODO : update the delete project function to use the id
+// TODO : update all remaining functions to use the helper function
 
 func CreateProject(c echo.Context) error {
-	userId := c.Get("userId").(uint)
+
+	userID, err := helpers.ConvertUserID(c, "userId")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
 	var project models.Project
 	if err := c.Bind(&project); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	project.StudentID = userId
+	project.StudentID = userID
 	if err := services.CreateProject(&project); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -29,7 +33,7 @@ func CreateProject(c echo.Context) error {
 
 func GetProject(c echo.Context) error {
 
-	userID ,err := helpers.ConvertUserID(c, "userId")
+	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -43,7 +47,7 @@ func GetProject(c echo.Context) error {
 
 func GetAllProjectByLecturerId(c echo.Context) error {
 
-	userID ,err := helpers.ConvertUserID(c, "userId")
+	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

@@ -4,14 +4,10 @@ import RegisterForm from "../UI/authentication/registerForm";
 import { axiosInstance } from "../fetcher/fetcher";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "../shared/store";
+import { registerFormData } from "../shared/types";
 
 
-interface registerFormData {
-    name: string;
-    email: string;
-    password: string;
-    role_id: number;
-}
+
 
 function Register() {
     const router = useRouter();

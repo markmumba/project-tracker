@@ -4,14 +4,12 @@ import { useEffect, useState } from "react";
 import { axiosInstance } from "../fetcher/fetcher";
 import LoginForm from "../UI/authentication/loginForm";
 import { useAuthStore } from "../shared/store";
+import { loginFormData } from "../shared/types";
 
 // TODO : add the token to the window  local storage 
 
 
-interface loginFormData {
-    email: string;
-    password: string;
-}
+
 function Login() {
     const router = useRouter();
     const successMessage = useAuthStore(state => state.successMessage);
@@ -41,8 +39,7 @@ function Login() {
                     'Content-Type': 'application/json'
                 }
             });
-
-
+            window.localStorage.setItem('token', response.data.token);
             router.push('/dashboard');
 
 

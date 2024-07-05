@@ -1,31 +1,18 @@
 'use client';
-import { useEffect, useState } from "react";
-import SideNav from "../UI/dashboard/sidebar";
+import { Suspense, useEffect, useState } from "react";
 import UserCard from "../UI/dashboard/userCard";
 import { axiosInstance } from "../fetcher/fetcher";
-import avatar from "/public/images/user.png"
+import { UserCardSkeleton } from "../UI/skeletons";
+import { ProjectDetails, UserDetails } from "../shared/types";
 
-// TODO : impelement the get  project details 
+// TODO : implement the get project details 
 
-interface user {
-  avatar: string; // Change the type of avatar to string
-  userName: string;
-  projectName: string;
-  supervisorName: string;
-  submissions: number;
-}
-interface userDetails {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
 
-}
 
 function Dashboard() {
 
-  const [userDetalis, setUserDetails] = useState<userDetails>();
-  const [projectDetails, setProjectDetails] = useState();
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+  const [projectDetails, setProjectDetails] = useState<ProjectDetails | null>(null);
 
   const getUserDetails = async () => {
     try {
@@ -36,15 +23,14 @@ function Dashboard() {
         }
       });
 
-      console.log(response);
       const data = response.data;
       setUserDetails(data);
-      console.log(data);
 
     } catch (error: any) {
       console.log(error.response.data);
     }
   };
+
   const getProjectDetails = async () => {
     try {
       const response = await axiosInstance.get("/projects", {
@@ -54,47 +40,51 @@ function Dashboard() {
         }
       });
 
-      console.log(response);
       const data = response.data;
       setProjectDetails(data);
-      console.log(data);
     } catch (error) {
       console.error(error);
     }
   }
 
-  const user: user = {
-    avatar: avatar.src, // Assign the src property of the avatar to the avatar property of the user object
-    userName: 'John Doe',
-    projectName: 'Project Alpha',
-    supervisorName: 'Dr. Smith',
-    submissions: 5,
-  };
-
-
   useEffect(() => {
     getUserDetails();
+    getProjectDetails();
   }, []);
+
+
+
   return (
     <div className="border p-4">
       <div className="flex flex-col md:flex-row justify-between">
         <div className="mb-4 md:mb-0 md:w-3/4 border p-4 flex-grow">
-          <p>
-            1. should have latest feedback
-            <br />
-            2. should prompt user to create project if there is no project
-          </p>
+          {projectDetails && userDetails ? (
+            <>
+              <h1 className="text-2xl font-semibold text-gray-800">Welcome, {userDetails.name}</h1>
+              <p className="text-gray-600">Your latest feedback:</p>
+              <div className="border p-4 mt-4">
+                <h2 className="text-xl font-semibold text-gray-800">Project: {projectDetails.title}</h2>
+                <p className="text-gray-600">Supervisor: {projectDetails.lecturer_name}</p>
+                <p className="text-gray-600">Description: {projectDetails.description}</p>
+              </div>
+
+            </>
+          ) : (
+            <>
+           
+            </>
+          )}
         </div>
-        <div className="md:w-1/4 border  p-4">
-          {userDetalis &&
-            <UserCard
-              avatar={user.avatar}
-              userName={userDetalis.name}
-              projectName={user.projectName}
-              supervisorName={user.supervisorName}
-              submissions={user.submissions}
+        <div className="md:w-1/4 border p-4">
+          <Suspense fallback={<UserCardSkeleton />}>
+            {userDetails && <UserCard
+              userName={userDetails.name}
+              projectName={projectDetails?.title}
+              supervisorName={projectDetails?.lecturer_name}
+              submissions={10}
             />
-          }
+            }
+          </Suspense>
         </div>
       </div>
     </div>
