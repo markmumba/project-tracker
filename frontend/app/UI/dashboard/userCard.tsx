@@ -1,11 +1,7 @@
 
+import { UserCardProps } from "@/app/shared/types";
 import avatar from "/public/images/user.png"
-interface UserCardProps {
-  userName: string  | null | undefined;
-  projectName: string | null | undefined;
-  supervisorName: string  | null | undefined;
-  submissions: number | null | undefined;
-}
+
 
 function UserCard({ userName, projectName, supervisorName, submissions }: UserCardProps) {
   return (

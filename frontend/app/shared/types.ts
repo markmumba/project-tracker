@@ -25,3 +25,9 @@ export interface registerFormData {
     password: string;
     role_id: number;
 }
+export interface UserCardProps {
+    userName: string | null | undefined;
+    projectName: string | null | undefined;
+    supervisorName: string | null | undefined;
+    submissions: number | null | undefined;
+}

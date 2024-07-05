@@ -4,6 +4,8 @@ import UserCard from "../UI/dashboard/userCard";
 import { axiosInstance } from "../fetcher/fetcher";
 import { UserCardSkeleton } from "../UI/skeletons";
 import { ProjectDetails, UserDetails } from "../shared/types";
+import NoProject from "../UI/dashboard/noProject";
+import Project from "../UI/dashboard/project";
 
 // TODO : implement the get project details 
 
@@ -58,22 +60,10 @@ function Dashboard() {
     <div className="border p-4">
       <div className="flex flex-col md:flex-row justify-between">
         <div className="mb-4 md:mb-0 md:w-3/4 border p-4 flex-grow">
-          {projectDetails && userDetails ? (
-            <>
-              <h1 className="text-2xl font-semibold text-gray-800">Welcome, {userDetails.name}</h1>
-              <p className="text-gray-600">Your latest feedback:</p>
-              <div className="border p-4 mt-4">
-                <h2 className="text-xl font-semibold text-gray-800">Project: {projectDetails.title}</h2>
-                <p className="text-gray-600">Supervisor: {projectDetails.lecturer_name}</p>
-                <p className="text-gray-600">Description: {projectDetails.description}</p>
-              </div>
-
-            </>
-          ) : (
-            <>
-           
-            </>
-          )}
+          {projectDetails && userDetails ?
+            (<Project projectDetails={projectDetails} userDetails={userDetails} />)
+            : (<NoProject userDetails={userDetails} />
+            )}
         </div>
         <div className="md:w-1/4 border p-4">
           <Suspense fallback={<UserCardSkeleton />}>
