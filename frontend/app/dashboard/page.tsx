@@ -2,7 +2,7 @@
 import { Suspense, useEffect, useState } from "react";
 import UserCard from "../UI/dashboard/userCard";
 import { axiosInstance } from "../fetcher/fetcher";
-import { UserCardSkeleton } from "../UI/skeletons";
+import { ProjectSkeleton, UserCardSkeleton } from "../UI/skeletons";
 import { ProjectDetails, UserDetails } from "../shared/types";
 import NoProject from "../UI/dashboard/noProject";
 import Project from "../UI/dashboard/project";
@@ -26,8 +26,9 @@ function Dashboard() {
       });
 
       const data = response.data;
-      setUserDetails(data);
-
+      setTimeout(() => {
+        setUserDetails(data);
+      }, 5000);
     } catch (error: any) {
       console.log(error.response.data);
     }
@@ -43,13 +44,17 @@ function Dashboard() {
       });
 
       const data = response.data;
-      setProjectDetails(data);
+      setTimeout(() => {
+        setProjectDetails(data);
+      }, 5000);
     } catch (error) {
       console.error(error);
     }
   }
 
   useEffect(() => {
+    //slow down getuserdetails
+
     getUserDetails();
     getProjectDetails();
   }, []);
@@ -60,20 +65,18 @@ function Dashboard() {
     <div className="border p-4">
       <div className="flex flex-col md:flex-row justify-between">
         <div className="mb-4 md:mb-0 md:w-3/4 border p-4 flex-grow">
-          {projectDetails && userDetails ?
-            (<Project projectDetails={projectDetails} userDetails={userDetails} />)
+          {projectDetails ?
+            (
+              <Suspense fallback={<ProjectSkeleton />}>
+                <Project projectDetails={projectDetails} userDetails={userDetails} />
+              </Suspense>
+            )
             : (<NoProject userDetails={userDetails} />
             )}
         </div>
         <div className="md:w-1/4 border p-4">
           <Suspense fallback={<UserCardSkeleton />}>
-            {userDetails && <UserCard
-              userName={userDetails.name}
-              projectName={projectDetails?.title}
-              supervisorName={projectDetails?.lecturer_name}
-              submissions={10}
-            />
-            }
+            <UserCard userDetails={userDetails} projectDetails={projectDetails} />
           </Suspense>
         </div>
       </div>
