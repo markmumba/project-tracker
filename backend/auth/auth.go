@@ -10,10 +10,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// TODO : change to uint and see what happens
+
 var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 type JwtCustomClaims struct {
-	UserId int `json:"id"`
+	UserId uint `json:"id"`
 	jwt.RegisteredClaims
 }
 
@@ -31,7 +33,7 @@ func GenerateJWT(user *models.User) (string, error) {
 	stringId := strconv.Itoa(int(user.ID))
 
 	claims := &JwtCustomClaims{
-		int(user.ID),
+		user.ID,
 		jwt.RegisteredClaims{
 			Issuer:    stringId,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),

@@ -1,11 +1,17 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
+	"github.com/markmumba/project-tracker/helpers"
 	"github.com/markmumba/project-tracker/models"
 	"github.com/markmumba/project-tracker/services"
-	"net/http"
 )
+// TODO : update the update project function to use the id and the new data 
+// TODO : update the delete project function to use the id
+// TODO : update all remaining functions to use the helper function 
+
 
 func CreateProject(c echo.Context) error {
 	userId := c.Get("userId").(uint)
@@ -22,8 +28,12 @@ func CreateProject(c echo.Context) error {
 }
 
 func GetProject(c echo.Context) error {
-	userId := c.Get("userId").(uint)
-	project, err := services.GetProject(userId)
+
+	userID ,err := helpers.ConvertUserID(c, "userId")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	project, err := services.GetProject(userID)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
@@ -32,8 +42,12 @@ func GetProject(c echo.Context) error {
 }
 
 func GetAllProjectByLecturerId(c echo.Context) error {
-	userId := c.Get("userId").(uint)
-	projects, err := services.GetProjectsByLecturerId(userId)
+
+	userID ,err := helpers.ConvertUserID(c, "userId")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	projects, err := services.GetProjectsByLecturerId(userID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

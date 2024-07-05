@@ -5,6 +5,9 @@ import { axiosInstance } from "../fetcher/fetcher";
 import LoginForm from "../UI/authentication/loginForm";
 import { useAuthStore } from "../shared/store";
 
+// TODO : add the token to the window  local storage 
+
+
 interface loginFormData {
     email: string;
     password: string;
@@ -38,6 +41,7 @@ function Login() {
                     'Content-Type': 'application/json'
                 }
             });
+
 
             router.push('/dashboard');
 

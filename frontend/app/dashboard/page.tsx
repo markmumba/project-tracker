@@ -5,6 +5,8 @@ import UserCard from "../UI/dashboard/userCard";
 import { axiosInstance } from "../fetcher/fetcher";
 import avatar from "/public/images/user.png"
 
+// TODO : impelement the get  project details 
+
 interface user {
   avatar: string; // Change the type of avatar to string
   userName: string;
@@ -23,7 +25,7 @@ interface userDetails {
 function Dashboard() {
 
   const [userDetalis, setUserDetails] = useState<userDetails>();
-  const [projectDetails, setProjectDetails] = useState(); 
+  const [projectDetails, setProjectDetails] = useState();
 
   const getUserDetails = async () => {
     try {
@@ -40,19 +42,7 @@ function Dashboard() {
       console.log(data);
 
     } catch (error: any) {
-      if (error.response) {
-        // Server responded with a status other than 2xx
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-      } else if (error.request) {
-        // Request was made but no response was received
-        console.error("Error request data:", error.request);
-      } else {
-        // Something else happened in making the request that triggered an error
-        console.error("Error message:", error.message);
-      }
-      console.error("Axios config:", error.config);
+      console.log(error.response.data);
     }
   };
   const getProjectDetails = async () => {
@@ -80,6 +70,7 @@ function Dashboard() {
     supervisorName: 'Dr. Smith',
     submissions: 5,
   };
+
 
   useEffect(() => {
     getUserDetails();

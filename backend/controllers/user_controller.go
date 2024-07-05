@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"github.com/markmumba/project-tracker/helpers"
 	"github.com/markmumba/project-tracker/models"
 	"github.com/markmumba/project-tracker/services"
 )
@@ -29,9 +30,6 @@ func Login(c echo.Context) error {
 		Name:     "token",
 		Value:    token,
 		Expires:  time.Now().Add(time.Hour * 72),
-		SameSite: http.SameSiteNoneMode,
-		HttpOnly: true, 
-
 	})
 
 	return c.JSON(http.StatusOK, echo.Map{
@@ -57,7 +55,9 @@ func CreateUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	if err := services.CreateUser(&user); err != nil {
+	if err := services.CreateUser(&user); err != nil {	// Print type for debugging
+
+		// Safely assert and handle the userID type
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -65,14 +65,18 @@ func CreateUser(c echo.Context) error {
 }
 
 func GetUser(c echo.Context) error {
-	userID := c.Get("userId").(uint)
+	userID ,err := helpers.ConvertUserID(c, "userId")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
 	user, err := services.GetUser(userID)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
-	
+
 	return c.JSON(http.StatusOK, models.UserToDTO(user))
 }
+
 
 func GetAllUsers(c echo.Context) error {
 	users, err := services.GetAllUsers()
@@ -88,20 +92,27 @@ func GetStudentsByLecturerId(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	userId := c.Get("userId").(uint)
-	students, err := services.GetStudentsByLecturerId(userId)
+
+	userID ,err := helpers.ConvertUserID(c, "userId")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	students, err := services.GetStudentsByLecturerId(userID)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
 	return c.JSON(http.StatusOK, models.UserToDTOs(students))
 }
 func UpdateUser(c echo.Context) error {
-	userId := c.Get("userId").(uint)
+	userID ,err := helpers.ConvertUserID(c, "userId")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
 	var updateUser models.User
 	if err := c.Bind(&updateUser); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	if err := services.UpdateUser(userId,&updateUser); err != nil {
+	if err := services.UpdateUser(userID ,&updateUser); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -109,13 +120,12 @@ func UpdateUser(c echo.Context) error {
 }
 
 func DeleteUser(c echo.Context) error {
-	var userParams models.User
-	err := c.Bind(&userParams)
+
+	userID ,err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	id := userParams.ID
-	err = services.DeleteUser(uint(id))
+	err = services.DeleteUser(userID)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}

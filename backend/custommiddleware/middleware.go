@@ -16,30 +16,22 @@ func Authentication(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		cookie, err := c.Cookie("token")
-		if err != nil || cookie == nil {
-			c.JSON(http.StatusBadRequest, err.Error())
-			return err
+		if err != nil {
+			return c.JSON(http.StatusUnauthorized, echo.Map{"message": "unauthorized"})
 		}
+
 		token, err := jwt.ParseWithClaims(cookie.Value, &auth.JwtCustomClaims{}, func(t *jwt.Token) (interface{}, error) {
 			return jwtSecret, nil
 		})
 		if err != nil {
-			return c.JSON(http.StatusUnauthorized, echo.Map{
-				"message": "unauthorized",
-				"error":   err.Error(),
-			})
+			return c.JSON(http.StatusUnauthorized, echo.Map{"message": "unauthorized"})
 		}
 
 		if claims, ok := token.Claims.(*auth.JwtCustomClaims); ok && token.Valid {
-			c.Set("userId", uint(claims.UserId))
+			c.Set("userId", claims.UserId)
 			return next(c)
-
-		} else {
-			return c.JSON(http.StatusUnauthorized, echo.Map{
-				"message": "unauthorized",
-			})
-
 		}
+
+		return c.JSON(http.StatusUnauthorized, echo.Map{"message": "unauthorized"})
 	}
 }
-
