@@ -3,7 +3,6 @@ package services
 import (
 	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
-	"gorm.io/gorm"
 )
 
 func CreateProject(project *models.Project) error {
@@ -11,22 +10,11 @@ func CreateProject(project *models.Project) error {
 	if result.Error != nil {
 		return result.Error
 	}
-
-	err := database.DB.Preload("Student", func(db *gorm.DB) *gorm.DB {
-		return db.Select("ID", "Name", "Email", "Role")
-	}).Preload("Lecturer", func(db *gorm.DB) *gorm.DB {
-		return db.Select("ID", "Name", "Email", "Role")
-	}).First(project, project.ID).Error
-
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 func GetProject(id uint) (*models.Project, error) {
 	var project models.Project
-	result := database.DB.First(&project).Where("student_id = ?", id)
+	result := database.DB.Preload("Lecturer").First(&project).Where("student_id = ?", id)
 	return &project, result.Error
 }
 func GetProjectsByLecturerId(lecturerId uint) ([]models.Project, error) {
