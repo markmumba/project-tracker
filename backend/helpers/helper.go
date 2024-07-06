@@ -16,7 +16,6 @@ func ConvertUserID(c echo.Context, key string) (uint, error) {
         }
         return 0, fmt.Errorf("negative user ID not allowed")
     case uint:
-        fmt.Println("it was this case ")
         return id, nil
     default:
         return 0, fmt.Errorf("invalid user ID type")

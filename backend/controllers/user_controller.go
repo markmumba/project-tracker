@@ -85,6 +85,13 @@ func GetAllUsers(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, models.UserToDTOs(users))
 }
+func GetLecturers(c echo.Context) error {
+	lecturers, err := services.GetLecturers()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, models.UserToDTOs(lecturers))
+}
 
 func GetStudentsByLecturerId(c echo.Context) error {
 	var userParams models.User

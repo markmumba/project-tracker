@@ -61,6 +61,12 @@ func GetStudentsByLecturerId(lecturerId uint) ([]models.User, error) {
 	return students, result.Error
 }
 
+func GetLecturers() ([]models.User, error) {
+	var lecturers []models.User
+	result := database.DB.Preload("Role").Where("role_id = 1").Find(&lecturers)
+	return lecturers, result.Error
+}
+
 func UpdateUser(id uint,user *models.User) error {
 	result := database.DB.Save(user).Where("id = ?", id)
 	return result.Error

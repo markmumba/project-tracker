@@ -31,3 +31,10 @@ export interface UserCardProps {
     supervisorName: string | null | undefined;
     submissions: number | null | undefined;
 }
+
+export interface CreateProjectFormData {
+  title: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+}

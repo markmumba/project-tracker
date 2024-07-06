@@ -29,6 +29,7 @@ func Authentication(next echo.HandlerFunc) echo.HandlerFunc {
 
 		if claims, ok := token.Claims.(*auth.JwtCustomClaims); ok && token.Valid {
 			c.Set("userId", claims.UserId)
+	
 			return next(c)
 		}
 

@@ -36,10 +36,7 @@ export function UserCardSkeleton() {
 export function ProjectSkeleton() {
   return (
     <div className={`${shimmer} relative overflow-hidden rounded-xl bg-gray-100 p-2 shadow-sm`}>
-      <div className="mb-4 p-4">
-        <div className="h-5 w-20 rounded-md bg-gray-200" />
-        <div className="mt-2 h-6 w-40 rounded-md bg-gray-200 text-xl font-semibold" />
-      </div>
+   
       <div className="border p-4">
         <h2 className="text-xl font-semibold text-gray-800">
           Project: <span className="h-8 w-60 rounded-md bg-gray-200" />
@@ -55,7 +52,7 @@ export function ProjectSkeleton() {
   );
 }
 
-export default function DashboardSkeleton() {
+export  function DashboardSkeleton() {
   return (
     <div className="border p-4">
       <div className="flex flex-col md:flex-row justify-between">
@@ -69,3 +66,4 @@ export default function DashboardSkeleton() {
     </div>
   );
 }
+

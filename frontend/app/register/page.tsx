@@ -30,7 +30,7 @@ function Register() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(formData);
+        
         try {
             const requestBody = JSON.stringify(formData);
             const response = await axiosInstance.post('/register', requestBody, {

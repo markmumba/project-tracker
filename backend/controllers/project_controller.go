@@ -1,6 +1,7 @@
 package controllers
 
 import (
+
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -34,6 +35,7 @@ func CreateProject(c echo.Context) error {
 func GetProject(c echo.Context) error {
 
 	userID, err := helpers.ConvertUserID(c, "userId")
+	
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

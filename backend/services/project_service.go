@@ -14,9 +14,10 @@ func CreateProject(project *models.Project) error {
 }
 func GetProject(id uint) (*models.Project, error) {
 	var project models.Project
-	result := database.DB.Preload("Lecturer").First(&project).Where("student_id = ?", id)
+	result := database.DB.Preload("Lecturer").Where("student_id = ?", id).First(&project)
 	return &project, result.Error
 }
+
 func GetProjectsByLecturerId(lecturerId uint) ([]models.Project, error) {
 	user, err := GetUser(lecturerId)
 	if err != nil {
