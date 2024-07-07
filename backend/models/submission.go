@@ -15,6 +15,7 @@ type Submission struct {
     Student       User    `gorm:"foreignKey:StudentID"`
 }
 type SubmissionDTO struct {
+    SubmissionID  uint   `json:"submission_id"`
     ProjectID     uint   `json:"project_id"`
     StudentID     uint   `json:"student_id"`
     SubmissionDate string `json:"submission_date"`
@@ -24,6 +25,7 @@ type SubmissionDTO struct {
 
 func  SubmissionToDTO(s *Submission) SubmissionDTO {
     return SubmissionDTO{
+        SubmissionID:  s.ID,
         ProjectID:     s.ProjectID,
         StudentID:     s.StudentID,
         SubmissionDate: s.SubmissionDate,

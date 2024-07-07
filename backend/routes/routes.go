@@ -51,6 +51,7 @@ func SetupRouter() *echo.Echo {
 	{
 		submissionGroup.POST("", controllers.CreateSubmission)
 		submissionGroup.GET("", controllers.GetSubmission)
+		submissionGroup.GET("/all", controllers.GetAllSubmissionByStudentId)
 		submissionGroup.PUT("", controllers.UpdateSubmission)
 		submissionGroup.DELETE("", controllers.DeleteSubmission)
 	}

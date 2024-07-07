@@ -1,9 +1,12 @@
+'use client';
 import SubmissionForm from "@/app/UI/Submission/createsubmission";
 import fetcher, { axiosInstance } from "@/app/fetcher/fetcher";
 import { CreateSubmissionFormData, ProjectDetails } from "@/app/shared/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
+
+// TODO : Get also the time at which the submission is made 
 
 function Submission() {
     const router = useRouter();
@@ -16,19 +19,20 @@ function Submission() {
     console.log(project);
 
     const [formData, setFormData] = useState<CreateSubmissionFormData>({
-        project_id: 0,
-        student_id: 0,
+        project_id: '',
+        student_id: '',
         submission_date: '',
         document_path: '',
         description: '',
     });
+    console.log(formData);
 
     useEffect(() => {
         const currentDate = new Date().toISOString().split('T')[0];
         if (project) {
             setFormData({
-                project_id: project.id,
-                student_id: project.student_id, // Assuming project has a student_id field
+                project_id: project.project_id.toString(),
+                student_id: project.student_id.toString(), // Assuming project has a student_id field
                 submission_date: currentDate,
                 document_path: '',
                 description: '',
@@ -61,13 +65,13 @@ function Submission() {
             });
             console.log('Project created successfully:', response.data);
             setFormData({
-                project_id: 0,
-                student_id: 0,
+                project_id: '',
+                student_id: '',
                 submission_date: '',
                 document_path: '',
                 description: '',
             });
-            router.push('/dashboard');
+            router.push('/dashboard/submission');
         } catch (error) {
             console.error('Error creating project:', error);
         }

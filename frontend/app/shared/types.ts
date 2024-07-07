@@ -1,7 +1,7 @@
 export interface ProjectDetails {
-    id: number;
-    student_id: number;
-    lecturer_id: number;
+    project_id: string;
+    student_id: string;
+    lecturer_id: string;
     lecturer_name: string;
     title: string;
     description: string;
@@ -49,8 +49,8 @@ export interface SubmissionDetails {
     description: string;
 }
 export interface CreateSubmissionFormData {
-    project_id: number;
-    student_id: number;
+    project_id: string;
+    student_id: string;
     submission_date: string;
     document_path: string;
     description: string;

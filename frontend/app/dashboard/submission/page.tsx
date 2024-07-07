@@ -1,7 +1,7 @@
 'use client';
 import Submissions from "@/app/UI/Submission/submissions";
 import fetcher from "@/app/fetcher/fetcher";
-import { SubmissionDetails } from "@/app/shared/types";
+import { ProjectDetails, SubmissionDetails } from "@/app/shared/types";
 import useSWR from "swr";
 
 // TODO 1: get the submissions that belong to current user 
@@ -12,7 +12,8 @@ import useSWR from "swr";
 // TODO 6: add a search bar to filter submissions (future feature)
 
 function SubmissionPage() {
-    const { data: submissions, isLoading:submissionLoading,error: submissionError } = useSWR<SubmissionDetails[]>('/submissions', fetcher);
+    const { data: submissions, isLoading:submissionLoading,error: submissionError } = useSWR<SubmissionDetails[]>('/submissions/all', fetcher);
+    const {data :project, error: projectError} = useSWR<ProjectDetails>('/projects', fetcher);
 
     if (submissionLoading) {
         return <p>Loading...</p>;
@@ -23,7 +24,7 @@ function SubmissionPage() {
 
   return (
     <div>
-        <Submissions submissions={submissions}/>
+        <Submissions submissions={submissions} project={project}/>
     </div>
   );
 }
