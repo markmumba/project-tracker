@@ -1,8 +1,8 @@
 package controllers
 
 import (
-
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/markmumba/project-tracker/helpers"
@@ -14,17 +14,41 @@ import (
 // TODO : update the delete project function to use the id
 // TODO : update all remaining functions to use the helper function
 
-func CreateProject(c echo.Context) error {
+type CreateProjectRequest struct {
+	Title       string `json:"title"`
+	LecturerID  string `json:"lecturer_id"`
+	Description string `json:"description"`
+	StartDate   string `json:"start_date"`
+	EndDate     string `json:"end_date"`
+}
 
+func CreateProject(c echo.Context) error {
 	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	var project models.Project
-	if err := c.Bind(&project); err != nil {
+
+	var request CreateProjectRequest
+	if err := c.Bind(&request); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	project.StudentID = userID
+
+	// Convert lecturer_id to uint
+	lecturerID, err := strconv.ParseUint(request.LecturerID, 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "invalid lecturer_id")
+	}
+
+	// Populate the final Project struct
+	project := models.Project{
+		Title:       request.Title,
+		LecturerID:  uint(lecturerID),
+		Description: request.Description,
+		StartDate:   request.StartDate,
+		EndDate:     request.EndDate,
+		StudentID:   userID,
+	}
+
 	if err := services.CreateProject(&project); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -35,7 +59,7 @@ func CreateProject(c echo.Context) error {
 func GetProject(c echo.Context) error {
 
 	userID, err := helpers.ConvertUserID(c, "userId")
-	
+
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

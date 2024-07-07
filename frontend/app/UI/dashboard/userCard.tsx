@@ -13,7 +13,7 @@ function UserCard({ userDetails, projectDetails }:
       <div className="  bg-gray-100 rounded-xl p-6">
         <div className="mb-1 p-4 rounded-xl">
           <div className='text-lg font-bold '>Name</div>
-          <div className='text-base'>{userDetails?.name}</div>
+          <div className='text-base'>{userDetails?.name} </div>
         </div>
 
         <div className="mb-1 p-4 rounded-xl">

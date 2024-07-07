@@ -34,7 +34,8 @@ export interface UserCardProps {
 
 export interface CreateProjectFormData {
   title: string;
+  lecturer_id: number;
   description: string;
-  startDate: string;
-  endDate: string;
+  start_date: string;
+  end_date: string;
 }
