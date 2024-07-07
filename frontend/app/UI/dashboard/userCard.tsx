@@ -3,8 +3,12 @@ import { ProjectDetails, UserDetails } from "@/app/shared/types";
 import avatar from "/public/images/user.png"
 
 
-function UserCard({ userDetails, projectDetails }:
-  { userDetails?: UserDetails | null | undefined, projectDetails?: ProjectDetails | null | undefined }) {
+function UserCard({ userDetails, projectDetails, submissionCount }:
+  {
+    userDetails?: UserDetails | null | undefined,
+    projectDetails?: ProjectDetails | null | undefined,
+    submissionCount?: number | undefined
+  }) {
   return (
     <div className=" flex flex-col p-4 rounded-lg">
       <div className="w-40 h-40 mx-auto mb-4">
@@ -28,7 +32,7 @@ function UserCard({ userDetails, projectDetails }:
 
         <div className='mb-1 p-4 rounded-xl'>
           <div className='text-lg font-bold'>Submissions</div>
-          <div className='text-base'>{10}</div>
+          <div className='text-base'>{submissionCount}</div>
         </div>
       </div>
     </div>
