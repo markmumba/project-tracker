@@ -9,7 +9,6 @@ import (
 	"github.com/markmumba/project-tracker/custommiddleware"
 )
 
-
 func SetupRouter() *echo.Echo {
 	e := echo.New()
 
@@ -18,8 +17,8 @@ func SetupRouter() *echo.Echo {
 	}))
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000"},
-		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowMethods:     []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 		AllowCredentials: true,
 	}))
 
@@ -35,7 +34,7 @@ func SetupRouter() *echo.Echo {
 		userGroup.GET("", controllers.GetUser)
 		userGroup.GET("/all", controllers.GetAllUsers)
 		userGroup.GET("/students", controllers.GetStudentsByLecturerId)
-		userGroup.GET("/lecturers", controllers.GetLecturers)    
+		userGroup.GET("/lecturers", controllers.GetLecturers)
 		userGroup.PUT("", controllers.UpdateUser)
 		userGroup.DELETE("", controllers.DeleteUser)
 	}
@@ -51,9 +50,9 @@ func SetupRouter() *echo.Echo {
 	submissionGroup := r.Group("/submissions")
 	{
 		submissionGroup.POST("", controllers.CreateSubmission)
-		submissionGroup.GET("/:id", controllers.GetSubmission)
-		submissionGroup.PUT("/:id", controllers.UpdateSubmission)
-		submissionGroup.DELETE("/:id", controllers.DeleteSubmission)
+		submissionGroup.GET("", controllers.GetSubmission)
+		submissionGroup.PUT("", controllers.UpdateSubmission)
+		submissionGroup.DELETE("", controllers.DeleteSubmission)
 	}
 
 	feedbackGroup := r.Group("/feedbacks")
@@ -71,5 +70,5 @@ func SetupRouter() *echo.Echo {
 		communicationGroup.GET("/:project_id", controllers.GetCommunicationHistory)
 	}
 
-	return e	
+	return e
 }

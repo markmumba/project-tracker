@@ -1,5 +1,5 @@
 export interface ProjectDetails {
-    project_id: number;
+    id: number;
     student_id: number;
     lecturer_id: number;
     lecturer_name: string;
@@ -33,9 +33,25 @@ export interface UserCardProps {
 }
 
 export interface CreateProjectFormData {
-  title: string;
-  lecturer_id: number;
-  description: string;
-  start_date: string;
-  end_date: string;
+    title: string;
+    lecturer_id: number;
+    description: string;
+    start_date: string;
+    end_date: string;
+}
+
+export interface SubmissionDetails {
+    submission_id: number;
+    project_id: number;
+    student_id: number;
+    submission_date: string;
+    document_path: string;
+    description: string;
+}
+export interface CreateSubmissionFormData {
+    project_id: number;
+    student_id: number;
+    submission_date: string;
+    document_path: string;
+    description: string;
 }
