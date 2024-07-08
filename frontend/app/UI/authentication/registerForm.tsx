@@ -1,8 +1,9 @@
-import Image from "next/image";
-import registerImage from "/public/images/Sandy_Bus-05_Single-08.jpg"
-import Link from "next/link";
+import React, { useState } from 'react';
+import Image from 'next/image';
+import registerImage from '/public/images/Sandy_Bus-05_Single-08.jpg';
+import { useRouter } from 'next/navigation';
+import Spinner from '../spinner';
 
-//TODO :Add a loading animation between registeration to login 
 
 function RegisterForm({ formData, handleChange, handleSubmit }:
     {
@@ -10,6 +11,14 @@ function RegisterForm({ formData, handleChange, handleSubmit }:
         handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
         handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     }) {
+    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
+
+    const handleLoginClick = () => {
+        setIsLoading(true);
+        router.push('/login');
+    };
+
     return (
         <>
             <div className="flex flex-col md:flex-row h-screen ">
@@ -67,9 +76,12 @@ function RegisterForm({ formData, handleChange, handleSubmit }:
                                 Register
                             </button>
                         </form>
-                        <Link href="/login">
-                        <p className="text-blue-500">Already have an account. Go to Login</p>
-                        </Link>
+                        <button
+                            onClick={handleLoginClick}
+                            className="text-blue-500 w-full py-3 px-4 rounded focus:outline-none"
+                        >
+                            {isLoading ? <Spinner /> : 'Already have an account? Go to Login'}
+                        </button>
                     </div>
                 </div>
                 <div className="md:w-1/2 bg-white flex items-center justify-center">
@@ -85,4 +97,5 @@ function RegisterForm({ formData, handleChange, handleSubmit }:
         </>
     )
 }
+
 export default RegisterForm;

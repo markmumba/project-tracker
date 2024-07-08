@@ -19,7 +19,7 @@ function Submissions({ lecturerSubmissions }: { lecturerSubmissions?: LecturerSu
 
     const handleSubmissionClick = (submissionId: number) => {
         setSelectedSubmissionId(submissionId);
-        router.push('/submission/details');
+        router.push('/dashboard/lecturer/submission');
     };
 
     return (
@@ -33,14 +33,14 @@ function Submissions({ lecturerSubmissions }: { lecturerSubmissions?: LecturerSu
                 >
                     <div className="flex items-center mb-2">
                         <div className="bg-blue-500 h-4 w-4 rounded-full border-2 border-white"></div>
-                        <div className="ml-4 p-4 bg-sky-100 hover:bg-sky-200 rounded-lg flex-grow max-w-5xl">
+                        <div className="ml-4 p-4 bg-gray-100 hover:bg-blue-500 hover:text-white rounded-lg flex-grow max-w-4xl">
                             <p className="mb-2">
                                 <span className='text-lg font-bold'>Description:</span>
                                 {` ${truncateDescription(submission.description, 40)}`}
                             </p>
                             <p className="mb-2">{`Submission Date: ${submission.submission_date}`}</p>
                             <h2>{`Project: ${submission.project_name}`}</h2>
-                            <h3 className="text-medium text-gray-400">{`Student: ${submission.student_name}`}</h3>
+                            <h3 className="text-medium text-gray-400 ">{`Student: ${submission.student_name}`}</h3>
                             <a
                                 href={submission.document_path}
                                 className="text-blue-500 underline"

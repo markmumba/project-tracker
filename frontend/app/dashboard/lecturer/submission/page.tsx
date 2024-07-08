@@ -19,6 +19,8 @@ function SubmissionDetail() {
 
     const { data: submission, error } = useSWR<LecturerSubmissionDetails>(selectedSubmissionId ? `/submissions/${selectedSubmissionId}` : null, fetcher);
 
+    console.log('Submission:', submission);
+
     const [feedback, setFeedback] = useState<string>('');
 
     if (error) {
@@ -38,9 +40,9 @@ function SubmissionDetail() {
     };
 
     return (
-        <div className="p-5">
+        <div className="p-5 max-w-6xl">
             <h1 className="text-3xl font-bold mb-4">Submission Details</h1>
-            <div className="bg-sky-100 p-4 rounded-lg mb-4">
+            <div className="bg-gray-100 p-4 rounded-lg mb-4">
                 <p><strong>Description:</strong> {submission.description}</p>
                 <p><strong>Submission Date:</strong> {submission.submission_date}</p>
                 <p><strong>Project:</strong> {submission.project_name}</p>

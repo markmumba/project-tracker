@@ -1,15 +1,15 @@
 'use client';
 import useSWR from 'swr';
-import UserCard from "../UI/dashboard/studentCard";
+import UserCard from "../UI/dashboard/student/studentCard";
 import fetcher from "../fetcher/fetcher";
 import { DashboardSkeleton, LecturerDashboardSkeleton, UserCardSkeleton } from "../UI/skeletons";
 import { LecturerSubmissionDetails, ProjectDetails, SubmissionDetails, UserDetails } from "../shared/types";
-import NoProject from "../UI/dashboard/noProject";
-import Project from "../UI/dashboard/project";
+import NoProject from "../UI/dashboard/student/noProject";
+import Project from "../UI/dashboard/student/project";
 import { useUserStore } from '../shared/store';
-import StudentCard from '../UI/dashboard/studentCard';
-import LecuturerCard from '../UI/dashboard/lecturerCard';
-import Submissions from '../UI/dashboard/submissions';
+import StudentCard from '../UI/dashboard/student/studentCard';
+import LecuturerCard from '../UI/dashboard/lecturer/lecturerCard';
+import Submissions from '../UI/dashboard/lecturer/submissions';
 
 // TODO : can view due date of project 
 // TODO : be alerted if the submission are not enough 
