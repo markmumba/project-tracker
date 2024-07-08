@@ -71,7 +71,7 @@ function Submission() {
                 document_path: '',
                 description: '',
             });
-            router.push('/dashboard/submission');
+            router.push('/dashboard/student/submission');
         } catch (error) {
             console.error('Error creating project:', error);
         }

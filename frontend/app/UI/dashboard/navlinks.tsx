@@ -13,7 +13,7 @@ import { useUserStore } from '@/app/shared/store';
 
 const studentLinks = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
-  { name: 'Submission', href: '/dashboard/submission', icon: DocumentDuplicateIcon },
+  { name: 'Submission', href: '/dashboard/student/submission', icon: DocumentDuplicateIcon },
   { name: 'Communicate', href: '/dashboard/communication', icon: UserGroupIcon },
 ];
 

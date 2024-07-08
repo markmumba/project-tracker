@@ -66,12 +66,14 @@ function Dashboard() {
 
   if (userDetails.role === 'lecturer') {
     return (
-      <div className="border p-4">
+      <div className="">
         <div className="flex flex-col md:flex-row justify-between">
-          <div className="mb-4 md:mb-0 md:w-3/4 border p-4 flex-grow">
+          <div className="mb-4 md:mb-0 md:w-3/4  p-4 flex-grow">
+            <h1 className="text-2xl font-bold mb-4"> Welcome back Lecturer {userDetails.name}</h1>
+            <h1 className="text-2xl font-bold mb-4"> Latest Submissions</h1>
             <Submissions lecturerSubmissions={lecturerSubmissions} />
           </div>
-          <div className="md:w-1/4 border p-4">
+          <div className="md:w-1/4  p-4">
             <LecuturerCard userDetails={userDetails} studentCount={studentCount} />
           </div>
         </div>

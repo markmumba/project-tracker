@@ -29,7 +29,7 @@ function Submissions({ submissions, project }: { submissions: SubmissionDetails[
         <div className="p-5">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Submissions</h1>
-                <Link href="/dashboard/submission/createsubmission">
+                <Link href="/dashboard/student/submission/createsubmission">
                     <button
                         className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
                     >
@@ -47,21 +47,16 @@ function Submissions({ submissions, project }: { submissions: SubmissionDetails[
                     >
                         <div className="flex items-center mb-2">
                             <div className="bg-blue-500 h-4 w-4 rounded-full border-2 border-white"></div>
-                            <div className="ml-4 p-4 bg-sky-100 rounded-lg flex-grow max-w-5xl">
+                            <div className="ml-4 p-4 bg-gray-100 hover:bg-blue-500 hover:text-white group rounded-lg flex-grow max-w-5xl">
                                 <p className="mb-2">
                                     <span className='text-lg font-bold'>Description</span>
                                     {`: ${truncateDescription(submission.description, 40)}`}
                                 </p>
                                 <p className="mb-2">{`Submission Date: ${submission.submission_date}`}</p>
                                 <h2 className="">{`Project: ${project?.title}`}</h2>
-                                <a
-                                    href={submission.document_path}
-                                    className="text-blue-500 underline"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
+                                <Link href={submission.document_path} className="text-blue-500 group-hover:text-white underline">
                                     View Document
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </div>

@@ -14,7 +14,7 @@ function LoginForm({ formData, handleChange, handleSubmit }: {
             <div className="flex flex-col md:flex-row h-screen ">
                 <div className="md:w-1/2 bg-gray-200 flex items-center justify-center">
                     <div className="max-w-md w-full p-8">
-                        <h2 className="text-4xl font-bold text-center">Student</h2>
+                        <h2 className="text-4xl font-bold text-center">User</h2>
                         <h2 className="text-3xl font-bold mb-6 text-center">Login</h2>
                         <form onSubmit={handleSubmit}>
 
