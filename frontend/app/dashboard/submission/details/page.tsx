@@ -6,7 +6,8 @@ import { useSubmissionStore } from '@/app/shared/store';
 import { LecturerSubmissionDetails } from '@/app/shared/types';
 import fetcher from '@/app/fetcher/fetcher';
 
-const SubmissionDetail: React.FC = () => {
+function SubmissionDetail() {
+
     const router = useRouter();
     const selectedSubmissionId = useSubmissionStore((state) => state.selectedSubmissionId);
 

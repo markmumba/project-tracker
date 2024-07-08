@@ -50,13 +50,10 @@ func CreateSubmission(c echo.Context) error {
 }
 
 func GetSubmission(c echo.Context) error {
-	var submissionParams models.Submission
-
-	err := c.Bind(&submissionParams)
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	id := submissionParams.ID
 	submission, err := services.GetSubmission(uint(id))
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())

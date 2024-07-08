@@ -50,7 +50,7 @@ func SetupRouter() *echo.Echo {
 	submissionGroup := r.Group("/submissions")
 	{
 		submissionGroup.POST("", controllers.CreateSubmission)
-		submissionGroup.GET("", controllers.GetSubmission)
+		submissionGroup.GET("/:id", controllers.GetSubmission)
 		submissionGroup.GET("/student", controllers.GetAllSubmissionByStudentId)
 		submissionGroup.GET("/lecturer", controllers.GetSubmissionsByLecturer)
 		submissionGroup.PUT("", controllers.UpdateSubmission)
