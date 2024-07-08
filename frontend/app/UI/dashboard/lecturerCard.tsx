@@ -1,12 +1,13 @@
 
-import {  UserDetails } from "@/app/shared/types";
+import { UserDetails } from "@/app/shared/types";
 import avatar from "/public/images/user.png"
 
 
-function LecturerCard({ userDetails}:
+function LecturerCard({ userDetails,studentCount }:
     {
         userDetails?: UserDetails | null | undefined,
-     
+        studentCount?: number | null | undefined,
+
     }) {
     return (
         <div className=" flex flex-col p-4 rounded-lg">
@@ -21,7 +22,7 @@ function LecturerCard({ userDetails}:
 
                 <div className="mb-1 p-4 rounded-xl">
                     <div className='text-lg font-bold '>Students Under Supervision</div>
-                    <div className='text-base'>{userDetails?.email}</div>
+                    <div className='text-base'>{studentCount}</div>
                 </div>
             </div>
         </div>

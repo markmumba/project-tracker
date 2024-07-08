@@ -12,6 +12,7 @@ import LecuturerCard from '../UI/dashboard/lecturerCard';
 
 // TODO : can view due date of project 
 // TODO : be alerted if the submission are not enough 
+// TODO : middleware to check auth so no page can load without auth
 
 
 function Dashboard() {
@@ -30,21 +31,16 @@ function Dashboard() {
 
   const { data: projectDetails, error: projectError } = useSWR<ProjectDetails>(
     shouldFetch ? '/projects' : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false
-    }
+    fetcher
   );
 
   const { data: submissions, error: submissionError } = useSWR<SubmissionDetails[]>(
     shouldFetch ? '/submissions/all' : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false
-    }
+    fetcher
   );
+
+  const {data : students , error : studentError} = useSWR<UserDetails[]>('/users/students', fetcher);
+  console.log(students);
 
   if (userLoading) {
     return <DashboardSkeleton />;
@@ -62,8 +58,12 @@ function Dashboard() {
   if (submissionError) {
     console.error(submissionError);
   }
+  if (studentError) {
+    console.error(studentError);
+  }
 
   const submissionCount = submissions ? submissions.length : 0;
+  const studentCount = students ? students.length : 0;
 
   if (!userDetails) {
     return <div>No user data available</div>;
@@ -77,7 +77,7 @@ function Dashboard() {
         <h1>Feedbacks are here </h1>
           </div>
           <div className="md:w-1/4 border p-4">
-            <LecuturerCard userDetails={userDetails} />
+            <LecuturerCard userDetails={userDetails} studentCount={studentCount}/>
           </div>
         </div>
       </div>

@@ -47,18 +47,19 @@ func GetAllUsers() ([]models.User, error) {
 	return users, result.Error
 }
 
-
-func GetStudentsByLecturerId(lecturerId uint) ([]models.User, error) {
-	user, err := GetUser(lecturerId)
+func GetStudentsByLecturer(lecturerID uint) ([]models.User, error) {
+	var projects []models.Project
+	err := database.DB.Preload("Student").Where("lecturer_id = ?", lecturerID).Find(&projects).Error
 	if err != nil {
 		return nil, err
 	}
-	if user.Role.Name != "lecturer" {
-		return nil, errors.New("user is not a lecturer")
-	}
+
 	var students []models.User
-	result := database.DB.Where("lecturer_id = ?", lecturerId).Find(&students)
-	return students, result.Error
+	for _, project := range projects {
+		students = append(students, project.Student)
+	}
+
+	return students, nil
 }
 
 func GetLecturers() ([]models.User, error) {
@@ -67,11 +68,10 @@ func GetLecturers() ([]models.User, error) {
 	return lecturers, result.Error
 }
 
-func UpdateUser(id uint,user *models.User) error {
+func UpdateUser(id uint, user *models.User) error {
 	result := database.DB.Save(user).Where("id = ?", id)
 	return result.Error
 }
-
 
 func DeleteUser(id uint) error {
 	var user models.User

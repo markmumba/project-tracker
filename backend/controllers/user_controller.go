@@ -94,17 +94,12 @@ func GetLecturers(c echo.Context) error {
 }
 
 func GetStudentsByLecturerId(c echo.Context) error {
-	var userParams models.User
-	err := c.Bind(&userParams)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
 
 	userID ,err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	students, err := services.GetStudentsByLecturerId(userID)
+	students, err := services.GetStudentsByLecturer(userID)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}

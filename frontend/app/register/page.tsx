@@ -1,13 +1,11 @@
-'use client'
-import { useState } from "react";
-import RegisterForm from "../UI/authentication/registerForm";
-import { axiosInstance } from "../fetcher/fetcher";
+'use client';
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { axiosInstance } from "../fetcher/fetcher";
 import { useAuthStore } from "../shared/store";
 import { registerFormData } from "../shared/types";
-
-
-
+import RegisterForm from "../UI/authentication/registerForm";
+import Spinner from "../UI/spinner";
 
 function Register() {
     const router = useRouter();
@@ -19,6 +17,7 @@ function Register() {
         password: '',
         role_id: 2
     });
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -30,7 +29,7 @@ function Register() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        
+        setLoading(true);
         try {
             const requestBody = JSON.stringify(formData);
             const response = await axiosInstance.post('/register', requestBody, {
@@ -40,14 +39,16 @@ function Register() {
             });
             setSuccessMessage('Registration successful! Please log in.');
             router.push('/login');
-
-
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
+
     return (
         <>
+            {loading && <Spinner />} {/* Conditionally render the spinner */}
             <RegisterForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
         </>
     )
