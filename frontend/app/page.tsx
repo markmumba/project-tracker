@@ -1,15 +1,12 @@
 import { useEffect } from "react";
 import Hero from "./UI/homepage/hero";
-import { useAuthStatus } from "./shared/store";
+import AboutSection from "./UI/homepage/about";
 
-// create the homepage a hero section 
 export default function Home() {
-
-
-
   return (
     <>
       <Hero />
+      <AboutSection />
     </>
 
   );
