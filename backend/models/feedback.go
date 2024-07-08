@@ -10,8 +10,8 @@ type Feedback struct {
     LecturerID   uint   `json:"lecturer_id"`
     FeedbackDate string `json:"feedback_date"`
     Comments     string `json:"comments"`
-    Submission   Submission `gorm:"foreignKey:SubmissionID"`
-    Lecturer     User       `gorm:"foreignKey:LecturerID"`
+    Submission   Submission `gorm:"foreignKey:SubmissionID" json:"-"`
+    Lecturer     User       `gorm:"foreignKey:LecturerID" json:"-"`
 }
 
 type FeedbackDTO struct {

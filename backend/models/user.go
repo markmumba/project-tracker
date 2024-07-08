@@ -11,7 +11,7 @@ type User struct {
 	Email    string `json:"email" gorm:"unique"`
 	Password string `json:"password"`
 	RoleID   uint   `json:"role_id"`
-	Role     Role `gorm:"foreignKey:RoleID"`
+	Role     Role `gorm:"foreignKey:RoleID" json:"-"`
 }
 
 type UserDTO struct {

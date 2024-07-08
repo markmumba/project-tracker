@@ -2,12 +2,15 @@ import { useSubmissionStore } from '@/app/shared/store';
 import { LecturerSubmissionDetails, UserDetails } from '@/app/shared/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Spinner from '../../spinner';
 
 
 function Submissions({ lecturerSubmissions }: {
     lecturerSubmissions?: LecturerSubmissionDetails[] | undefined | null,
 }) {
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
 
     const setSelectedSubmissionId = useSubmissionStore((state) => state.setSelectedSubmissionId);
 
@@ -21,8 +24,10 @@ function Submissions({ lecturerSubmissions }: {
     };
 
     const handleSubmissionClick = (submissionId: number) => {
+        setIsLoading(true);
         setSelectedSubmissionId(submissionId);
         router.push('/dashboard/lecturer/submission');
+        
     };
 
     return (
@@ -51,6 +56,8 @@ function Submissions({ lecturerSubmissions }: {
                     </div>
                 </div>
             ))}
+            {isLoading && 
+                <Spinner />}
         </div>
     );
 };

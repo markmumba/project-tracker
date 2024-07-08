@@ -59,7 +59,7 @@ func GetSubmission(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, models.SubmissionToDTO(submission))
+	return c.JSON(http.StatusOK, submission)
 }
 
 func GetSubmissionsByLecturer(c echo.Context) error {

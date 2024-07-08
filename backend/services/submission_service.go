@@ -20,8 +20,16 @@ func CreateSubmission(submission *models.Submission) error {
 
 func GetSubmission(id uint) (*models.Submission, error) {
 	var submission models.Submission
-	result := database.DB.First(&submission, id)
-	return &submission, result.Error
+	result := database.DB.Preload("Project").Preload("Student").First(&submission, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	// Populate the ProjectName and StudentName fields
+	submission.ProjectName = submission.Project.Title
+	submission.StudentName = submission.Student.Name
+
+	return &submission, nil
 }
 
 func GetAllSubmissionByStudentId(studentId uint) ([]models.Submission, error) {
