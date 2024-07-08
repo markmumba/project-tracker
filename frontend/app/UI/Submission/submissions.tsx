@@ -5,6 +5,7 @@ import { ProjectDetails, SubmissionDetails } from '@/app/shared/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import SubmissionModal from './submissionmodal';
+import { truncateDescription } from '@/app/shared/helper';
 
 type SubmissionsProps = {
     submissions: SubmissionDetails[] | null | undefined;
@@ -14,24 +15,12 @@ type SubmissionsProps = {
 function Submissions({ submissions, project }: { submissions: SubmissionDetails[] | null | undefined, project: ProjectDetails | null | undefined }) {
     const [selectedSubmission, setSelectedSubmission] = useState<SubmissionDetails | null>(null);
 
-    // Sort submissions by submission_id in descending order
     const sortedSubmissions = submissions?.sort((a, b) => b.submission_id - a.submission_id);
 
-    // Function to truncate description to a specified length
-    const truncateDescription = (description: string, maxLength: number) => {
-        if (description.length <= maxLength) {
-            return description;
-        } else {
-            return description.substring(0, maxLength) + '...';
-        }
-    };
-
-    // Function to handle submission click and open modal
     const handleSubmissionClick = (submission: SubmissionDetails) => {
         setSelectedSubmission(submission);
     };
 
-    // Function to close modal
     const closeModal = () => {
         setSelectedSubmission(null);
     };

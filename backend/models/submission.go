@@ -17,11 +17,23 @@ type Submission struct {
 type SubmissionDTO struct {
     SubmissionID  uint   `json:"submission_id"`
     ProjectID     uint   `json:"project_id"`
+    ProjectName string `json:"project_name"`
     StudentID     uint   `json:"student_id"`
+    StudentName  string `json:"student_name"`
     SubmissionDate string `json:"submission_date"`
     DocumentPath  string `json:"document_path"`
     Description   string `json:"description"`
 }
+
+type SubmissionDetails struct {
+    SubmissionID   uint   `json:"submission_id"`
+    SubmissionDate string `json:"submission_date"`
+    DocumentPath   string `json:"document_path"`
+    Description    string `json:"description"`
+    ProjectName    string `json:"project_name"`
+    StudentName    string `json:"student_name"`
+}
+
 
 func  SubmissionToDTO(s *Submission) SubmissionDTO {
     return SubmissionDTO{

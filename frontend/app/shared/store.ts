@@ -18,3 +18,16 @@ export const useUserStore = create<UserState>((set) => ({
     role: null,
     setRole: (role) => set({ role }),
 }));
+
+
+
+
+interface SubmissionState {
+    selectedSubmissionId: number | null;
+    setSelectedSubmissionId: (id: number) => void;
+}
+
+export const useSubmissionStore = create<SubmissionState>((set) => ({
+    selectedSubmissionId: null,
+    setSelectedSubmissionId: (id: number) => set({ selectedSubmissionId: id }),
+}));

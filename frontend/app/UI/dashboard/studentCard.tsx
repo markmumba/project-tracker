@@ -11,7 +11,7 @@ function StudentCard({ userDetails, projectDetails, submissionCount }:
   }) {
   return (
     <div className=" flex flex-col p-4 rounded-lg">
-      <div className="w-40 h-40 mx-auto mb-4">
+      <div className="w-30 h-20 mx-auto mb-4">
         <img src={avatar.src} alt="avatar" className="w-full h-full rounded-full object-cover" />
       </div>
       <div className="  bg-gray-100 rounded-xl p-6">

@@ -65,6 +65,19 @@ func GetSubmission(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.SubmissionToDTO(submission))
 }
 
+func GetSubmissionsByLecturer(c echo.Context) error {
+
+	userID, err := helpers.ConvertUserID(c, "userId")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	submissions, err := services.GetSubmissionsByLecturer(userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, submissions)
+}
+
 func GetAllSubmissionByStudentId(c echo.Context) error {
 	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {

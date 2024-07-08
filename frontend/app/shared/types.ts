@@ -55,3 +55,14 @@ export interface CreateSubmissionFormData {
     document_path: string;
     description: string;
 }
+
+export interface LecturerSubmissionDetails {
+    submission_id: number;
+    submission_date: string;
+    document_path: string;
+    description: string;
+    project_name: string;
+    project_id: number;
+    student_name: string;
+    student_id: number;
+}
