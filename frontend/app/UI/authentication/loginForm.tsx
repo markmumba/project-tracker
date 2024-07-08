@@ -2,6 +2,7 @@
 import Image from "next/image";
 import registerImage from "/public/images/Sandy_Bus-05_Single-08.jpg"
 import Link from "next/link";
+// TODO :Add a loading animation between login to Dashboard 
 
 function LoginForm({ formData, handleChange, handleSubmit }: {
     formData: { email: string; password: string; };

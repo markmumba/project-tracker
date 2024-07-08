@@ -4,18 +4,17 @@ interface AuthState {
     successMessage: string | null;
     setSuccessMessage: (message: string | null) => void;
 }
-interface AuthStatus {
-    isAuthenticated: boolean;
-    setAuthenticated: (value: boolean) => void;
-}
-
-
 export const useAuthStore = create<AuthState>((set) => ({
     successMessage: null,
     setSuccessMessage: (message) => set({ successMessage: message })
 }));
 
-export const useAuthStatus = create<AuthStatus>((set) => ({
-    isAuthenticated: false,
-    setAuthenticated: (value) => set({ isAuthenticated: value }),
+interface UserState {
+    role: string | null;
+    setRole: (role: string) => void;
+}
+
+export const useUserStore = create<UserState>((set) => ({
+    role: null,
+    setRole: (role) => set({ role }),
 }));

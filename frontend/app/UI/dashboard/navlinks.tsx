@@ -4,19 +4,30 @@ import {
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
+  ChatBubbleBottomCenterTextIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import { useUserStore } from '@/app/shared/store';
 
-const links = [
+const studentLinks = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
   { name: 'Submission', href: '/dashboard/submission', icon: DocumentDuplicateIcon },
   { name: 'Communicate', href: '/dashboard/communication', icon: UserGroupIcon },
 ];
 
- function NavLinks() {
+const lecturerLinks = [
+  { name: 'Home', href: '/dashboard', icon: HomeIcon },
+  { name: 'Feedback', href: '/dashboard/feedback', icon: ChatBubbleBottomCenterTextIcon },
+  { name: 'Communicate', href: '/dashboard/communication', icon: UserGroupIcon },
+];
+
+function NavLinks() {
   const pathname = usePathname();
+  const role = useUserStore((state) => state.role);
+
+  const links = role === 'lecturer' ? lecturerLinks : studentLinks;
 
   return (
     <>
@@ -41,4 +52,5 @@ const links = [
     </>
   );
 }
+
 export default NavLinks;

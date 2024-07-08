@@ -1,23 +1,35 @@
 'use client';
 import useSWR from 'swr';
-import UserCard from "../UI/dashboard/userCard";
+import UserCard from "../UI/dashboard/studentCard";
 import fetcher from "../fetcher/fetcher";
 import { DashboardSkeleton, LecturerDashboardSkeleton } from "../UI/skeletons";
 import { ProjectDetails, SubmissionDetails, UserDetails } from "../shared/types";
 import NoProject from "../UI/dashboard/noProject";
 import Project from "../UI/dashboard/project";
+import { useUserStore } from '../shared/store';
+import StudentCard from '../UI/dashboard/studentCard';
+import LecuturerCard from '../UI/dashboard/lecturerCard';
+
+// TODO : can view due date of project 
+// TODO : be alerted if the submission are not enough 
+
 
 function Dashboard() {
   const { data: userDetails, isLoading: userLoading, error: userError } = useSWR<UserDetails>('/users', fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false
   });
+  const setRole = useUserStore((state) => state.setRole);
 
-  // Fetch project details and submissions only if userDetails are available and the user is not a lecturer
+  // Set role in Zustand store when userDetails are fetched
+  if (userDetails) {
+    setRole(userDetails.role);
+  }
+
   const shouldFetch = userDetails && userDetails.role !== 'lecturer';
 
   const { data: projectDetails, error: projectError } = useSWR<ProjectDetails>(
-    shouldFetch ? '/projects' : null, 
+    shouldFetch ? '/projects' : null,
     fetcher,
     {
       revalidateOnFocus: false,
@@ -26,7 +38,7 @@ function Dashboard() {
   );
 
   const { data: submissions, error: submissionError } = useSWR<SubmissionDetails[]>(
-    shouldFetch ? '/submissions/all' : null, 
+    shouldFetch ? '/submissions/all' : null,
     fetcher,
     {
       revalidateOnFocus: false,
@@ -59,8 +71,15 @@ function Dashboard() {
 
   if (userDetails.role === 'lecturer') {
     return (
-      <div>
-        <h1>This is the lecturers page</h1>
+      <div className="border p-4">
+        <div className="flex flex-col md:flex-row justify-between">
+          <div className="mb-4 md:mb-0 md:w-3/4 border p-4 flex-grow">
+        <h1>Feedbacks are here </h1>
+          </div>
+          <div className="md:w-1/4 border p-4">
+            <LecuturerCard userDetails={userDetails} />
+          </div>
+        </div>
       </div>
     );
   }
@@ -76,7 +95,7 @@ function Dashboard() {
           )}
         </div>
         <div className="md:w-1/4 border p-4">
-          <UserCard userDetails={userDetails} projectDetails={projectDetails} submissionCount={submissionCount} />
+          <StudentCard userDetails={userDetails} projectDetails={projectDetails} submissionCount={submissionCount} />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 // Loading animation
-const shimmer =
-  'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
+const shimmer = 'relative overflow-hidden before:absolute before:inset-0 before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent before:-translate-x-full';
+
 
 export function UserCardSkeleton() {
   return (
@@ -12,17 +12,14 @@ export function UserCardSkeleton() {
             <div className={`${shimmer} h-6 w-20 rounded-md bg-gray-200 mb-2`} />
             <div className={`${shimmer} h-4 w-full rounded-md bg-gray-200`} />
           </div>
-
           <div className="mb-1 p-4">
             <div className={`${shimmer} h-6 w-20 rounded-md bg-gray-200 mb-2`} />
             <div className={`${shimmer} h-4 w-full rounded-md bg-gray-200`} />
           </div>
-
           <div className="mb-1 p-4">
             <div className={`${shimmer} h-6 w-20 rounded-md bg-gray-200 mb-2`} />
             <div className={`${shimmer} h-4 w-full rounded-md bg-gray-200`} />
           </div>
-
           <div className="mb-1 p-4">
             <div className={`${shimmer} h-6 w-20 rounded-md bg-gray-200 mb-2`} />
             <div className={`${shimmer} h-4 w-full rounded-md bg-gray-200`} />
@@ -36,16 +33,15 @@ export function UserCardSkeleton() {
 export function ProjectSkeleton() {
   return (
     <div className={`${shimmer} relative overflow-hidden rounded-xl bg-gray-100 p-2 shadow-sm`}>
-
-      <div className="border p-4">
+      <div className=" p-4">
         <h2 className="text-xl font-semibold text-gray-800">
-          Project: <span className="h-8 w-60 rounded-md bg-gray-200" />
+          Project: <span className="h-8 w-60 rounded-md bg-gray-200 inline-block" />
         </h2>
         <p className="mt-2 text-gray-600">
-          Supervisor: <span className="h-6 w-40 rounded-md bg-gray-200" />
+          Supervisor: <span className="h-6 w-40 rounded-md bg-gray-200 inline-block" />
         </p>
         <p className="mt-2 text-gray-600">
-          Description: <span className="h-6 w-96 rounded-md bg-gray-200" />
+          Description: <span className="h-6 w-96 rounded-md bg-gray-200 inline-block" />
         </p>
       </div>
     </div>
@@ -66,6 +62,7 @@ export function DashboardSkeleton() {
     </div>
   );
 }
+
 
 export function LecturerDashboardSkeleton() {
   return (

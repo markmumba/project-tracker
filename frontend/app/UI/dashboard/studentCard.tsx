@@ -3,7 +3,7 @@ import { ProjectDetails, UserDetails } from "@/app/shared/types";
 import avatar from "/public/images/user.png"
 
 
-function UserCard({ userDetails, projectDetails, submissionCount }:
+function StudentCard({ userDetails, projectDetails, submissionCount }:
   {
     userDetails?: UserDetails | null | undefined,
     projectDetails?: ProjectDetails | null | undefined,
@@ -39,4 +39,4 @@ function UserCard({ userDetails, projectDetails, submissionCount }:
   );
 };
 
-export default UserCard;
+export default StudentCard;
