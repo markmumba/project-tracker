@@ -21,6 +21,9 @@ const config: Config = {
       animation: {
         shimmer: 'shimmer 2s infinite',
       },
+      boxShadow: {
+        blue:'0 0 100px  theme("colors.blue.400"), 0 0 600px theme("colors.blue.500")'
+      },
     },
   },
   plugins: [],

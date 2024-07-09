@@ -31,12 +31,16 @@ function SubmissionDetail() {
         return <div>Loading...</div>;
     }
 
-    const handleFeedbackSubmit = async (e: React.FormEvent) => {
+    async function handleFeedbackSubmit(e: React.FormEvent) {
         e.preventDefault();
-        // Handle feedback submission logic
-        console.log('Feedback:', feedback);
-        // Clear the input
-        setFeedback('');
+        try {
+            const responseJson = JSON.stringify(feedback);
+            console.log('Feedback:', feedback);
+            setFeedback('');
+        } catch (error) {
+            console.error('Error submitting feedback:', error);
+        }
+
     };
 
     return (
@@ -60,7 +64,7 @@ function SubmissionDetail() {
                         value={feedback}
                         onChange={(e) => setFeedback(e.target.value)}
                         rows={4}
-                        className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500 sm:text-sm"
                         required
                     />
                 </div>
