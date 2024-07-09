@@ -66,3 +66,8 @@ export interface LecturerSubmissionDetails {
     student_name: string;
     student_id: number;
 }
+export interface CreateFeedbackFormData {   
+    submission_id: number|null|undefined;
+    feedback_date: string;
+    comments: string;
+}

@@ -1,15 +1,13 @@
-'use client';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import React, { useState, useEffect } from 'react';
 import { useSubmissionStore } from '@/app/shared/store';
-import { LecturerSubmissionDetails } from '@/app/shared/types';
-import fetcher from '@/app/fetcher/fetcher';
+import { CreateFeedbackFormData, LecturerSubmissionDetails } from '@/app/shared/types';
+import fetcher, { axiosInstance } from '@/app/fetcher/fetcher';
 
 function SubmissionDetail() {
-
     const router = useRouter();
-    const selectedSubmissionId = useSubmissionStore((state) => state.selectedSubmissionId);
+    const { selectedSubmissionId, markAsFeedbackGiven } = useSubmissionStore();
 
     useEffect(() => {
         if (!selectedSubmissionId) {
@@ -19,9 +17,11 @@ function SubmissionDetail() {
 
     const { data: submission, error } = useSWR<LecturerSubmissionDetails>(selectedSubmissionId ? `/submissions/${selectedSubmissionId}` : null, fetcher);
 
-    console.log('Submission:', submission);
-
-    const [feedback, setFeedback] = useState<string>('');
+    const [feedback, setFeedback] = useState<CreateFeedbackFormData>({
+        submission_id: selectedSubmissionId,
+        feedback_date: new Date().toISOString(),
+        comments: '',
+    });
 
     if (error) {
         return <div>Error loading submission details</div>;
@@ -35,12 +35,28 @@ function SubmissionDetail() {
         e.preventDefault();
         try {
             const responseJson = JSON.stringify(feedback);
-            console.log('Feedback:', feedback);
-            setFeedback('');
+            console.log('Feedback:', responseJson);
+
+            const response = await axiosInstance.post('/feedbacks', feedback, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (selectedSubmissionId) {
+                markAsFeedbackGiven(selectedSubmissionId);
+            }
+
+            setFeedback({
+                submission_id: selectedSubmissionId,
+                feedback_date: new Date().toISOString(),
+                comments: '',
+            });
+
+            router.push('/dashboard');
         } catch (error) {
             console.error('Error submitting feedback:', error);
         }
-
     };
 
     return (
@@ -61,8 +77,8 @@ function SubmissionDetail() {
                     <textarea
                         id="feedback"
                         name="feedback"
-                        value={feedback}
-                        onChange={(e) => setFeedback(e.target.value)}
+                        value={feedback.comments}
+                        onChange={(e) => setFeedback({ ...feedback, comments: e.target.value })}
                         rows={4}
                         className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500 sm:text-sm"
                         required

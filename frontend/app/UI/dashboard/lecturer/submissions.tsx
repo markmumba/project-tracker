@@ -1,18 +1,16 @@
-import { useSubmissionStore } from '@/app/shared/store';
-import { LecturerSubmissionDetails, UserDetails } from '@/app/shared/types';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import Spinner from '../../spinner';
-
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useSubmissionStore } from "@/app/shared/store";
+import { LecturerSubmissionDetails } from "@/app/shared/types";
+import Spinner from "../../spinner";
 
 function Submissions({ lecturerSubmissions }: {
     lecturerSubmissions?: LecturerSubmissionDetails[] | undefined | null,
 }) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-
-    const setSelectedSubmissionId = useSubmissionStore((state) => state.setSelectedSubmissionId);
+    const { setSelectedSubmissionId, feedbackGiven } = useSubmissionStore();
 
     const sortedSubmissions = lecturerSubmissions?.sort((a, b) => b.submission_id - a.submission_id);
 
@@ -27,7 +25,6 @@ function Submissions({ lecturerSubmissions }: {
         setIsLoading(true);
         setSelectedSubmissionId(submissionId);
         router.push('/dashboard/lecturer/submission');
-        
     };
 
     return (
@@ -36,7 +33,7 @@ function Submissions({ lecturerSubmissions }: {
             {sortedSubmissions?.map((submission) => (
                 <div
                     key={submission.submission_id}
-                    className="relative pl-8 mb-4 cursor-pointer"
+                    className={`relative pl-8 mb-4 cursor-pointer ${feedbackGiven[submission.submission_id] ? 'bg-green-100' : ''}`}
                     onClick={() => handleSubmissionClick(submission.submission_id)}
                 >
                     <div className="flex items-center mb-2 group">
@@ -49,18 +46,16 @@ function Submissions({ lecturerSubmissions }: {
                             <p className="mb-2">{`Submission Date: ${submission.submission_date}`}</p>
                             <h2>{`Project: ${submission.project_name}`}</h2>
                             <h3 className="text-medium text-gray-400 group-hover:text-gray-100 ">{`Student: ${submission.student_name}`}</h3>
-                            <Link href={submission.document_path} className="text-blue-500 underline group-hover:text-white  ">
+                            <Link href={submission.document_path} className="text-blue-500 underline group-hover:text-white">
                                 View Document
                             </Link>
                         </div>
                     </div>
                 </div>
             ))}
-            {isLoading && 
-                <Spinner />}
+            {isLoading && <Spinner />}
         </div>
     );
 };
 
 export default Submissions;
-
