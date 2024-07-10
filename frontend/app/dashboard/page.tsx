@@ -35,6 +35,7 @@ function Dashboard() {
 
   const { data: lecturerSubmissions, error: lecturerSubmissionError } = useSWR<LecturerSubmissionDetails[]>('/submissions/lecturer', fetcher);
 
+  console.log(lecturerSubmissions);
 
   if (userLoading) {
     return <DashboardSkeleton />;

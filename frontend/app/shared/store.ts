@@ -19,21 +19,15 @@ export const useUserStore = create<UserState>((set) => ({
     setRole: (role) => set({ role }),
 }));
 
+
+
+
 interface SubmissionState {
     selectedSubmissionId: number | null;
     setSelectedSubmissionId: (id: number) => void;
-    feedbackGiven: Record<number, boolean>;
-    markAsFeedbackGiven: (id: number) => void;
 }
 
 export const useSubmissionStore = create<SubmissionState>((set) => ({
     selectedSubmissionId: null,
     setSelectedSubmissionId: (id: number) => set({ selectedSubmissionId: id }),
-    feedbackGiven: {},
-    markAsFeedbackGiven: (id) => set((state) => ({
-        feedbackGiven: {
-            ...state.feedbackGiven,
-            [id]: true
-        }
-    })),
 }));
