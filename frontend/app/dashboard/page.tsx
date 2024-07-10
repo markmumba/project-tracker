@@ -2,7 +2,7 @@
 import useSWR from 'swr';
 import fetcher from "../fetcher/fetcher";
 import { DashboardSkeleton, LecturerDashboardSkeleton, UserCardSkeleton } from "../UI/skeletons";
-import { LecturerSubmissionDetails, ProjectDetails, SubmissionDetails, UserDetails } from "../shared/types";
+import { FeedbackDetails, LecturerSubmissionDetails, ProjectDetails, SubmissionDetails, UserDetails } from "../shared/types";
 import NoProject from "../UI/dashboard/student/noProject";
 import Project from "../UI/dashboard/student/project";
 import { useUserStore } from '../shared/store';
@@ -10,6 +10,7 @@ import StudentCard from '../UI/dashboard/student/studentCard';
 import LecuturerCard from '../UI/dashboard/lecturer/lecturerCard';
 import Submissions from '../UI/dashboard/lecturer/submissions';
 import { useEffect } from 'react';
+import Feedback from '../UI/dashboard/student/feedback';
 
 // TODO : can view due date of project 
 // TODO : be alerted if the submission are not enough 
@@ -32,10 +33,10 @@ function Dashboard() {
   const { data: projectDetails, error: projectError } = useSWR<ProjectDetails>(shouldFetch ? '/projects' : null, fetcher);
   const { data: submissions, error: submissionError } = useSWR<SubmissionDetails[]>(shouldFetch ? '/submissions/student' : null, fetcher);
   const { data: students, error: studentError } = useSWR<UserDetails[]>('/users/students', fetcher);
+  const { data: feedbackDetails, error: feedbackError } = useSWR<FeedbackDetails[]>('/feedbacks', fetcher);
   const { data: lecturerSubmissions, error: lecturerSubmissionError } = useSWR<LecturerSubmissionDetails[]>('/submissions/lecturer', fetcher);
-  console.log("this is the dashboard",lecturerSubmissions);
 
-  console.log(lecturerSubmissions);
+  console.log(feedbackDetails);
 
   if (userLoading) {
     return <DashboardSkeleton />;
@@ -90,7 +91,10 @@ function Dashboard() {
       <div className="flex flex-col md:flex-row justify-between">
         <div className="mb-4 md:mb-0 md:w-3/4 border p-4 flex-grow">
           {projectDetails ? (
-            <Project projectDetails={projectDetails} userDetails={userDetails} />
+            <>
+              <Project projectDetails={projectDetails} userDetails={userDetails} />
+              <Feedback feedbackDetails={feedbackDetails} />
+            </>
           ) : (
             <NoProject userDetails={userDetails} />
           )}

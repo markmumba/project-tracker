@@ -74,3 +74,11 @@ export interface CreateFeedbackFormData {
     feedback_date: string;
     comments: string;
 }
+
+export interface FeedbackDetails {
+    id: number;
+    submission_id: number;
+    feedback_date: string;
+    comments: string;
+    submission: SubmissionDetails;
+}

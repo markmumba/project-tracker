@@ -12,10 +12,20 @@ func CreateFeedback(feedback *models.Feedback) error {
 	}
 	return nil
 }
-func GetFeedback(id uint) (*models.Feedback, error) {
-	var feedback models.Feedback
-	result := database.DB.First(&feedback, id)
-	return &feedback, result.Error
+
+func GetFeedbackByStudent(id uint) (*[]models.Feedback, error) {
+    var feedback []models.Feedback
+    err := database.DB.Table("feedbacks").
+        Select("feedbacks.id, feedbacks.feedback_date, feedbacks.comments, submissions.id as submission_id, submissions.submission_date, submissions.document_path, submissions.description, submissions.project_name, submissions.student_name").
+        Joins("JOIN submissions ON feedbacks.submission_id = submissions.id").
+        Where("submissions.student_id = ?", id).
+        Find(&feedback).Error
+
+    if err != nil {
+        return nil, err
+    }
+
+    return &feedback, nil
 }
 
 func GetAllFeedback() ([]models.Feedback, error) {

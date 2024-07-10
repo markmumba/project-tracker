@@ -29,19 +29,17 @@ func CreateFeedback(c echo.Context) error {
 	return c.JSON(http.StatusCreated, models.FeedbackToDTO(&feedback))
 }
 
-func GetFeedback(c echo.Context) error {
-	var feedbackParams models.Feedback
-	err := c.Bind(&feedbackParams)
+func GetFeedbackByStudent(c echo.Context) error {
+	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	id := feedbackParams.ID
-	feedback, err := services.GetFeedback(uint(id))
+	feedback, err := services.GetFeedbackByStudent(uint(userID))
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, models.FeedbackToDTO(feedback))
+	return c.JSON(http.StatusOK, feedback)
 }
 
 func GetAllFeedback(c echo.Context) error {
