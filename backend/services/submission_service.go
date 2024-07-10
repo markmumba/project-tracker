@@ -1,6 +1,7 @@
 package services
 
 import (
+
 	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
 )
@@ -37,7 +38,7 @@ func GetAllSubmissionByStudentId(studentId uint) ([]models.Submission, error) {
 	if err != nil {
 		return nil, err
 	}
-	if user.Role.Name != "student" {
+	if user.RoleID != 2 {
 		return nil, nil
 	}
 	var submissions []models.Submission
@@ -60,8 +61,23 @@ func GetSubmissionsByLecturer(lecturerID uint) ([]models.SubmissionDTO, error) {
 	return submissions, nil
 }
 
-func UpdateSubmission(submission *models.Submission) error {
-	result := database.DB.Save(submission)
+func UpdateSubmission(submission *models.Submission, id uint) error {
+	// Find the submission by ID
+	var existingSubmission models.Submission
+	result := database.DB.First(&existingSubmission, id)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	// Update fields of the existing submission
+	existingSubmission.Description = submission.Description
+	existingSubmission.SubmissionDate = submission.SubmissionDate
+	existingSubmission.ProjectName = submission.ProjectName
+	existingSubmission.StudentName = submission.StudentName
+	existingSubmission.Reviewed = submission.Reviewed // Assuming Reviewed is a field in models.Submission
+
+	// Save the updated submission
+	result = database.DB.Save(&existingSubmission)
 	return result.Error
 }
 

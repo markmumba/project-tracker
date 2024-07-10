@@ -13,6 +13,7 @@ type Submission struct {
 	Description    string  `json:"description"`
 	Project        Project `gorm:"foreignKey:ProjectID" json:"-"`
 	Student        User    `gorm:"foreignKey:StudentID" json:"-"`
+	Reviewed       bool    `json:"reviewed"`
 	ProjectName    string  `json:"project_name" gorm:"-"`
 	StudentName    string  `json:"student_name" gorm:"-"`
 }
@@ -24,6 +25,7 @@ type SubmissionDTO struct {
 	StudentName    string `json:"student_name"`
 	SubmissionDate string `json:"submission_date"`
 	DocumentPath   string `json:"document_path"`
+	Reviewed 	 bool   `json:"reviewed"`
 	Description    string `json:"description"`
 }
 
@@ -35,6 +37,7 @@ func SubmissionToDTO(s *Submission) SubmissionDTO {
 		SubmissionDate: s.SubmissionDate,
 		DocumentPath:   s.DocumentPath,
 		Description:    s.Description,
+		Reviewed:       s.Reviewed,
 	}
 }
 

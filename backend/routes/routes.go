@@ -53,7 +53,7 @@ func SetupRouter() *echo.Echo {
 		submissionGroup.GET("/:id", controllers.GetSubmission)
 		submissionGroup.GET("/student", controllers.GetAllSubmissionByStudentId)
 		submissionGroup.GET("/lecturer", controllers.GetSubmissionsByLecturer)
-		submissionGroup.PUT("", controllers.UpdateSubmission)
+		submissionGroup.PUT("/:id", controllers.UpdateSubmission)
 		submissionGroup.DELETE("", controllers.DeleteSubmission)
 	}
 

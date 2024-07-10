@@ -47,6 +47,7 @@ export interface SubmissionDetails {
     submission_date: string;
     document_path: string;
     description: string;
+    reviewed: boolean;
 }
 export interface CreateSubmissionFormData {
     project_id: string;
@@ -54,6 +55,7 @@ export interface CreateSubmissionFormData {
     submission_date: string;
     document_path: string;
     description: string;
+    reviewed: boolean;
 }
 
 export interface LecturerSubmissionDetails {
@@ -65,6 +67,7 @@ export interface LecturerSubmissionDetails {
     project_id: number;
     student_name: string;
     student_id: number;
+    reviewed: boolean;
 }
 export interface CreateFeedbackFormData {
     submission_id: number | null | undefined;

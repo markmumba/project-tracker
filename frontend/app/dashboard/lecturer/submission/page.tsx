@@ -7,9 +7,9 @@ import { CreateFeedbackFormData, LecturerSubmissionDetails } from '@/app/shared/
 import fetcher, { axiosInstance } from '@/app/fetcher/fetcher';
 
 function SubmissionDetail() {
-
     const router = useRouter();
     const selectedSubmissionId = useSubmissionStore((state) => state.selectedSubmissionId);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (!selectedSubmissionId) {
@@ -17,7 +17,10 @@ function SubmissionDetail() {
         }
     }, [selectedSubmissionId, router]);
 
-    const { data: submission, error } = useSWR<LecturerSubmissionDetails>(selectedSubmissionId ? `/submissions/${selectedSubmissionId}` : null, fetcher);
+    const { data: submission, error, mutate } = useSWR<LecturerSubmissionDetails>(
+        selectedSubmissionId ? `/submissions/${selectedSubmissionId}` : null,
+        fetcher
+    );
 
     console.log('Submission:', submission);
 
@@ -37,10 +40,19 @@ function SubmissionDetail() {
 
     async function handleFeedbackSubmit(e: React.FormEvent) {
         e.preventDefault();
+        setIsLoading(true);
         try {
             const responseJson = JSON.stringify(feedback);
             console.log('Feedback:', responseJson);
-            const response = await axiosInstance.post('/feedback', responseJson, {
+            const response = await axiosInstance.post('/feedbacks', responseJson, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            // Assuming your backend updates the 'reviewed' field upon successful feedback submission
+            await axiosInstance.put(`/submissions/${selectedSubmissionId}`, { reviewed: true }, {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,12 +64,17 @@ function SubmissionDetail() {
                 feedback_date: new Date().toISOString(),
                 comments: '',
             });
+
+            // Refetch the submission details to reflect the updated reviewed status
+            mutate();
+
             router.push('/dashboard');
         } catch (error) {
             console.error('Error submitting feedback:', error);
+        } finally {
+            setIsLoading(false);
         }
-
-    };
+    }
 
     return (
         <div className="p-5 max-w-6xl">
@@ -87,12 +104,14 @@ function SubmissionDetail() {
                 <button
                     type="submit"
                     className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
+                    disabled={isLoading}
                 >
-                    Submit Feedback
+                    {isLoading ? 'Submitting...' : 'Submit Feedback'}
                 </button>
             </form>
         </div>
     );
-};
+}
 
 export default SubmissionDetail;
+

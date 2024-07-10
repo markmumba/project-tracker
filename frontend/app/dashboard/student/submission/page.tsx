@@ -14,6 +14,8 @@ import useSWR from "swr";
 function SubmissionPage() {
     const { data: submissions, isLoading:submissionLoading,error: submissionError } = useSWR<SubmissionDetails[]>('/submissions/student', fetcher);
     const {data :project, error: projectError} = useSWR<ProjectDetails>('/projects', fetcher);
+    console.log(submissions);
+    console.log(project);
     
 
     if (submissionLoading) {

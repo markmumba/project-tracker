@@ -20,6 +20,7 @@ function Submission() {
 
     const [formData, setFormData] = useState<CreateSubmissionFormData>({
         project_id: '',
+        reviewed: false,
         student_id: '',
         submission_date: '',
         document_path: '',
@@ -32,7 +33,8 @@ function Submission() {
         if (project) {
             setFormData({
                 project_id: project.project_id.toString(),
-                student_id: project.student_id.toString(), // Assuming project has a student_id field
+                student_id: project.student_id.toString(),
+                reviewed: false, // Assuming project has a student_id field
                 submission_date: currentDate,
                 document_path: '',
                 description: '',
@@ -57,6 +59,7 @@ function Submission() {
         e.preventDefault();
         try {
             const requestBody = JSON.stringify(formData);
+            console.log(requestBody)
             const response = await axiosInstance.post('/submissions', requestBody, {
                 withCredentials: true,
                 headers: {
@@ -66,6 +69,7 @@ function Submission() {
             console.log('Project created successfully:', response.data);
             setFormData({
                 project_id: '',
+                reviewed: false,
                 student_id: '',
                 submission_date: '',
                 document_path: '',

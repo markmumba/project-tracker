@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -17,6 +18,7 @@ type CreateSubmissionRequest struct {
 	SubmissionDate string `json:"submission_date"`
 	DocumentPath   string `json:"document_path"`
 	Description    string `json:"description"`
+	Reviewed       bool   `json:"reviewed"`
 }
 
 func CreateSubmission(c echo.Context) error {
@@ -40,6 +42,7 @@ func CreateSubmission(c echo.Context) error {
 		SubmissionDate: request.SubmissionDate,
 		DocumentPath:   request.DocumentPath,
 		Description:    request.Description,
+		Reviewed: 	 request.Reviewed,
 	}
 
 	if err := services.CreateSubmission(&submission); err != nil {
@@ -77,23 +80,29 @@ func GetSubmissionsByLecturer(c echo.Context) error {
 
 func GetAllSubmissionByStudentId(c echo.Context) error {
 	userID, err := helpers.ConvertUserID(c, "userId")
+	fmt.Println("User ID:", userID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	submissions, err := services.GetAllSubmissionByStudentId(userID)
+	fmt.Println("Submissions:", submissions)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, models.SubmissionToDTOs(submissions))
+	return c.JSON(http.StatusOK, submissions)
 }
 
 func UpdateSubmission(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
 	var submission models.Submission
 	if err := c.Bind(&submission); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	if err := services.UpdateSubmission(&submission); err != nil {
+	if err := services.UpdateSubmission(&submission, uint(id)); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
