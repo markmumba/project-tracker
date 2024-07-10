@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -80,12 +79,10 @@ func GetSubmissionsByLecturer(c echo.Context) error {
 
 func GetAllSubmissionByStudentId(c echo.Context) error {
 	userID, err := helpers.ConvertUserID(c, "userId")
-	fmt.Println("User ID:", userID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	submissions, err := services.GetAllSubmissionByStudentId(userID)
-	fmt.Println("Submissions:", submissions)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

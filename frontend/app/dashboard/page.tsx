@@ -1,6 +1,5 @@
 'use client';
 import useSWR from 'swr';
-import UserCard from "../UI/dashboard/student/studentCard";
 import fetcher from "../fetcher/fetcher";
 import { DashboardSkeleton, LecturerDashboardSkeleton, UserCardSkeleton } from "../UI/skeletons";
 import { LecturerSubmissionDetails, ProjectDetails, SubmissionDetails, UserDetails } from "../shared/types";
@@ -10,6 +9,7 @@ import { useUserStore } from '../shared/store';
 import StudentCard from '../UI/dashboard/student/studentCard';
 import LecuturerCard from '../UI/dashboard/lecturer/lecturerCard';
 import Submissions from '../UI/dashboard/lecturer/submissions';
+import { useEffect } from 'react';
 
 // TODO : can view due date of project 
 // TODO : be alerted if the submission are not enough 
@@ -21,19 +21,19 @@ function Dashboard() {
 
   const setRole = useUserStore((state) => state.setRole);
 
-  if (userDetails) {
-    setRole(userDetails.role);
-  }
+  useEffect(() => {
+    if (userDetails) {
+      setRole(userDetails.role);
+    }
+  }, [userDetails, setRole]);
 
   const shouldFetch = userDetails && userDetails.role !== 'lecturer';
 
   const { data: projectDetails, error: projectError } = useSWR<ProjectDetails>(shouldFetch ? '/projects' : null, fetcher);
-
   const { data: submissions, error: submissionError } = useSWR<SubmissionDetails[]>(shouldFetch ? '/submissions/student' : null, fetcher);
-
   const { data: students, error: studentError } = useSWR<UserDetails[]>('/users/students', fetcher);
-
   const { data: lecturerSubmissions, error: lecturerSubmissionError } = useSWR<LecturerSubmissionDetails[]>('/submissions/lecturer', fetcher);
+  console.log("this is the dashboard",lecturerSubmissions);
 
   console.log(lecturerSubmissions);
 
@@ -53,8 +53,12 @@ function Dashboard() {
   if (submissionError) {
     console.error(submissionError);
   }
+
   if (studentError) {
     console.error(studentError);
+  }
+  if (lecturerSubmissionError) {
+    console.error(lecturerSubmissionError);
   }
 
   const submissionCount = submissions ? submissions.length : 0;
@@ -68,12 +72,12 @@ function Dashboard() {
     return (
       <div className="">
         <div className="flex flex-col md:flex-row justify-between">
-          <div className="mb-4 md:mb-0 md:w-3/4  p-4 flex-grow">
+          <div className="mb-4 md:mb-0 md:w-3/4 p-4 flex-grow">
             <h1 className="text-2xl font-bold mb-4"> Welcome back Lecturer {userDetails.name}</h1>
             <h1 className="text-2xl font-bold mb-4"> Latest Submissions</h1>
             <Submissions lecturerSubmissions={lecturerSubmissions} />
           </div>
-          <div className="md:w-1/4  p-4">
+          <div className="md:w-1/4 p-4">
             <LecuturerCard userDetails={userDetails} studentCount={studentCount} />
           </div>
         </div>

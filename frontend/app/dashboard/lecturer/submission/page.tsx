@@ -51,8 +51,24 @@ function SubmissionDetail() {
                 },
             });
 
-            // Assuming your backend updates the 'reviewed' field upon successful feedback submission
-            await axiosInstance.put(`/submissions/${selectedSubmissionId}`, { reviewed: true }, {
+            // Fetch the current submission data
+            const submissionResponse = await axiosInstance.get(`/submissions/${selectedSubmissionId}`, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const currentSubmission = submissionResponse.data;
+
+            // Update the 'reviewed' field on the current submission data
+            const updatedSubmission = {
+                ...currentSubmission,
+                reviewed: true,
+            };
+
+            // Send the complete updated object in the PUT request
+            await axiosInstance.put(`/submissions/${selectedSubmissionId}`, updatedSubmission, {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,6 +91,7 @@ function SubmissionDetail() {
             setIsLoading(false);
         }
     }
+
 
     return (
         <div className="p-5 max-w-6xl">

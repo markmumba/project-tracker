@@ -12,13 +12,14 @@ export const useAuthStore = create<AuthState>((set) => ({
 interface UserState {
     role: string | null;
     setRole: (role: string) => void;
+    resetUser: () => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
     role: null,
     setRole: (role) => set({ role }),
+    resetUser: () => set({ role: null }),
 }));
-
 
 
 

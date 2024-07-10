@@ -1,7 +1,6 @@
 package services
 
 import (
-
 	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
 )
@@ -46,11 +45,10 @@ func GetAllSubmissionByStudentId(studentId uint) ([]models.Submission, error) {
 	return submissions, result.Error
 }
 
-// GetSubmissionsByLecturer retrieves all submissions made by students supervised by a specific lecturer.
 func GetSubmissionsByLecturer(lecturerID uint) ([]models.SubmissionDTO, error) {
 	var submissions []models.SubmissionDTO
 	err := database.DB.Table("submissions").
-		Select("submissions.id as submission_id, projects.id as project_id, users.id as student_id, submissions.submission_date, submissions.document_path, submissions.description, projects.title as project_name, users.name as student_name").
+		Select("submissions.id as submission_id, projects.id as project_id, users.id as student_id, submissions.submission_date, submissions.document_path, submissions.description, projects.title as project_name, users.name as student_name, submissions.reviewed").
 		Joins("JOIN projects ON projects.id = submissions.project_id").
 		Joins("JOIN users ON users.id = submissions.student_id").
 		Where("projects.lecturer_id = ?", lecturerID).
