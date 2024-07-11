@@ -37,8 +37,8 @@ function Submissions({ submissions, project }: { submissions: SubmissionDetails[
                     </button>
                 </Link>
             </div>
-            <div className="relative">
-                <div className="absolute left-2 top-0 bottom-0 border-l-2 border-gray-300"></div>
+            <div className="relative ">
+                <div className="absolute left-2 top-0 bottom-0 border-l-2 border-gray-300 "></div>
                 {sortedSubmissions?.map((submission) => (
                     <div
                         key={submission.submission_id}
@@ -46,8 +46,8 @@ function Submissions({ submissions, project }: { submissions: SubmissionDetails[
                         onClick={() => handleSubmissionClick(submission)}
                     >
                         <div className="flex items-center mb-2">
-                            <div className="animate-ping bg-blue-500 h-4 w-4 rounded-full border-2 border-white"></div>
-                            <div className="ml-4 p-4 bg-gray-100 hover:bg-blue-500 hover:text-white group rounded-lg flex-grow max-w-5xl">
+                            <div className=" bg-blue-500 h-4 w-4 rounded-full border-2 border-white"></div>
+                            <div className="ml-4 p-4 bg-blue-500/20 backdrop-blur-xl hover:bg-blue-500 hover:text-white group rounded-lg flex-grow max-w-5xl">
                                 <p className="mb-2">
                                     <span className='text-lg font-bold'>Description</span>
                                     {`: ${truncateDescription(submission.description, 40)}`}

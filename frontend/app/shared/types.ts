@@ -76,9 +76,13 @@ export interface CreateFeedbackFormData {
 }
 
 export interface FeedbackDetails {
-    id: number;
-    submission_id: number;
+    feedback_id: number;
     feedback_date: string;
     comments: string;
-    submission: SubmissionDetails;
+    submission_id: number;
+    submission_date: string;
+    document_path: string;
+    description: string;
+    student_name: string;
+    student_email: string;
 }

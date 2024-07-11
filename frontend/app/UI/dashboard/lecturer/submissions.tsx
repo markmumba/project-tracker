@@ -18,8 +18,7 @@ function Submissions({ lecturerSubmissions }: {
     const reviewedTrueSubmissions = lecturerSubmissions?.filter(submission => submission.reviewed) ?? [];
 
     // Sort both lists by submission_id
-    const sortedReviewedFalseSubmissions = reviewedFalseSubmissions.sort((a, b) => b.submission_id - a.submission_id);
-    const sortedReviewedTrueSubmissions = reviewedTrueSubmissions.sort((a, b) => b.submission_id - a.submission_id);
+
 
     const truncateDescription = (description: string, maxLength: number) => {
         if (description.length > maxLength) {
@@ -48,7 +47,7 @@ function Submissions({ lecturerSubmissions }: {
 
             {/* Display submissions based on toggle state */}
             {showReviewed ?
-                sortedReviewedTrueSubmissions.map((submission) => (
+                reviewedTrueSubmissions.map((submission) => (
                     <div
                         key={submission.submission_id}
                         className="relative pl-8 mb-4 cursor-pointer"
@@ -72,7 +71,7 @@ function Submissions({ lecturerSubmissions }: {
                     </div>
                 ))
                 :
-                sortedReviewedFalseSubmissions.map((submission) => (
+                reviewedFalseSubmissions.map((submission) => (
                     <div
                         key={submission.submission_id}
                         className="relative pl-8 mb-4 cursor-pointer"

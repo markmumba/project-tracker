@@ -12,20 +12,31 @@ func CreateFeedback(feedback *models.Feedback) error {
 	}
 	return nil
 }
+func GetFeedback(id uint) (*models.Feedback, error) {
+	var feedback models.Feedback
+	result := database.DB.First(&feedback, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &feedback, nil
+}
 
-func GetFeedbackByStudent(id uint) (*[]models.Feedback, error) {
-    var feedback []models.Feedback
-    err := database.DB.Table("feedbacks").
-        Select("feedbacks.id, feedbacks.feedback_date, feedbacks.comments, submissions.id as submission_id, submissions.submission_date, submissions.document_path, submissions.description, submissions.project_name, submissions.student_name").
+func GetFeedbackByStudent(studentID uint) (*[]models.FeedbackResponse, error) {
+    var feedbackResponses []models.FeedbackResponse
+
+    err := database.DB.
+        Table("feedbacks").
+        Select("feedbacks.id as feedback_id, feedbacks.feedback_date, feedbacks.comments, submissions.id as submission_id, submissions.submission_date, submissions.document_path, submissions.description, users.name as student_name, users.email as student_email").
         Joins("JOIN submissions ON feedbacks.submission_id = submissions.id").
-        Where("submissions.student_id = ?", id).
-        Find(&feedback).Error
+        Joins("JOIN users ON submissions.student_id = users.id").
+        Where("submissions.student_id = ?", studentID).
+        Scan(&feedbackResponses).Error
 
     if err != nil {
         return nil, err
     }
 
-    return &feedback, nil
+    return &feedbackResponses, nil
 }
 
 func GetAllFeedback() ([]models.Feedback, error) {

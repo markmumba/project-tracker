@@ -14,6 +14,18 @@ type Feedback struct {
 	Lecturer     User       `gorm:"foreignKey:LecturerID"  `
 }
 
+type FeedbackResponse struct {
+    FeedbackID      uint   `json:"feedback_id"`
+    FeedbackDate    string `json:"feedback_date"`
+    Comments        string `json:"comments"`
+    SubmissionID    uint   `json:"submission_id"`
+    SubmissionDate  string `json:"submission_date"`
+    DocumentPath    string `json:"document_path"`
+    Description     string `json:"description"`
+    StudentName     string `json:"student_name"`
+    StudentEmail    string `json:"student_email"`
+}
+
 type FeedbackDTO struct {
 	SubmissionID uint   `json:"submission_id"`
 	LecturerID   uint   `json:"lecturer_id"`

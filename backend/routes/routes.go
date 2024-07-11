@@ -60,7 +60,7 @@ func SetupRouter() *echo.Echo {
 	feedbackGroup := r.Group("/feedbacks")
 	{
 		feedbackGroup.POST("", controllers.CreateFeedback)
-		feedbackGroup.GET("", controllers.GetFeedbackByStudent)
+		feedbackGroup.GET("/student", controllers.GetFeedbackByStudent)
 		feedbackGroup.GET("", controllers.GetAllFeedback)
 		feedbackGroup.PUT("/:id", controllers.UpdateFeedback)
 		feedbackGroup.DELETE("/:id", controllers.DeleteFeedback)
