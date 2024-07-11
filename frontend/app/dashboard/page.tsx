@@ -36,7 +36,6 @@ function Dashboard() {
   const { data: feedbackDetails, error: feedbackError } = useSWR<FeedbackDetails[]>('/feedbacks/student', fetcher);
   const { data: lecturerSubmissions, error: lecturerSubmissionError } = useSWR<LecturerSubmissionDetails[]>('/submissions/lecturer', fetcher);
 
-  console.log("This is the feedback you got", feedbackDetails);
 
   if (userLoading) {
     return <DashboardSkeleton />;
@@ -58,9 +57,14 @@ function Dashboard() {
   if (studentError) {
     console.error(studentError);
   }
+  if (feedbackError) {
+    console.error(feedbackError);
+  }
+
   if (lecturerSubmissionError) {
     console.error(lecturerSubmissionError);
   }
+
 
   const submissionCount = submissions ? submissions.length : 0;
   const studentCount = students ? students.length : 0;

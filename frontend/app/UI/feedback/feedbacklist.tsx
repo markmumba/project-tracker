@@ -1,10 +1,16 @@
-import { useState } from 'react';
-import { formatFeedbackDate, truncateDescription } from '@/app/shared/helper';
-import { FeedbackDetails } from '@/app/shared/types';
-import Link from 'next/link';
-import FeedbackModal from './feedbackmodal';
+'use client';
+import { formatFeedbackDate, truncateDescription } from "@/app/shared/helper";
+import { FeedbackDetails } from "@/app/shared/types";
+import Link from "next/link";
+import { useState } from "react";
+import FeedbackModal from "../dashboard/student/feedbackmodal";
 
-function Feedbacks({ feedbackDetails }: { feedbackDetails: FeedbackDetails[] | undefined | null }) {
+
+function FeedbackList({ feedbackDetails }: { feedbackDetails: FeedbackDetails[] | undefined | null }) {
+
+
+    const sortedFeedback = feedbackDetails?.slice().sort((a, b) => new Date(b.feedback_date).getTime() - new Date(a.feedback_date).getTime());
+
     const [selectedFeedback, setSelectedFeedback] = useState<FeedbackDetails | null>(null);
 
     const handleFeedbackClick = (feedback: FeedbackDetails) => {
@@ -15,23 +21,10 @@ function Feedbacks({ feedbackDetails }: { feedbackDetails: FeedbackDetails[] | u
         setSelectedFeedback(null);
     };
 
-    const sortedFeedback = feedbackDetails?.slice().sort((a, b) => new Date(b.feedback_date).getTime() - new Date(a.feedback_date).getTime());
-
-    const displayedFeedback = sortedFeedback?.slice(0, 2);
-
     return (
-        <div className="pt-10">
-            <h1 className="text-3xl font-bold">Feedback</h1>
-            <div className="flex justify-end mb-4">
-
-                <Link href="/dashboard/student/feedback"
-                    className="bg-blue-300 py-2 px-4 rounded-full hover:bg-blue-400 focus:outline-none focus:bg-blue-400">
-                    View all feedback
-                </Link>
-
-            </div>
-
-            {displayedFeedback?.map((feedback) => (
+        <div>
+            <h1 className="text-3xl py-4 font-bold">Full Feedback List</h1>
+            {sortedFeedback?.map((feedback) => (
                 <div
                     key={feedback.feedback_id}
                     className="relative pl-8 mb-4 cursor-pointer"
@@ -59,7 +52,6 @@ function Feedbacks({ feedbackDetails }: { feedbackDetails: FeedbackDetails[] | u
                 <FeedbackModal feedback={selectedFeedback} onClose={closeModal} />
             )}
         </div>
-    );
+    )
 }
-
-export default Feedbacks;
+export default FeedbackList;
