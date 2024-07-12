@@ -120,3 +120,11 @@ func DeleteSubmission(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, "Submission deleted successfully")
 }
+
+func GetAllSubmissions (c echo.Context) error {
+	submissions, err := services.GetAllSubmissions()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, submissions)
+}

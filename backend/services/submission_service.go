@@ -84,3 +84,13 @@ func DeleteSubmission(id uint) error {
 	result := database.DB.Delete(&submission, id)
 	return result.Error
 }
+
+func GetAllSubmissions() ([]models.Submission, error) {
+
+	var submissions []models.Submission
+	err := database.DB.Preload("Project").Preload("Student").Find(&submissions)
+	if err.Error != nil {
+		return nil, err.Error
+	}
+	return submissions, nil
+}

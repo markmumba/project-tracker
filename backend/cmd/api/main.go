@@ -28,7 +28,30 @@ func main() {
 		&models.Feedback{},
 		&models.CommunicationHistory{},
 	)
-	
+
+	// Create roles
+	roles := []models.Role{
+
+		{Name: "lecturer"},
+		{Name: "student"},
+	}
+	for _, role := range roles {
+		database.DB.Create(&role)
+	}
+
+	// Create lecturer users
+	lecturers := []models.User{
+
+		{Name: "Paul Mwaniki", Email: "paulmwaniki@gmail.com", Password: "qwerty1234", RoleID: 1},
+		{Name: "Florence Kimani", Email: "florencekimani@gmail.com", Password: "qwerty1234", RoleID: 1},
+
+	}
+	for _, lecturer := range lecturers {
+		database.DB.Create(&lecturer)
+	}
+
+	log.Println("Database seeded successfully")
+
 	handler := routes.SetupRouter()
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 

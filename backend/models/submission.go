@@ -25,7 +25,7 @@ type SubmissionDTO struct {
 	StudentName    string `json:"student_name"`
 	SubmissionDate string `json:"submission_date"`
 	DocumentPath   string `json:"document_path"`
-	Reviewed 	 bool   `json:"reviewed"`
+	Reviewed       bool   `json:"reviewed"`
 	Description    string `json:"description"`
 }
 
