@@ -27,9 +27,9 @@ func Login(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 	c.SetCookie(&http.Cookie{
-		Name:     "token",
-		Value:    token,
-		Expires:  time.Now().Add(time.Hour * 72),
+		Name:    "token",
+		Value:   token,
+		Expires: time.Now().Add(time.Hour * 72),
 	})
 
 	return c.JSON(http.StatusOK, echo.Map{
@@ -55,7 +55,7 @@ func CreateUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	if err := services.CreateUser(&user); err != nil {	// Print type for debugging
+	if err := services.CreateUser(&user); err != nil { // Print type for debugging
 
 		// Safely assert and handle the userID type
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -65,7 +65,7 @@ func CreateUser(c echo.Context) error {
 }
 
 func GetUser(c echo.Context) error {
-	userID ,err := helpers.ConvertUserID(c, "userId")
+	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -76,7 +76,6 @@ func GetUser(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, models.UserToDTO(user))
 }
-
 
 func GetAllUsers(c echo.Context) error {
 	users, err := services.GetAllUsers()
@@ -95,7 +94,7 @@ func GetLecturers(c echo.Context) error {
 
 func GetStudentsByLecturerId(c echo.Context) error {
 
-	userID ,err := helpers.ConvertUserID(c, "userId")
+	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -106,7 +105,7 @@ func GetStudentsByLecturerId(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.UserToDTOs(students))
 }
 func UpdateUser(c echo.Context) error {
-	userID ,err := helpers.ConvertUserID(c, "userId")
+	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -114,16 +113,36 @@ func UpdateUser(c echo.Context) error {
 	if err := c.Bind(&updateUser); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	if err := services.UpdateUser(userID ,&updateUser); err != nil {
+	if err := services.UpdateUser(userID, &updateUser); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, models.UserToDTO(&updateUser))
 }
 
+func UpdateUserProfileImage(c echo.Context) error {
+	var image struct {
+		ProfileImage string `json:"profile_image"`
+	}
+	userID, err := helpers.ConvertUserID(c, "userId")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	if err := c.Bind(&image); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	err = services.UpdateUserProfileImage(userID, image.ProfileImage)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, "Profile image updated successfully")
+}
+
+
 func DeleteUser(c echo.Context) error {
 
-	userID ,err := helpers.ConvertUserID(c, "userId")
+	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

@@ -1,30 +1,29 @@
 package models
 
 import (
-
 	"gorm.io/gorm"
 )
 
 type User struct {
 	gorm.Model
-	Name     string `json:"name"`
-	Email    string `json:"email" gorm:"unique"`
-	Password string `json:"password"`
-	RoleID   uint   `json:"role_id"`
-	Role     Role `gorm:"foreignKey:RoleID" json:"-"`
+	Name         string `json:"name"`
+	Email        string `json:"email" gorm:"unique"`
+	Password     string `json:"password"`
+	RoleID       uint   `json:"role_id"`
+	Role         Role   `gorm:"foreignKey:RoleID" json:"-"`
+	ProfileImage string `json:"profile_image"`
 }
 
 type UserDTO struct {
-	Id 	 uint   `json:"id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Role     string `json:"role"`
+	Id    uint   `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+	Role  string `json:"role"`
 }
-
 
 func UserToDTO(u *User) UserDTO {
 	return UserDTO{
-		Id : u.ID,
+		Id:    u.ID,
 		Name:  u.Name,
 		Email: u.Email,
 		Role:  u.Role.Name,

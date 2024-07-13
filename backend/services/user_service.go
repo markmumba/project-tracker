@@ -73,6 +73,14 @@ func UpdateUser(id uint, user *models.User) error {
 	return result.Error
 }
 
+func UpdateUserProfileImage (id uint, profileImage string) error {
+	err := database.DB.Model(&models.User{}).Where("id = ?", id).Update("profile_image", profileImage).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func DeleteUser(id uint) error {
 	var user models.User
 	result := database.DB.Delete(&user, id)

@@ -20,6 +20,7 @@ func main() {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 	database.ConnectDB()
+	database.InitFirebase()
 
 	if len(os.Args) > 1 && os.Args[1] == "migrate" {
 		database.DB.AutoMigrate(

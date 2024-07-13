@@ -10,10 +10,11 @@ export interface ProjectDetails {
 }
 
 export interface UserDetails {
-    id: number;
-    name: string;
-    email: string;
-    role: string;
+    id?: number;
+    name?: string;
+    email?: string;
+    role?: string;
+    profile_image?: string;
 }
 export interface loginFormData {
     email: string;

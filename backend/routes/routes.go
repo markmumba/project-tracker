@@ -36,6 +36,7 @@ func SetupRouter() *echo.Echo {
 		userGroup.GET("/students", controllers.GetStudentsByLecturerId)
 		userGroup.GET("/lecturers", controllers.GetLecturers)
 		userGroup.PUT("", controllers.UpdateUser)
+		userGroup.POST("/profile", controllers.UpdateUserProfileImage)	
 		userGroup.DELETE("", controllers.DeleteUser)
 	}
 
