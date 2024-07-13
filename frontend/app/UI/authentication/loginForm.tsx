@@ -54,7 +54,7 @@ function LoginForm({ formData, handleChange, handleSubmit }: {
                             </button>
                         </form>
                         <Link href="/register">
-                            <p className="text-blue-500">Don`t have an account ? Register</p>
+                            <p className="text-blue-500">Don&apos;t have an account ? Register</p>
                         </Link>
                     </div>
                 </div>

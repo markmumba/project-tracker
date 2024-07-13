@@ -9,7 +9,7 @@ function StudentCard({ userDetails, projectDetails, submissionCount }:
   {
     userDetails?: UserDetails | null | undefined,
     projectDetails?: ProjectDetails | null | undefined,
-    submissionCount?: number | undefined
+    submissionCount?: number | undefined 
   }) {
   return (
     <>
