@@ -8,7 +8,7 @@ done
 echo "Postgres is up - executing command"
 
 # Run migrations
-.main migrate
+./main migrate
 
 # Run the application
-.main
+./main

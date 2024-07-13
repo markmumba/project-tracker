@@ -15,7 +15,7 @@ function StudentCard({ userDetails, projectDetails, submissionCount }:
     <>
       <div className=" flex flex-col p-4 rounded-lg">
         <div className="w-30 h-20 mx-auto mb-4">
-          <Image src={avatar.src} alt="avatar" className="w-full h-full rounded-full object-cover" />
+          <Image src={avatar.src} width={300} height={300} alt="avatar" className="w-full h-full rounded-full object-cover" />
         </div>
         <div className="  bg-gray-100 rounded-xl p-6">
           <div className="mb-1 p-4 rounded-xl">

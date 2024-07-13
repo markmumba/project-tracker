@@ -67,7 +67,6 @@ function Dashboard() {
 
 
   const submissionCount = submissions ? submissions.length : 0;
-  const studentCount = students ? students.length : 0;
 
   if (!userDetails) {
     return <div>No user data available</div>;
@@ -83,7 +82,7 @@ function Dashboard() {
             <Submissions lecturerSubmissions={lecturerSubmissions} />
           </div>
           <div className="md:w-1/4 p-4">
-            <LecuturerCard userDetails={userDetails} studentCount={studentCount} />
+            <LecuturerCard userDetails={userDetails} students={students}/>
           </div>
         </div>
       </div>
