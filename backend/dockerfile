@@ -16,14 +16,8 @@ COPY . .
 # Build the Go app
 RUN go build -o main ./cmd/api
 
-# Use a minimal base image
-FROM alpine:latest
+RUN chmod +x init.sh
 
-# Set the Current Working Directory inside the container
-WORKDIR /app
-
-# Copy the pre-built binary file from the builder image
-COPY --from=builder /app/main .
 
 # Expose port 8080 to the outside world
 EXPOSE 8080

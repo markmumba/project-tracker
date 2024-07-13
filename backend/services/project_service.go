@@ -23,7 +23,7 @@ func GetProjectsByLecturerId(lecturerId uint) ([]models.Project, error) {
 	if err != nil {
 		return nil, err
 	}
-	if user.Role.Name != "lecturer" {
+	if user.Role.ID != 1 {
 		return nil, nil
 	}
 	var projects []models.Project

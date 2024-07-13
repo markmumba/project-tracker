@@ -20,37 +20,19 @@ func main() {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 	database.ConnectDB()
-	database.DB.AutoMigrate(
-		&models.Role{},
-		&models.User{},
-		&models.Project{},
-		&models.Submission{},
-		&models.Feedback{},
-		&models.CommunicationHistory{},
-	)
 
-	// Create roles
-	roles := []models.Role{
-
-		{Name: "lecturer"},
-		{Name: "student"},
+	if len(os.Args) > 1 && os.Args[1] == "migrate" {
+		database.DB.AutoMigrate(
+			&models.Role{},
+			&models.User{},
+			&models.Project{},
+			&models.Submission{},
+			&models.Feedback{},
+			&models.CommunicationHistory{},
+		)
+		fmt.Println("Migration completed.")
+		return
 	}
-	for _, role := range roles {
-		database.DB.Create(&role)
-	}
-
-	// Create lecturer users
-	lecturers := []models.User{
-
-		{Name: "Paul Mwaniki", Email: "paulmwaniki@gmail.com", Password: "qwerty1234", RoleID: 1},
-		{Name: "Florence Kimani", Email: "florencekimani@gmail.com", Password: "qwerty1234", RoleID: 1},
-
-	}
-	for _, lecturer := range lecturers {
-		database.DB.Create(&lecturer)
-	}
-
-	log.Println("Database seeded successfully")
 
 	handler := routes.SetupRouter()
 	port, _ := strconv.Atoi(os.Getenv("PORT"))

@@ -2,6 +2,7 @@
 import { ProjectDetails, UserDetails } from "@/app/shared/types";
 import avatar from "/public/images/user.png"
 import TimeRemaining from "./timeremaining";
+import Image from "next/image";
 
 
 function StudentCard({ userDetails, projectDetails, submissionCount }:
@@ -14,7 +15,7 @@ function StudentCard({ userDetails, projectDetails, submissionCount }:
     <>
       <div className=" flex flex-col p-4 rounded-lg">
         <div className="w-30 h-20 mx-auto mb-4">
-          <img src={avatar.src} alt="avatar" className="w-full h-full rounded-full object-cover" />
+          <Image src={avatar.src} alt="avatar" className="w-full h-full rounded-full object-cover" />
         </div>
         <div className="  bg-gray-100 rounded-xl p-6">
           <div className="mb-1 p-4 rounded-xl">
