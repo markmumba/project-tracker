@@ -11,8 +11,17 @@ import (
 
 // TODO : get the latest feedback for the student
 
-func CreateFeedback(c echo.Context) error {
+type FeedbackController struct {
+	feedbackService *services.FeedbackService
+}
 
+func NewFeedbackController(feedbackService *services.FeedbackService) *FeedbackController {
+	return &FeedbackController{
+		feedbackService: feedbackService,
+	}
+}
+
+func (fc *FeedbackController) CreateFeedback(c echo.Context) error {
 	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -22,19 +31,19 @@ func CreateFeedback(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	feedback.LecturerID = userID
-	if err := services.CreateFeedback(&feedback); err != nil {
+	if err := fc.feedbackService.CreateFeedback(&feedback); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusCreated, models.FeedbackToDTO(&feedback))
 }
 
-func GetFeedbackByStudent(c echo.Context) error {
+func (fc *FeedbackController) GetFeedbackByStudent(c echo.Context) error {
 	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	feedback, err := services.GetFeedbackByStudent(uint(userID))
+	feedback, err := fc.feedbackService.GetFeedbackByStudent(uint(userID))
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
@@ -42,34 +51,35 @@ func GetFeedbackByStudent(c echo.Context) error {
 	return c.JSON(http.StatusOK, feedback)
 }
 
-func GetAllFeedback(c echo.Context) error {
-	feedbacks, err := services.GetAllFeedback()
+func (fc *FeedbackController) GetAllFeedback(c echo.Context) error {
+	feedbacks, err := fc.feedbackService.GetAllFeedback()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, models.FeedbackToDTOs(feedbacks))
 }
-func UpdateFeedback(c echo.Context) error {
+
+func (fc *FeedbackController) UpdateFeedback(c echo.Context) error {
 	var feedback models.Feedback
 	if err := c.Bind(&feedback); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	if err := services.UpdateFeedback(&feedback); err != nil {
+	if err := fc.feedbackService.UpdateFeedback(&feedback); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, models.FeedbackToDTO(&feedback))
 }
 
-func DeleteFeedback(c echo.Context) error {
+func (fc *FeedbackController) DeleteFeedback(c echo.Context) error {
 	var feedbackParams models.Feedback
 	err := c.Bind(&feedbackParams)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	id := feedbackParams.ID
-	err = services.DeleteFeedback(uint(id))
+	err = fc.feedbackService.DeleteFeedback(uint(id))
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}

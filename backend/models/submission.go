@@ -1,43 +1,32 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type Submission struct {
-	gorm.Model
-	ProjectID      uint    `json:"project_id"`
-	StudentID      uint    `json:"student_id"`
-	SubmissionDate string  `json:"submission_date"`
-	DocumentPath   string  `json:"document_path"`
-	Description    string  `json:"description"`
-	Project        Project `gorm:"foreignKey:ProjectID" json:"-"`
-	Student        User    `gorm:"foreignKey:StudentID" json:"-"`
-	Reviewed       bool    `json:"reviewed"`
-	ProjectName    string  `json:"project_name" gorm:"-"`
-	StudentName    string  `json:"student_name" gorm:"-"`
+	ID             uint   `gorm:"primaryKey"`
+	Description    string `gorm:"not null"`
+	SubmissionDate string
+	DocumentPath   string  `gorm:"not null"`
+	Reviewed       bool    `gorm:"default:false"`
+	ProjectID      uint    `gorm:"not null"`
+	StudentID      uint    `gorm:"not null"`
+	Project        Project `gorm:"foreignKey:ProjectID"`
+	Student        User    `gorm:"foreignKey:StudentID"`
 }
+
 type SubmissionDTO struct {
-	SubmissionID   uint   `json:"submission_id"`
-	ProjectID      uint   `json:"project_id"`
-	ProjectName    string `json:"project_name"`
-	StudentID      uint   `json:"student_id"`
-	StudentName    string `json:"student_name"`
-	SubmissionDate string `json:"submission_date"`
-	DocumentPath   string `json:"document_path"`
-	Reviewed       bool   `json:"reviewed"`
-	Description    string `json:"description"`
+	ID          uint       `json:"id"`
+	Description string     `json:"description"`
+	Reviewed    bool       `json:"reviewed"`
+	Project     ProjectDTO `json:"project"`
+	Student     UserDTO    `json:"student"`
 }
 
 func SubmissionToDTO(s *Submission) SubmissionDTO {
 	return SubmissionDTO{
-		SubmissionID:   s.ID,
-		ProjectID:      s.ProjectID,
-		StudentID:      s.StudentID,
-		SubmissionDate: s.SubmissionDate,
-		DocumentPath:   s.DocumentPath,
-		Description:    s.Description,
-		Reviewed:       s.Reviewed,
+		ID:          s.ID,
+		Description: s.Description,
+		Reviewed:    s.Reviewed,
+		Project:     ProjectToDTO(&s.Project),
+		Student:     UserToDTO(&s.Student),
 	}
 }
 

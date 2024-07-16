@@ -1,42 +1,36 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type Project struct {
-	gorm.Model
-	StudentID   uint   `json:"student_id"`
-	LecturerID  uint   `json:"lecturer_id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	StartDate   string `json:"start_date"`
-	EndDate     string `json:"end_date"`
-	Student     User   `gorm:"foreignKey:StudentID" json:"-"`
-	Lecturer    User   `gorm:"foreignKey:LecturerID" json:"-"`
+	ID          uint   `gorm:"primaryKey"`
+	Title       string `gorm:"not null"`
+	Description string
+	StartDate   string
+	EndDate     string
+	StudentID   uint `gorm:"not null"`
+	LecturerID  uint `gorm:"not null"`
+	Student     User `gorm:"foreignKey:StudentID"`
+	Lecturer    User `gorm:"foreignKey:LecturerID"`
 }
 
 type ProjectDTO struct {
-	ProjectID    uint   `json:"project_id"`
-	StudentID    uint   `json:"student_id"`
-	LecturerID   uint   `json:"lecturer_id"`
-	LecturerName string `json:"lecturer_name"`
-	Title        string `json:"title"`
-	Description  string `json:"description"`
-	StartDate    string `json:"start_date"`
-	EndDate      string `json:"end_date"`
+	ID          uint    `json:"id"`
+	Title       string  `json:"title"`
+	Description string  `json:"description"`
+	StartDate   string  `json:"start_date"`
+	EndDate     string  `json:"end_date"`
+	Student     UserDTO `json:"student"`
+	Lecturer    UserDTO `json:"lecturer"`
 }
 
 func ProjectToDTO(p *Project) ProjectDTO {
 	return ProjectDTO{
-		ProjectID:    p.ID,
-		StudentID:    p.StudentID,
-		LecturerID:   p.LecturerID,
-		LecturerName: p.Lecturer.Name,
-		Title:        p.Title,
-		Description:  p.Description,
-		StartDate:    p.StartDate,
-		EndDate:      p.EndDate,
+		ID:          p.ID,
+		Title:       p.Title,
+		Description: p.Description,
+		StartDate:   p.StartDate,
+		EndDate:     p.EndDate,
+		Student:     UserToDTO(&p.Student),
+		Lecturer:    UserToDTO(&p.Lecturer),
 	}
 }
 
