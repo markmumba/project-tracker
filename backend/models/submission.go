@@ -2,11 +2,11 @@ package models
 
 type Submission struct {
 	ID             uint   `gorm:"primaryKey"`
-	Description    string `gorm:"not null"`
-	SubmissionDate string
-	DocumentPath   string  `gorm:"not null"`
-	Reviewed       bool    `gorm:"default:false"`
-	ProjectID      uint    `gorm:"not null"`
+	Description    string `gorm:"not null" json:"description"`
+	SubmissionDate string `json:"submission_date"`
+	DocumentPath   string  `gorm:"not null" json:"document_path"`
+	Reviewed       bool    `gorm:"default:false" json:"reviewed"`
+	ProjectID      uint    `gorm:"not null" json:"project_id"`
 	StudentID      uint    `gorm:"not null"`
 	Project        Project `gorm:"foreignKey:ProjectID"`
 	Student        User    `gorm:"foreignKey:StudentID"`

@@ -2,11 +2,11 @@ package models
 
 type Project struct {
 	ID          uint   `gorm:"primaryKey"`
-	Title       string `gorm:"not null"`
-	Description string
-	StartDate   string
-	EndDate     string
-	StudentID   uint `gorm:"not null"`
+	Title       string `gorm:"not null" json:"title"`
+	Description string 	`gorm:"not null" json:"description"`
+	StartDate   string  `json:"start_date"`
+	EndDate     string `json:"end_date"`
+	StudentID   uint `gorm:"not null" json:"lecturer_id"`
 	LecturerID  uint `gorm:"not null"`
 	Student     User `gorm:"foreignKey:StudentID"`
 	Lecturer    User `gorm:"foreignKey:LecturerID"`

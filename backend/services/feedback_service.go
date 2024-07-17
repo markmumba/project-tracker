@@ -23,7 +23,7 @@ func (s *FeedbackService) GetFeedback(id uint) (*models.Feedback, error) {
 	return s.FeedbackRepository.GetFeedback(id)
 }
 
-func (s *FeedbackService) GetFeedbackByStudent(studentID uint) (*[]models.FeedbackResponse, error) {
+func (s *FeedbackService) GetFeedbackByStudent(studentID uint) (*[]models.Feedback, error) {
 	return s.FeedbackRepository.GetFeedbackByStudent(studentID)
 }
 

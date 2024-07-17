@@ -48,7 +48,7 @@ func (fc *FeedbackController) GetFeedbackByStudent(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, feedback)
+	return c.JSON(http.StatusOK, models.FeedbackToDTOs(*feedback))
 }
 
 func (fc *FeedbackController) GetAllFeedback(c echo.Context) error {

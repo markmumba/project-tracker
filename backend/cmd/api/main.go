@@ -22,7 +22,7 @@ func main() {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 	database.ConnectDB()
-	database.InitFirebase()
+	//database.InitFirebase()
 
 	if len(os.Args) > 1 && os.Args[1] == "migrate" {
 		database.DB.AutoMigrate(
@@ -41,16 +41,15 @@ func main() {
 	userService := services.NewUserService(userRepository)
 
 	projectRepository := repository.NewProjectRepository()
-	projectService := services.NewProjectService(projectRepository ,userRepository)
+	projectService := services.NewProjectService(projectRepository, userRepository)
 
 	submissionRepository := repository.NewSubmissionRepository()
-	submissionService := services.NewSubmissionService(submissionRepository,userRepository)
+	submissionService := services.NewSubmissionService(submissionRepository, userRepository)
 
 	feedbackRepository := repository.NewFeedbackRepository()
 	feedbackService := services.NewFeedbackService(feedbackRepository)
 
-
-	handler := routes.SetupRouter(userService ,projectService,submissionService,feedbackService)
+	handler := routes.SetupRouter(userService, projectService, submissionService, feedbackService)
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 
 	srv := &http.Server{

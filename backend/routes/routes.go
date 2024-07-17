@@ -33,6 +33,10 @@ func SetupRouter(
 	submissionController := controllers.NewSubmissionController(submissionService)
 	feedbackController := controllers.NewFeedbackController(feedbackService)
 
+	e.POST("/register", userController.CreateUser)
+	e.POST("/login", userController.Login)
+	e.GET("/logout", userController.Logout)
+
 	r := e.Group("")
 	r.Use(custommiddleware.Authentication)
 

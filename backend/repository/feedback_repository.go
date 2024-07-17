@@ -25,22 +25,22 @@ func (repo *FeedbackRepositoryImpl) GetFeedback(id uint) (*models.Feedback, erro
 	return &feedback, nil
 }
 
-func (repo *FeedbackRepositoryImpl) GetFeedbackByStudent(studentID uint) (*[]models.FeedbackResponse, error) {
-	var feedbackResponses []models.FeedbackResponse
+func (repo *FeedbackRepositoryImpl) GetFeedbackByStudent(studentID uint) (*[]models.Feedback, error) {
+    var feedbacks []models.Feedback
+    
+    err := database.DB.
+        Preload("Submission.Project").
+        Preload("Submission.Student").
+        Preload("Lecturer").
+        Joins("JOIN submissions ON feedbacks.submission_id = submissions.id").
+        Where("submissions.student_id = ?", studentID).
+        Find(&feedbacks).Error
 
-	err := database.DB.
-		Table("feedbacks").
-		Select("feedbacks.id as feedback_id, feedbacks.feedback_date, feedbacks.comments, submissions.id as submission_id, submissions.submission_date, submissions.document_path, submissions.description, users.name as student_name, users.email as student_email").
-		Joins("JOIN submissions ON feedbacks.submission_id = submissions.id").
-		Joins("JOIN users ON submissions.student_id = users.id").
-		Where("submissions.student_id = ?", studentID).
-		Scan(&feedbackResponses).Error
+    if err != nil {
+        return nil, err
+    }
 
-	if err != nil {
-		return nil, err
-	}
-
-	return &feedbackResponses, nil
+    return &feedbacks, nil
 }
 
 func (repo *FeedbackRepositoryImpl) GetAllFeedback() ([]models.Feedback, error) {
