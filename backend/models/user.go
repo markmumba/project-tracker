@@ -11,7 +11,7 @@ type User struct {
 	Password     string `json:"password"`
 	RoleID       uint   `json:"role_id"`
 	Role         Role   `gorm:"foreignKey:RoleID" json:"-"`
-	ProfileImage string `json:"profile_image"`
+	ProfileImage string `gorm:"default:/path/to/image" json:"profile_image"`
 }
 
 type UserDTO struct {
@@ -19,6 +19,7 @@ type UserDTO struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 	Role  string `json:"role"`
+	ProfileImage string `json:"profile_image"`
 }
 
 func UserToDTO(u *User) UserDTO {
@@ -27,6 +28,7 @@ func UserToDTO(u *User) UserDTO {
 		Name:  u.Name,
 		Email: u.Email,
 		Role:  u.Role.Name,
+		ProfileImage: u.ProfileImage,
 	}
 }
 func UserToDTOs(users []User) []UserDTO {

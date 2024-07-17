@@ -13,7 +13,7 @@ export interface UserDetails {
     id?: number;
     name?: string;
     email?: string;
-    role?: string;
+    role?: string|undefined;
     profile_image?: string;
 }
 export interface loginFormData {

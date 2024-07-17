@@ -22,7 +22,6 @@ func main() {
 	database.ConnectDB()
 	database.InitFirebase()
 
-	if len(os.Args) > 1 && os.Args[1] == "migrate" {
 		database.DB.AutoMigrate(
 			&models.Role{},
 			&models.User{},
@@ -31,9 +30,7 @@ func main() {
 			&models.Feedback{},
 			&models.CommunicationHistory{},
 		)
-		fmt.Println("Migration completed.")
-		return
-	}
+	
 
 	handler := routes.SetupRouter()
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
@@ -51,3 +48,4 @@ func main() {
 	}
 
 }
+

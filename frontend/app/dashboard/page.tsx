@@ -24,7 +24,7 @@ function Dashboard() {
 
   useEffect(() => {
     if (userDetails) {
-      setRole(userDetails.role);
+      setRole(userDetails?.role);
     }
   }, [userDetails, setRole]);
 
