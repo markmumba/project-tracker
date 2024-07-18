@@ -1,6 +1,3 @@
-Sure! Below is the updated README file with the additional setup and usage instructions you've provided:
-
-```markdown
 # Project Tracker
 
 Project Tracker is a web application designed to facilitate communication between lecturers and students during their final project period at the university. Students can submit their progress in the form of a document file, which lecturers can review and provide feedback on. The application keeps track of the communication history between lecturers and students.
