@@ -1,15 +1,14 @@
 package models
 
 type Feedback struct {
-	ID           uint   `gorm:"primaryKey"`
-	Comment      string `gorm:"not null" json:"comment"`
-	FeedbackDate string `json:"feedback_date"`
+	ID           uint   `gorm:"primaryKey;autoIncrement"`
+	Comment      string     `gorm:"not null" json:"comment"`
+	FeedbackDate string     `json:"feedback_date"`
 	SubmissionID uint       `gorm:"not null" json:"submission_id"`
 	LecturerID   uint       `gorm:"not null"`
 	Submission   Submission `gorm:"foreignKey:SubmissionID"`
 	Lecturer     User       `gorm:"foreignKey:LecturerID"`
 }
-
 
 type FeedbackDTO struct {
 	ID           uint          `json:"id"`

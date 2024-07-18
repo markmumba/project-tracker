@@ -12,6 +12,7 @@ function Submission() {
     const router = useRouter();
 
     const { data: project, error: projectError } = useSWR<ProjectDetails>("/projects", fetcher);
+   
 
     if (projectError) {
         console.log(projectError.response?.data);
@@ -19,9 +20,9 @@ function Submission() {
     console.log(project);
 
     const [formData, setFormData] = useState<CreateSubmissionFormData>({
-        project_id: '',
+        project_id: 0,
         reviewed: false,
-        student_id: '',
+        student_id: 0,
         submission_date: '',
         document_path: '',
         description: '',
@@ -32,9 +33,9 @@ function Submission() {
         const currentDate = new Date().toISOString().split('T')[0];
         if (project) {
             setFormData({
-                project_id: project.project_id.toString(),
-                student_id: project.student_id.toString(),
-                reviewed: false, // Assuming project has a student_id field
+                project_id: project?.id ?? 0,
+                student_id: project?.student?.id ?? 0,
+                reviewed: false,
                 submission_date: currentDate,
                 document_path: '',
                 description: '',
@@ -68,9 +69,9 @@ function Submission() {
             });
             console.log('Project created successfully:', response.data);
             setFormData({
-                project_id: '',
+                project_id: 0,
                 reviewed: false,
-                student_id: '',
+                student_id: 0,
                 submission_date: '',
                 document_path: '',
                 description: '',

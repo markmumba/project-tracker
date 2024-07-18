@@ -24,18 +24,14 @@ func main() {
 	database.ConnectDB()
 	//database.InitFirebase()
 
-	if len(os.Args) > 1 && os.Args[1] == "migrate" {
-		database.DB.AutoMigrate(
-			&models.Role{},
-			&models.User{},
-			&models.Project{},
-			&models.Submission{},
-			&models.Feedback{},
-			&models.CommunicationHistory{},
-		)
-		fmt.Println("Migration completed.")
-		return
-	}
+	database.DB.AutoMigrate(
+		&models.Role{},
+		&models.User{},
+		&models.Project{},
+		&models.Submission{},
+		&models.Feedback{},
+		&models.CommunicationHistory{},
+	)
 
 	userRepository := repository.NewUserRepository()
 	userService := services.NewUserService(userRepository)

@@ -1,13 +1,14 @@
 package models
 
 type Project struct {
-	ID          uint   `gorm:"primaryKey"`
+	
+	ID           uint   `gorm:"primaryKey;autoIncrement"`
 	Title       string `gorm:"not null" json:"title"`
 	Description string 	`gorm:"not null" json:"description"`
 	StartDate   string  `json:"start_date"`
 	EndDate     string `json:"end_date"`
-	StudentID   uint `gorm:"not null" json:"lecturer_id"`
-	LecturerID  uint `gorm:"not null"`
+	StudentID   uint `gorm:"not null" json:"student_id"`
+	LecturerID  uint `gorm:"not null" json:"lecturer_id"`
 	Student     User `gorm:"foreignKey:StudentID"`
 	Lecturer    User `gorm:"foreignKey:LecturerID"`
 }

@@ -39,10 +39,16 @@ func (r *SubmissionRepositoryImpl) GetAllSubmissionByStudentId(studentId uint) (
 	}
 	return submissions, nil
 }
-
 func (r *SubmissionRepositoryImpl) GetSubmissionsByLecturer(lecturerID uint) ([]models.Submission, error) {
 	var submissions []models.Submission
-	result := database.DB.Preload("Lecturer").Preload("Project").Find(&submissions)
+
+	result := database.DB.
+		Joins("JOIN projects ON projects.id = submissions.project_id").
+		Where("projects.lecturer_id = ?", lecturerID).
+		Preload("Project").
+		Preload("Student").
+		Find(&submissions)
+
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -52,6 +58,7 @@ func (r *SubmissionRepositoryImpl) GetSubmissionsByLecturer(lecturerID uint) ([]
 func (r *SubmissionRepositoryImpl) UpdateSubmission(submission *models.Submission, id uint) error {
 	// Find the submission by ID
 	var existingSubmission models.Submission
+	
 	result := database.DB.First(&existingSubmission, id)
 	if result.Error != nil {
 		return result.Error
@@ -60,6 +67,8 @@ func (r *SubmissionRepositoryImpl) UpdateSubmission(submission *models.Submissio
 	existingSubmission.Description = submission.Description
 	existingSubmission.DocumentPath = submission.DocumentPath
 	existingSubmission.SubmissionDate = submission.SubmissionDate
+	existingSubmission.Reviewed = submission.Reviewed
+
 
 	result = database.DB.Save(&existingSubmission)
 	return result.Error

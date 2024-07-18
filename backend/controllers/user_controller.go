@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -60,16 +61,20 @@ func (uc *UserController) Logout(c echo.Context) error {
 }
 
 func (uc *UserController) CreateUser(c echo.Context) error {
-	var user models.User
-	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
+    var user models.User
+    if err := c.Bind(&user); err != nil {
+        return c.JSON(http.StatusBadRequest, err.Error())
+    }
 
-	if err := uc.UserService.CreateUser(&user); err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
+    err := uc.UserService.CreateUser(&user)
+    if err != nil {
+        if strings.Contains(err.Error(), "already exists") {
+            return c.JSON(http.StatusConflict, map[string]string{"message": err.Error()})
+        }
+        return c.JSON(http.StatusInternalServerError, err.Error())
+    }
 
-	return c.JSON(http.StatusCreated, models.UserToDTO(&user))
+    return c.JSON(http.StatusCreated, models.UserToDTO(&user))
 }
 
 func (uc *UserController) GetUser(c echo.Context) error {

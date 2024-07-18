@@ -1,6 +1,7 @@
 package controllers
 
 import (
+
 	"net/http"
 	"strconv"
 
@@ -42,7 +43,6 @@ func (sc *SubmissionController) GetSubmission(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
-
 	return c.JSON(http.StatusOK, models.SubmissionToDTO(submission))
 }
 

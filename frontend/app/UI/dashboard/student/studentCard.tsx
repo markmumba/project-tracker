@@ -42,7 +42,7 @@ function StudentCard({ userDetails, projectDetails, submissionCount }:
 
           <div className="mb-1 p-4 rounded-xl">
             <div className='text-lg font-bold '>Supervisor Name</div>
-            <div className='text-base'>{projectDetails?.lecturer_name}</div>
+            <div className='text-base'>{projectDetails?.lecturer.name}</div>
           </div>
 
           <div className='mb-1 p-4 rounded-xl'>

@@ -1,8 +1,12 @@
 package repository
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
+	"gorm.io/gorm"
 )
 
 type UserRepositoryImpl struct{}
@@ -11,9 +15,26 @@ func NewUserRepository() UserRepository {
 	return &UserRepositoryImpl{}
 }
 
+
 func (r *UserRepositoryImpl) CreateUser(user *models.User) error {
-	result := database.DB.Create(user)
-	return result.Error
+    return database.DB.Transaction(func(tx *gorm.DB) error {
+        var existingUser models.User
+        result := tx.Where("email = ?", user.Email).First(&existingUser)
+
+        // If the user already exists, return an error
+        if result.Error == nil {
+            return fmt.Errorf("user with email %s already exists", user.Email)
+        }
+
+        // If the error is not RecordNotFound, return the error
+        if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+            return result.Error
+        }
+
+        // Proceed with user creation if no existing user is found
+        result = tx.Create(user)
+        return result.Error
+    })
 }
 
 func (r *UserRepositoryImpl) FindByEmail(email string, user *models.User) error {

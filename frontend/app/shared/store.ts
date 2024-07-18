@@ -11,7 +11,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
 interface UserState {
     role: string | null;
-    setRole: (role: string) => void;
+    setRole: (role: string |undefined) => void;
     resetUser: () => void;
 }
 

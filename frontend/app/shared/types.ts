@@ -1,12 +1,12 @@
+// the main models 
 export interface ProjectDetails {
-    project_id: string;
-    student_id: string;
-    lecturer_id: string;
-    lecturer_name: string;
+    id: number;
     title: string;
     description: string;
-    start_date: string; // Assuming the dates are in ISO string format
+    start_date: string;
     end_date: string;
+    student: UserDetails;
+    lecturer: UserDetails;
 }
 
 export interface UserDetails {
@@ -16,6 +16,29 @@ export interface UserDetails {
     role?: string;
     profile_image?: string;
 }
+
+export interface SubmissionDetails {
+    id: number;
+    description: string;
+    document_path: string;
+    submission_date: string;
+    reviewed: boolean;
+    project: ProjectDetails;
+    student: UserDetails;
+}
+
+export interface FeedbackDetails {
+    id: number;
+    comment: string;
+    feedback_date: string;
+    submission: SubmissionDetails;
+    lecturer: UserDetails;
+}
+
+
+
+// Form input interfaces
+
 export interface loginFormData {
     email: string;
     password: string;
@@ -26,12 +49,6 @@ export interface registerFormData {
     password: string;
     role_id: number;
 }
-export interface UserCardProps {
-    userName: string | null | undefined;
-    projectName: string | null | undefined;
-    supervisorName: string | null | undefined;
-    submissions: number | null | undefined;
-}
 
 export interface CreateProjectFormData {
     title: string;
@@ -41,49 +58,31 @@ export interface CreateProjectFormData {
     end_date: string;
 }
 
-export interface SubmissionDetails {
-    submission_id: number;
+
+export interface CreateSubmissionFormData {
     project_id: number;
     student_id: number;
-    submission_date: string;
-    document_path: string;
-    description: string;
-    reviewed: boolean;
-}
-export interface CreateSubmissionFormData {
-    project_id: string;
-    student_id: string;
     submission_date: string;
     document_path: string;
     description: string;
     reviewed: boolean;
 }
 
-export interface LecturerSubmissionDetails {
-    submission_id: number;
-    submission_date: string;
-    document_path: string;
-    description: string;
-    project_name: string;
-    project_id: number;
-    student_name: string;
-    student_id: number;
-    reviewed: boolean;
-}
 export interface CreateFeedbackFormData {
     submission_id: number | null | undefined;
     feedback_date: string;
-    comments: string;
+    comment: string;
 }
 
-export interface FeedbackDetails {
-    feedback_id: number;
-    feedback_date: string;
-    comments: string;
-    submission_id: number;
-    submission_date: string;
-    document_path: string;
-    description: string;
-    student_name: string;
-    student_email: string;
+
+// Component Properties 
+
+export interface UserCardProps {
+    userName: string | null | undefined;
+    projectName: string | null | undefined;
+    supervisorName: string | null | undefined;
+    submissions: number | null | undefined;
 }
+
+
+

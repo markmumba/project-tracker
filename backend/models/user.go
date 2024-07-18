@@ -1,13 +1,13 @@
 package models
 
 type User struct {
-	ID           uint   `gorm:"primaryKey"`
-	Name         string `json:"name"`
-	Email        string `json:"email" gorm:"unique;not null"`
-	Password     string `json:"password"`
-	RoleID       uint   `gorm:"not null" json:"role_id"`
-	Role         Role   `gorm:"foreignKey:RoleID" json:"-"`
-	ProfileImage string `json:"profile_image"`
+    ID           uint   `gorm:"primaryKey;autoIncrement"`
+    Name         string `json:"name"`
+    Email        string `json:"email" gorm:"unique;not null"`
+    Password     string `json:"password"`
+    RoleID       uint   `gorm:"not null" json:"role_id"`
+    Role         Role   `gorm:"foreignKey:RoleID" json:"-"`
+    ProfileImage string `json:"profile_image"`
 }
 
 type UserDTO struct {

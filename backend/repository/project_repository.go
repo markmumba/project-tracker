@@ -18,7 +18,11 @@ func (r *ProjectRepositoryImpl) CreateProject(project *models.Project) error {
 
 func (r *ProjectRepositoryImpl) GetProject(id uint) (*models.Project, error) {
 	var project models.Project
-	result := database.DB.Preload("Lecturer").Where("student_id = ?", id).First(&project)
+	result := database.DB.
+		Preload("Lecturer.Role").
+		Preload("Student.Role").
+		Where("student_id = ?", id).
+		First(&project)
 	return &project, result.Error
 }
 
