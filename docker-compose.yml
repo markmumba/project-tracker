@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend         # Build backend using Dockerfile in backend directory
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=bobbyshmurda66
+      - DB_NAME=projecttracker
+      - PORT=8080
+
+  frontend:
+    build: ./frontend        # Build frontend using Dockerfile in frontend directory
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8080  # Replace with your actual backend URL
+
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: bobbyshmurda66
+      POSTGRES_DB: projecttracker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
+
+volumes:
+  postgres_data:
+

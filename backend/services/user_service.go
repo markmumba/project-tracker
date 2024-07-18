@@ -4,23 +4,32 @@ import (
 	"errors"
 
 	"github.com/markmumba/project-tracker/auth"
-	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
+	"github.com/markmumba/project-tracker/repository"
 )
 
-func CreateUser(user *models.User) error {
+type UserService struct {
+	UserRepository repository.UserRepository
+}
+
+func NewUserService(userRepo repository.UserRepository) *UserService {
+	return &UserService{
+		UserRepository: userRepo,
+	}
+}
+
+func (u *UserService) CreateUser(user *models.User) error {
 	hashedPassword, err := auth.HashPassword(user.Password)
 	if err != nil {
 		return err
 	}
 	user.Password = hashedPassword
-	result := database.DB.Create(user)
-	return result.Error
+	return u.UserRepository.CreateUser(user)
 }
 
-func LoginUser(email, password string) (string, error) {
+func (u *UserService) LoginUser(email, password string) (string, error) {
 	var user models.User
-	err := database.DB.Where("email = ?", email).First(&user).Error
+	err := u.UserRepository.FindByEmail(email, &user)
 	if err != nil {
 		return "", err
 	}
@@ -35,8 +44,31 @@ func LoginUser(email, password string) (string, error) {
 	}
 	return token, nil
 }
-func GetUser(id uint) (*models.User, error) {
-	var user models.User
-	result := database.DB.First(&user, id)
-	return &user, result.Error
+
+func (u *UserService) GetUser(id uint) (*models.User, error) {
+	return u.UserRepository.GetUser(id)
+}
+
+func (u *UserService) GetAllUsers() ([]models.User, error) {
+	return u.UserRepository.GetAllUsers()
+}
+
+func (u *UserService) GetStudentsByLecturer(lecturerID uint) ([]models.User, error) {
+	return u.UserRepository.GetStudentsByLecturer(lecturerID)
+}
+
+func (u *UserService) GetLecturers() ([]models.User, error) {
+	return u.UserRepository.GetLecturers()
+}
+
+func (u *UserService) UpdateUser(id uint, user *models.User) error {
+	return u.UserRepository.UpdateUser(id, user)
+}
+
+func (u *UserService) UpdateUserProfileImage(id uint, profileImage string) error {
+	return u.UserRepository.UpdateUserProfileImage(id, profileImage)
+}
+
+func (u *UserService) DeleteUser(id uint) error {
+	return u.UserRepository.DeleteUser(id)
 }
