@@ -11,7 +11,9 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
+	"github.com/markmumba/project-tracker/repository"
 	"github.com/markmumba/project-tracker/routes"
+	"github.com/markmumba/project-tracker/services"
 )
 
 func main() {
@@ -20,19 +22,30 @@ func main() {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 	database.ConnectDB()
-	database.InitFirebase()
+	//database.InitFirebase()
 
-		database.DB.AutoMigrate(
-			&models.Role{},
-			&models.User{},
-			&models.Project{},
-			&models.Submission{},
-			&models.Feedback{},
-			&models.CommunicationHistory{},
-		)
-	
+	database.DB.AutoMigrate(
+		&models.Role{},
+		&models.User{},
+		&models.Project{},
+		&models.Submission{},
+		&models.Feedback{},
+		&models.CommunicationHistory{},
+	)
 
-	handler := routes.SetupRouter()
+	userRepository := repository.NewUserRepository()
+	userService := services.NewUserService(userRepository)
+
+	projectRepository := repository.NewProjectRepository()
+	projectService := services.NewProjectService(projectRepository, userRepository)
+
+	submissionRepository := repository.NewSubmissionRepository()
+	submissionService := services.NewSubmissionService(submissionRepository, userRepository)
+
+	feedbackRepository := repository.NewFeedbackRepository()
+	feedbackService := services.NewFeedbackService(feedbackRepository)
+
+	handler := routes.SetupRouter(userService, projectService, submissionService, feedbackService)
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 
 	srv := &http.Server{

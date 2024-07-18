@@ -28,7 +28,7 @@ function CreateProjectPage() {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: value,
+            [name]: name === 'lecturer_id' ? parseInt(value, 10) : value,
         }));
     };
 
@@ -36,6 +36,7 @@ function CreateProjectPage() {
         e.preventDefault();
         try {
             const requestBody = JSON.stringify(formData);
+            console.log(requestBody)
             const response = await axiosInstance.post('/projects', requestBody, {
                 withCredentials: true,
                 headers: {

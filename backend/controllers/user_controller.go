@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -10,9 +11,19 @@ import (
 	"github.com/markmumba/project-tracker/services"
 )
 
+type UserController struct {
+	UserService *services.UserService
+}
+
+func NewUserController(userService *services.UserService) *UserController {
+	return &UserController{
+		UserService: userService,
+	}
+}
+
 // TODO : Get all the lecturers that is get all users where role id is 1
 
-func Login(c echo.Context) error {
+func (uc *UserController) Login(c echo.Context) error {
 	var credentials struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
@@ -22,7 +33,7 @@ func Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	token, err := services.LoginUser(credentials.Email, credentials.Password)
+	token, err := uc.UserService.LoginUser(credentials.Email, credentials.Password)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
@@ -36,7 +47,7 @@ func Login(c echo.Context) error {
 		"token": token,
 	})
 }
-func Logout(c echo.Context) error {
+func (uc *UserController) Logout(c echo.Context) error {
 	cookie := &http.Cookie{
 		Name:    "token",
 		Value:   "",
@@ -49,27 +60,29 @@ func Logout(c echo.Context) error {
 	})
 }
 
-func CreateUser(c echo.Context) error {
-	var user models.User
-	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
+func (uc *UserController) CreateUser(c echo.Context) error {
+    var user models.User
+    if err := c.Bind(&user); err != nil {
+        return c.JSON(http.StatusBadRequest, err.Error())
+    }
 
-	if err := services.CreateUser(&user); err != nil { // Print type for debugging
+    err := uc.UserService.CreateUser(&user)
+    if err != nil {
+        if strings.Contains(err.Error(), "already exists") {
+            return c.JSON(http.StatusConflict, map[string]string{"message": err.Error()})
+        }
+        return c.JSON(http.StatusInternalServerError, err.Error())
+    }
 
-		// Safely assert and handle the userID type
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusCreated, models.UserToDTO(&user))
+    return c.JSON(http.StatusCreated, models.UserToDTO(&user))
 }
 
-func GetUser(c echo.Context) error {
+func (uc *UserController) GetUser(c echo.Context) error {
 	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	user, err := services.GetUser(userID)
+	user, err := uc.UserService.GetUser(userID)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
@@ -77,34 +90,35 @@ func GetUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.UserToDTO(user))
 }
 
-func GetAllUsers(c echo.Context) error {
-	users, err := services.GetAllUsers()
+func (uc *UserController) GetAllUsers(c echo.Context) error {
+	users, err := uc.UserService.GetAllUsers()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, models.UserToDTOs(users))
 }
-func GetLecturers(c echo.Context) error {
-	lecturers, err := services.GetLecturers()
+
+func (uc *UserController) GetLecturers(c echo.Context) error {
+	lecturers, err := uc.UserService.GetLecturers()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, models.UserToDTOs(lecturers))
 }
 
-func GetStudentsByLecturerId(c echo.Context) error {
-
+func (uc *UserController) GetStudentsByLecturerId(c echo.Context) error {
 	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	students, err := services.GetStudentsByLecturer(userID)
+	students, err := uc.UserService.GetStudentsByLecturer(userID)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
 	return c.JSON(http.StatusOK, models.UserToDTOs(students))
 }
-func UpdateUser(c echo.Context) error {
+
+func (uc *UserController) UpdateUser(c echo.Context) error {
 	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -113,14 +127,14 @@ func UpdateUser(c echo.Context) error {
 	if err := c.Bind(&updateUser); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	if err := services.UpdateUser(userID, &updateUser); err != nil {
+	if err := uc.UserService.UpdateUser(userID, &updateUser); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, models.UserToDTO(&updateUser))
 }
 
-func UpdateUserProfileImage(c echo.Context) error {
+func (uc *UserController) UpdateUserProfileImage(c echo.Context) error {
 	var image struct {
 		ProfileImage string `json:"profile_image"`
 	}
@@ -132,21 +146,19 @@ func UpdateUserProfileImage(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	err = services.UpdateUserProfileImage(userID, image.ProfileImage)
+	err = uc.UserService.UpdateUserProfileImage(userID, image.ProfileImage)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, "Profile image updated successfully")
 }
 
-
-func DeleteUser(c echo.Context) error {
-
+func (uc *UserController) DeleteUser(c echo.Context) error {
 	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	err = services.DeleteUser(userID)
+	err = uc.UserService.DeleteUser(userID)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}

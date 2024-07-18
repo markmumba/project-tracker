@@ -1,43 +1,36 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type Submission struct {
-	gorm.Model
-	ProjectID      uint    `json:"project_id"`
-	StudentID      uint    `json:"student_id"`
+	ID             uint    `gorm:"primaryKey;autoIncrement"`
+	Description    string  `gorm:"not null" json:"description"`
 	SubmissionDate string  `json:"submission_date"`
-	DocumentPath   string  `json:"document_path"`
-	Description    string  `json:"description"`
-	Project        Project `gorm:"foreignKey:ProjectID" json:"-"`
-	Student        User    `gorm:"foreignKey:StudentID" json:"-"`
-	Reviewed       bool    `json:"reviewed"`
-	ProjectName    string  `json:"project_name" gorm:"-"`
-	StudentName    string  `json:"student_name" gorm:"-"`
+	DocumentPath   string  `gorm:"not null" json:"document_path"`
+	Reviewed       bool    `gorm:"default:false" json:"reviewed"`
+	ProjectID      uint    `gorm:"not null" json:"project_id"`
+	StudentID      uint    `gorm:"not null" json:"student_id"`
+	Project        Project `gorm:"foreignKey:ProjectID"`
+	Student        User    `gorm:"foreignKey:StudentID"`
 }
+
 type SubmissionDTO struct {
-	SubmissionID   uint   `json:"submission_id"`
-	ProjectID      uint   `json:"project_id"`
-	ProjectName    string `json:"project_name"`
-	StudentID      uint   `json:"student_id"`
-	StudentName    string `json:"student_name"`
-	SubmissionDate string `json:"submission_date"`
-	DocumentPath   string `json:"document_path"`
-	Reviewed       bool   `json:"reviewed"`
-	Description    string `json:"description"`
+	ID             uint       `json:"id"`
+	Description    string     `json:"description"`
+	Reviewed       bool       `json:"reviewed"`
+	DocumentPath   string     `json:"document_path"`
+	SubmissionDate string     `json:"submission_date"`
+	Project        ProjectDTO `json:"project"`
+	Student        UserDTO    `json:"student"`
 }
 
 func SubmissionToDTO(s *Submission) SubmissionDTO {
 	return SubmissionDTO{
-		SubmissionID:   s.ID,
-		ProjectID:      s.ProjectID,
-		StudentID:      s.StudentID,
+		ID:          s.ID,
+		Description: s.Description,
+		Reviewed:    s.Reviewed,
+		DocumentPath: s.DocumentPath,
 		SubmissionDate: s.SubmissionDate,
-		DocumentPath:   s.DocumentPath,
-		Description:    s.Description,
-		Reviewed:       s.Reviewed,
+		Project:     ProjectToDTO(&s.Project),
+		Student:     UserToDTO(&s.Student),
 	}
 }
 

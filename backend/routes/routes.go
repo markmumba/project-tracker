@@ -7,9 +7,15 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/markmumba/project-tracker/controllers"
 	"github.com/markmumba/project-tracker/custommiddleware"
+	"github.com/markmumba/project-tracker/services"
 )
 
-func SetupRouter() *echo.Echo {
+func SetupRouter(
+	userService *services.UserService,
+	projectService *services.ProjectService,
+	submissionService *services.SubmissionService,
+	feedbackService *services.FeedbackService,
+) *echo.Echo {
 	e := echo.New()
 
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
@@ -22,50 +28,55 @@ func SetupRouter() *echo.Echo {
 		AllowCredentials: true,
 	}))
 
-	e.POST("/register", controllers.CreateUser)
-	e.POST("/login", controllers.Login)
-	e.GET("/logout", controllers.Logout)
+	userController := controllers.NewUserController(userService)
+	projectController := controllers.NewProjectController(projectService)
+	submissionController := controllers.NewSubmissionController(submissionService)
+	feedbackController := controllers.NewFeedbackController(feedbackService)
+
+	e.POST("/register", userController.CreateUser)
+	e.POST("/login", userController.Login)
+	e.GET("/logout", userController.Logout)
 
 	r := e.Group("")
 	r.Use(custommiddleware.Authentication)
 
 	userGroup := r.Group("/users")
 	{
-		userGroup.GET("", controllers.GetUser)
-		userGroup.GET("/all", controllers.GetAllUsers)
-		userGroup.GET("/students", controllers.GetStudentsByLecturerId)
-		userGroup.GET("/lecturers", controllers.GetLecturers)
-		userGroup.PUT("", controllers.UpdateUser)
-		userGroup.POST("/profile", controllers.UpdateUserProfileImage)	
-		userGroup.DELETE("", controllers.DeleteUser)
+		userGroup.GET("", userController.GetUser)
+		userGroup.GET("/all", userController.GetAllUsers)
+		userGroup.GET("/students", userController.GetStudentsByLecturerId)
+		userGroup.GET("/lecturers", userController.GetLecturers)
+		userGroup.PUT("", userController.UpdateUser)
+		userGroup.POST("/profile", userController.UpdateUserProfileImage)
+		userGroup.DELETE("", userController.DeleteUser)
 	}
 
 	projectGroup := r.Group("/projects")
 	{
-		projectGroup.POST("", controllers.CreateProject)
-		projectGroup.GET("", controllers.GetProject)
-		projectGroup.PUT("", controllers.UpdateProject)
-		projectGroup.DELETE("", controllers.DeleteProject)
+		projectGroup.POST("", projectController.CreateProject)
+		projectGroup.GET("", projectController.GetProject)
+		projectGroup.PUT("", projectController.UpdateProject)
+		projectGroup.DELETE("", projectController.DeleteProject)
 	}
 
 	submissionGroup := r.Group("/submissions")
 	{
-		submissionGroup.POST("", controllers.CreateSubmission)
-		submissionGroup.GET("/:id", controllers.GetSubmission)
-		submissionGroup.GET("/student", controllers.GetAllSubmissionByStudentId)
-		submissionGroup.GET("/lecturer", controllers.GetSubmissionsByLecturer)
-		submissionGroup.PUT("/:id", controllers.UpdateSubmission)
-		submissionGroup.GET("", controllers.GetAllSubmissions)
-		submissionGroup.DELETE("", controllers.DeleteSubmission)
+		submissionGroup.POST("", submissionController.CreateSubmission)
+		submissionGroup.GET("/:id", submissionController.GetSubmission)
+		submissionGroup.GET("/student", submissionController.GetAllSubmissionByStudentId)
+		submissionGroup.GET("/lecturer", submissionController.GetSubmissionsByLecturer)
+		submissionGroup.PUT("/:id", submissionController.UpdateSubmission)
+		submissionGroup.GET("", submissionController.GetAllSubmissions)
+		submissionGroup.DELETE("", submissionController.DeleteSubmission)
 	}
 
 	feedbackGroup := r.Group("/feedbacks")
 	{
-		feedbackGroup.POST("", controllers.CreateFeedback)
-		feedbackGroup.GET("/student", controllers.GetFeedbackByStudent)
-		feedbackGroup.GET("", controllers.GetAllFeedback)
-		feedbackGroup.PUT("/:id", controllers.UpdateFeedback)
-		feedbackGroup.DELETE("/:id", controllers.DeleteFeedback)
+		feedbackGroup.POST("", feedbackController.CreateFeedback)
+		feedbackGroup.GET("/student", feedbackController.GetFeedbackByStudent)
+		feedbackGroup.GET("", feedbackController.GetAllFeedback)
+		feedbackGroup.PUT("/:id", feedbackController.UpdateFeedback)
+		feedbackGroup.DELETE("/:id", feedbackController.DeleteFeedback)
 	}
 
 	communicationGroup := r.Group("/communications")

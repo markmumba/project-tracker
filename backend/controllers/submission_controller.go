@@ -1,6 +1,7 @@
 package controllers
 
 import (
+
 	"net/http"
 	"strconv"
 
@@ -11,85 +12,65 @@ import (
 )
 
 // TODO : streamline type conversion from frontend to backend and vice versa
-type CreateSubmissionRequest struct {
-	ProjectID      string `json:"project_id"`
-	StudentID      string `json:"student_id"`
-	SubmissionDate string `json:"submission_date"`
-	DocumentPath   string `json:"document_path"`
-	Description    string `json:"description"`
-	Reviewed       bool   `json:"reviewed"`
+type SubmissionController struct {
+	submissionService *services.SubmissionService
 }
 
-func CreateSubmission(c echo.Context) error {
+func NewSubmissionController(submissionService *services.SubmissionService) *SubmissionController {
+	return &SubmissionController{
+		submissionService: submissionService,
+	}
+}
 
-	var request CreateSubmissionRequest
-	if err := c.Bind(&request); err != nil {
+func (sc *SubmissionController) CreateSubmission(c echo.Context) error {
+	var submission models.Submission
+	if err := c.Bind(&submission); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	ProjectID, err := strconv.ParseUint(request.ProjectID, 10, 32)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, "invalid project_id or student_id")
-	}
-
-	StudnetID, err := strconv.ParseUint(request.StudentID, 10, 32)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, "invalid project_id or student_id")
-	}
-	submission := models.Submission{
-		ProjectID:      uint(ProjectID),
-		StudentID:      uint(StudnetID),
-		SubmissionDate: request.SubmissionDate,
-		DocumentPath:   request.DocumentPath,
-		Description:    request.Description,
-		Reviewed: 	 request.Reviewed,
-	}
-
-	if err := services.CreateSubmission(&submission); err != nil {
+	if err := sc.submissionService.CreateSubmission(&submission); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusCreated, models.SubmissionToDTO(&submission))
 }
 
-func GetSubmission(c echo.Context) error {
+func (sc *SubmissionController) GetSubmission(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	submission, err := services.GetSubmission(uint(id))
+	submission, err := sc.submissionService.GetSubmission(uint(id))
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
-
-	return c.JSON(http.StatusOK, submission)
+	return c.JSON(http.StatusOK, models.SubmissionToDTO(submission))
 }
 
-func GetSubmissionsByLecturer(c echo.Context) error {
-
+func (sc *SubmissionController) GetAllSubmissionByStudentId(c echo.Context) error {
 	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	submissions, err := services.GetSubmissionsByLecturer(userID)
+	submissions, err := sc.submissionService.GetAllSubmissionByStudentId(userID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, submissions)
+	return c.JSON(http.StatusOK, models.SubmissionToDTOs(submissions))
 }
 
-func GetAllSubmissionByStudentId(c echo.Context) error {
+func (sc *SubmissionController) GetSubmissionsByLecturer(c echo.Context) error {
 	userID, err := helpers.ConvertUserID(c, "userId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	submissions, err := services.GetAllSubmissionByStudentId(userID)
+	submissions, err := sc.submissionService.GetSubmissionsByLecturer(userID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, submissions)
+	return c.JSON(http.StatusOK, models.SubmissionToDTOs(submissions))
 }
 
-func UpdateSubmission(c echo.Context) error {
+func (sc *SubmissionController) UpdateSubmission(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
@@ -99,21 +80,21 @@ func UpdateSubmission(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	if err := services.UpdateSubmission(&submission, uint(id)); err != nil {
+	if err := sc.submissionService.UpdateSubmission(&submission, uint(id)); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, models.SubmissionToDTO(&submission))
 }
 
-func DeleteSubmission(c echo.Context) error {
+func (sc *SubmissionController) DeleteSubmission(c echo.Context) error {
 	var submissionParams models.Submission
 	err := c.Bind(&submissionParams)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	id := submissionParams.ID
-	err = services.DeleteSubmission(uint(id))
+	err = sc.submissionService.DeleteSubmission(uint(id))
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
@@ -121,8 +102,8 @@ func DeleteSubmission(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Submission deleted successfully")
 }
 
-func GetAllSubmissions (c echo.Context) error {
-	submissions, err := services.GetAllSubmissions()
+func (sc *SubmissionController) GetAllSubmissions(c echo.Context) error {
+	submissions, err := sc.submissionService.GetAllSubmissions()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

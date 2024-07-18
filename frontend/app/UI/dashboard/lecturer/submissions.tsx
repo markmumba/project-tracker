@@ -1,12 +1,12 @@
 import { useSubmissionStore } from '@/app/shared/store';
-import { LecturerSubmissionDetails } from '@/app/shared/types';
+import { LecturerSubmissionDetails, SubmissionDetails } from '@/app/shared/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Spinner from '../../spinner';
 
 function Submissions({ lecturerSubmissions }: {
-    lecturerSubmissions?: LecturerSubmissionDetails[] | undefined | null,
+    lecturerSubmissions?: SubmissionDetails[] | undefined | null,
 }) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -49,9 +49,9 @@ function Submissions({ lecturerSubmissions }: {
             {showReviewed ?
                 reviewedTrueSubmissions.map((submission) => (
                     <div
-                        key={submission.submission_id}
+                        key={submission.id}
                         className="relative pl-8 mb-4 cursor-pointer"
-                        onClick={() => handleSubmissionClick(submission.submission_id)}
+                        onClick={() => handleSubmissionClick(submission.id)}
                     >
                         <div className=" bg-blue-500 h-4 w-4 rounded-full border-2 border-white"></div>
                         <div className="flex items-center mb-2 group">
@@ -61,8 +61,8 @@ function Submissions({ lecturerSubmissions }: {
                                     {` ${truncateDescription(submission.description, 40)}`}
                                 </p>
                                 <p className="mb-2">{`Submission Date: ${submission.submission_date}`}</p>
-                                <h2>{`Project: ${submission.project_name}`}</h2>
-                                <h3 className="text-medium text-gray-400 group-hover:text-gray-100 ">{`Student: ${submission.student_name}`}</h3>
+                                <h2>{`Project: ${submission.project.title}`}</h2>
+                                <h3 className="text-medium text-gray-400 group-hover:text-gray-100 ">{`Student: ${submission.student.name}`}</h3>
                                 <Link href={submission.document_path} className="text-blue-500 underline group-hover:text-white  ">
                                     View Document
                                 </Link>
@@ -73,9 +73,9 @@ function Submissions({ lecturerSubmissions }: {
                 :
                 reviewedFalseSubmissions.map((submission) => (
                     <div
-                        key={submission.submission_id}
+                        key={submission.id}
                         className="relative pl-8 mb-4 cursor-pointer"
-                        onClick={() => handleSubmissionClick(submission.submission_id)}
+                        onClick={() => handleSubmissionClick(submission.id)}
                     >
                         <div className="flex items-center mb-2 group">
                             <div className="animate-ping bg-blue-500 h-4 w-4 rounded-full border-2 border-white"></div>
@@ -85,8 +85,8 @@ function Submissions({ lecturerSubmissions }: {
                                     {` ${truncateDescription(submission.description, 40)}`}
                                 </p>
                                 <p className="mb-2">{`Submission Date: ${submission.submission_date}`}</p>
-                                <h2>{`Project: ${submission.project_name}`}</h2>
-                                <h3 className="text-medium text-gray-400 group-hover:text-gray-100 ">{`Student: ${submission.student_name}`}</h3>
+                                <h2>{`Project: ${submission.project.title}`}</h2>
+                                <h3 className="text-medium text-gray-400 group-hover:text-gray-100 ">{`Student: ${submission.student.name}`}</h3>
                                 <Link href={submission.document_path} className="text-blue-500 underline group-hover:text-white  ">
                                     View Document
                                 </Link>

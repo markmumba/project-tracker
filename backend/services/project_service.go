@@ -1,42 +1,47 @@
 package services
 
 import (
-	"github.com/markmumba/project-tracker/database"
+	"errors"
+
 	"github.com/markmumba/project-tracker/models"
+	"github.com/markmumba/project-tracker/repository"
 )
 
-func CreateProject(project *models.Project) error {
-	result := database.DB.Create(project)
-	if result.Error != nil {
-		return result.Error
-	}
-	return nil
-}
-func GetProject(id uint) (*models.Project, error) {
-	var project models.Project
-	result := database.DB.Preload("Lecturer").Where("student_id = ?", id).First(&project)
-	return &project, result.Error
+type ProjectService struct {
+	ProjectRepository repository.ProjectRepository
+	UserRepository    repository.UserRepository
 }
 
-func GetProjectsByLecturerId(lecturerId uint) ([]models.Project, error) {
-	user, err := GetUser(lecturerId)
+func NewProjectService(projectRepo repository.ProjectRepository, userRepo repository.UserRepository) *ProjectService {
+	return &ProjectService{
+		ProjectRepository: projectRepo,
+	}
+}
+
+func (p *ProjectService) CreateProject(project *models.Project) error {
+	return p.ProjectRepository.CreateProject(project)
+}
+
+func (p *ProjectService) GetProject(id uint) (*models.Project, error) {
+	return p.ProjectRepository.GetProject(id)
+}
+
+func (p *ProjectService) GetProjectsByLecturerId(lecturerId uint) ([]models.Project, error) {
+	// Ensure the lecturer exists and is actually a lecturer
+	user, err := p.UserRepository.GetUser(lecturerId)
 	if err != nil {
 		return nil, err
 	}
 	if user.Role.ID != 1 {
-		return nil, nil
+		return nil, errors.New("user is not a lecturer")
 	}
-	var projects []models.Project
-	result := database.DB.Where("lecturer_id = ?", lecturerId).Find(&projects)
-	return projects, result.Error
-}
-func UpdateProject(project *models.Project) error {
-	result := database.DB.Save(project)
-	return result.Error
+	return p.ProjectRepository.GetProjectsByLecturerId(lecturerId)
 }
 
-func DeleteProject(id uint) error {
-	var project models.Project
-	result := database.DB.Delete(&project, id)
-	return result.Error
+func (p *ProjectService) UpdateProject(project *models.Project) error {
+	return p.ProjectRepository.UpdateProject(project)
+}
+
+func (p *ProjectService) DeleteProject(id uint) error {
+	return p.ProjectRepository.DeleteProject(id)
 }

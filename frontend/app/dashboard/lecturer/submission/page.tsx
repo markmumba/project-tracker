@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import React, { useState, useEffect } from 'react';
 import { useSubmissionStore } from '@/app/shared/store';
-import { CreateFeedbackFormData, LecturerSubmissionDetails } from '@/app/shared/types';
+import { CreateFeedbackFormData, SubmissionDetails } from '@/app/shared/types';
 import fetcher, { axiosInstance } from '@/app/fetcher/fetcher';
 
 function SubmissionDetail() {
@@ -17,17 +17,17 @@ function SubmissionDetail() {
         }
     }, [selectedSubmissionId, router]);
 
-    const { data: submission, error, mutate } = useSWR<LecturerSubmissionDetails>(
+    const { data: submission, error, mutate } = useSWR<SubmissionDetails>(
         selectedSubmissionId ? `/submissions/${selectedSubmissionId}` : null,
         fetcher
     );
 
-    console.log('Submission:', submission);
+    console.log(submission);
 
     const [feedback, setFeedback] = useState<CreateFeedbackFormData>({
         submission_id: selectedSubmissionId,
         feedback_date: new Date().toISOString(),
-        comments: '',
+        comment: '',
     });
 
     if (error) {
@@ -66,6 +66,7 @@ function SubmissionDetail() {
                 ...currentSubmission,
                 reviewed: true,
             };
+            console.log(updatedSubmission.data)
 
             // Send the complete updated object in the PUT request
             await axiosInstance.put(`/submissions/${selectedSubmissionId}`, updatedSubmission, {
@@ -78,7 +79,7 @@ function SubmissionDetail() {
             setFeedback({
                 submission_id: selectedSubmissionId,
                 feedback_date: new Date().toISOString(),
-                comments: '',
+                comment: '',
             });
 
             // Refetch the submission details to reflect the updated reviewed status
@@ -99,8 +100,8 @@ function SubmissionDetail() {
             <div className="bg-gray-100 p-4 rounded-lg mb-4">
                 <p><strong>Description:</strong> {submission.description}</p>
                 <p><strong>Submission Date:</strong> {submission.submission_date}</p>
-                <p><strong>Project:</strong> {submission.project_name}</p>
-                <p><strong>Student:</strong> {submission.student_name}</p>
+                <p><strong>Project:</strong> {submission.project.title}</p>
+                <p><strong>Student:</strong> {submission.student.name}</p>
                 <a href={submission.document_path} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">
                     View Document
                 </a>
@@ -111,8 +112,8 @@ function SubmissionDetail() {
                     <textarea
                         id="feedback"
                         name="feedback"
-                        value={feedback.comments}
-                        onChange={(e) => setFeedback({ ...feedback, comments: e.target.value })}
+                        value={feedback.comment}
+                        onChange={(e) => setFeedback({ ...feedback, comment: e.target.value })}
                         rows={4}
                         className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500 sm:text-sm"
                         required

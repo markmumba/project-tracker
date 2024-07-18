@@ -34,7 +34,7 @@ function Dashboard() {
   const { data: submissions, error: submissionError } = useSWR<SubmissionDetails[]>(shouldFetch ? '/submissions/student' : null, fetcher);
   const { data: students, error: studentError } = useSWR<UserDetails[]>('/users/students', fetcher);
   const { data: feedbackDetails, error: feedbackError } = useSWR<FeedbackDetails[]>('/feedbacks/student', fetcher);
-  const { data: lecturerSubmissions, error: lecturerSubmissionError } = useSWR<LecturerSubmissionDetails[]>('/submissions/lecturer', fetcher);
+  const { data: lecturerSubmissions, error: lecturerSubmissionError } = useSWR<SubmissionDetails[]>('/submissions/lecturer', fetcher);
 
 
   if (userLoading) {
@@ -64,6 +64,8 @@ function Dashboard() {
   if (lecturerSubmissionError) {
     console.error(lecturerSubmissionError);
   }
+
+  console.log(submissions);
 
 
   const submissionCount = submissions ? submissions.length : 0;

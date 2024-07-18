@@ -4,23 +4,32 @@ import (
 	"errors"
 
 	"github.com/markmumba/project-tracker/auth"
-	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
+	"github.com/markmumba/project-tracker/repository"
 )
 
-func CreateUser(user *models.User) error {
+type UserService struct {
+	UserRepository repository.UserRepository
+}
+
+func NewUserService(userRepo repository.UserRepository) *UserService {
+	return &UserService{
+		UserRepository: userRepo,
+	}
+}
+
+func (u *UserService) CreateUser(user *models.User) error {
 	hashedPassword, err := auth.HashPassword(user.Password)
 	if err != nil {
 		return err
 	}
 	user.Password = hashedPassword
-	result := database.DB.Create(user)
-	return result.Error
+	return u.UserRepository.CreateUser(user)
 }
 
-func LoginUser(email, password string) (string, error) {
+func (u *UserService) LoginUser(email, password string) (string, error) {
 	var user models.User
-	err := database.DB.Where("email = ?", email).First(&user).Error
+	err := u.UserRepository.FindByEmail(email, &user)
 	if err != nil {
 		return "", err
 	}
@@ -35,54 +44,31 @@ func LoginUser(email, password string) (string, error) {
 	}
 	return token, nil
 }
-func GetUser(id uint) (*models.User, error) {
-	var user models.User
-	result := database.DB.Preload("Role").First(&user, id)
-	return &user, result.Error
+
+func (u *UserService) GetUser(id uint) (*models.User, error) {
+	return u.UserRepository.GetUser(id)
 }
 
-func GetAllUsers() ([]models.User, error) {
-	var users []models.User
-	result := database.DB.Find(&users)
-	return users, result.Error
+func (u *UserService) GetAllUsers() ([]models.User, error) {
+	return u.UserRepository.GetAllUsers()
 }
 
-func GetStudentsByLecturer(lecturerID uint) ([]models.User, error) {
-	var projects []models.Project
-	err := database.DB.Preload("Student").Where("lecturer_id = ?", lecturerID).Find(&projects).Error
-	if err != nil {
-		return nil, err
-	}
-
-	var students []models.User
-	for _, project := range projects {
-		students = append(students, project.Student)
-	}
-
-	return students, nil
+func (u *UserService) GetStudentsByLecturer(lecturerID uint) ([]models.User, error) {
+	return u.UserRepository.GetStudentsByLecturer(lecturerID)
 }
 
-func GetLecturers() ([]models.User, error) {
-	var lecturers []models.User
-	result := database.DB.Preload("Role").Where("role_id = 1").Find(&lecturers)
-	return lecturers, result.Error
+func (u *UserService) GetLecturers() ([]models.User, error) {
+	return u.UserRepository.GetLecturers()
 }
 
-func UpdateUser(id uint, user *models.User) error {
-	result := database.DB.Save(user).Where("id = ?", id)
-	return result.Error
+func (u *UserService) UpdateUser(id uint, user *models.User) error {
+	return u.UserRepository.UpdateUser(id, user)
 }
 
-func UpdateUserProfileImage (id uint, profileImage string) error {
-	err := database.DB.Model(&models.User{}).Where("id = ?", id).Update("profile_image", profileImage).Error
-	if err != nil {
-		return err
-	}
-	return nil
+func (u *UserService) UpdateUserProfileImage(id uint, profileImage string) error {
+	return u.UserRepository.UpdateUserProfileImage(id, profileImage)
 }
 
-func DeleteUser(id uint) error {
-	var user models.User
-	result := database.DB.Delete(&user, id)
-	return result.Error
+func (u *UserService) DeleteUser(id uint) error {
+	return u.UserRepository.DeleteUser(id)
 }

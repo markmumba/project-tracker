@@ -26,7 +26,7 @@ function FeedbackList({ feedbackDetails }: { feedbackDetails: FeedbackDetails[] 
             <h1 className="text-3xl py-4 font-bold">Full Feedback List</h1>
             {sortedFeedback?.map((feedback) => (
                 <div
-                    key={feedback.feedback_id}
+                    key={feedback.id}
                     className="relative pl-8 mb-4 cursor-pointer"
                     onClick={() => handleFeedbackClick(feedback)}
                 >
@@ -35,11 +35,11 @@ function FeedbackList({ feedbackDetails }: { feedbackDetails: FeedbackDetails[] 
                         <div className="ml-4 p-4 bg-gray-100 hover:bg-blue-500 hover:text-white group rounded-lg flex-grow max-w-5xl">
                             <p className="mb-2">
                                 <span className='text-lg font-bold'>Feedback</span>
-                                {`: ${truncateDescription(feedback.comments, 40)}`}
+                                {`: ${truncateDescription(feedback.comment, 40)}`}
                             </p>
                             <p className="mb-2">{`Feedback Date: ${formatFeedbackDate(feedback.feedback_date)}`}</p>
-                            <h2 className=""><span className="text-lg font-bold"> In reference to submission:</span>{truncateDescription(feedback.description, 40)}</h2>
-                            <Link href={feedback.document_path} className="text-blue-500 group-hover:text-white underline">
+                            <h2 className=""><span className="text-lg font-bold"> In reference to submission:</span>{truncateDescription(feedback.submission.description, 40)}</h2>
+                            <Link href={feedback.submission.document_path} className="text-blue-500 group-hover:text-white underline">
                                 View Document
                             </Link>
                         </div>
