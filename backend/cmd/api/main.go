@@ -22,7 +22,7 @@ func main() {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 	database.ConnectDB()
-	//database.InitFirebase()
+	
 
 	database.DB.AutoMigrate(
 		&models.Role{},
