@@ -4,14 +4,18 @@ import { useState } from 'react';
 import { ProjectDetails, SubmissionDetails } from '@/app/shared/types';
 import Link from 'next/link';
 import SubmissionModal from './submissionmodal';
-import { truncateDescription } from '@/app/shared/helper';
+import { formatDate, truncateDescription } from '@/app/shared/helper';
 
 function Submissions({ submissions, project }: { submissions: SubmissionDetails[] | null | undefined, project: ProjectDetails | null | undefined }) {
     const [selectedSubmission, setSelectedSubmission] = useState<SubmissionDetails | null>(null);
 
     // Filter and sort submissions
     const unreviewed = submissions?.filter(submission => submission.reviewed === false) ?? [];
-    const sortedSubmissions = unreviewed.sort((a, b) => b.submission_id - a.submission_id);
+    const sortedSubmissions = unreviewed.sort((a, b) => {
+        const dateA = new Date(a.submission_date);
+        const dateB = new Date(b.submission_date);
+        return dateA.getTime() - dateB.getTime();
+    });
 
     const handleSubmissionClick = (submission: SubmissionDetails) => {
         setSelectedSubmission(submission);
@@ -38,7 +42,7 @@ function Submissions({ submissions, project }: { submissions: SubmissionDetails[
                 {sortedSubmissions.length > 0 ? (
                     sortedSubmissions.map((submission) => (
                         <div
-                            key={submission.submission_id}
+                            key={submission.id}
                             className="relative pl-8 mb-4 cursor-pointer"
                             onClick={() => handleSubmissionClick(submission)}
                         >
@@ -49,7 +53,7 @@ function Submissions({ submissions, project }: { submissions: SubmissionDetails[
                                         <span className='text-lg font-bold'>Description</span>
                                         {`: ${truncateDescription(submission.description, 40)}`}
                                     </p>
-                                    <p className="mb-2">{`Submission Date: ${submission.submission_date}`}</p>
+                                    <p className="mb-2">{`Submission Date: ${formatDate(submission.submission_date)}`}</p>
                                     <h2 className="">{`Project: ${project?.title}`}</h2>
                                     <Link href={submission.document_path} className="text-blue-500 group-hover:text-white underline">
                                         View Document

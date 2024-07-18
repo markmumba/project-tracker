@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useSubmissionStore } from '@/app/shared/store';
 import { CreateFeedbackFormData, SubmissionDetails } from '@/app/shared/types';
 import fetcher, { axiosInstance } from '@/app/fetcher/fetcher';
+import { formatDate } from '@/app/shared/helper';
 
 function SubmissionDetail() {
     const router = useRouter();
@@ -99,7 +100,7 @@ function SubmissionDetail() {
             <h1 className="text-3xl font-bold mb-4">Submission Details</h1>
             <div className="bg-gray-100 p-4 rounded-lg mb-4">
                 <p><strong>Description:</strong> {submission.description}</p>
-                <p><strong>Submission Date:</strong> {submission.submission_date}</p>
+                <p><strong>Submission Date:</strong> { formatDate(submission.submission_date)}</p>
                 <p><strong>Project:</strong> {submission.project.title}</p>
                 <p><strong>Student:</strong> {submission.student.name}</p>
                 <a href={submission.document_path} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">

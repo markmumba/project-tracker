@@ -1,8 +1,8 @@
 'use client';
 import useSWR from 'swr';
 import fetcher from "../fetcher/fetcher";
-import { DashboardSkeleton, LecturerDashboardSkeleton, UserCardSkeleton } from "../UI/skeletons";
-import { FeedbackDetails, LecturerSubmissionDetails, ProjectDetails, SubmissionDetails, UserDetails } from "../shared/types";
+import { DashboardSkeleton } from "../UI/skeletons";
+import { FeedbackDetails, ProjectDetails, SubmissionDetails, UserDetails } from "../shared/types";
 import NoProject from "../UI/dashboard/student/noProject";
 import Project from "../UI/dashboard/student/project";
 import { useUserStore } from '../shared/store';
@@ -15,6 +15,7 @@ import Feedbacks from '../UI/dashboard/student/feedbacks';
 // TODO : can view due date of project 
 // TODO : be alerted if the submission are not enough 
 // TODO : middleware to check auth so no page can load without auth
+// TODO : Adding the sekeletons to every page 
 
 
 function Dashboard() {

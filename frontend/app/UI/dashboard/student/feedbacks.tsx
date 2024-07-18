@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { formatFeedbackDate, truncateDescription } from '@/app/shared/helper';
+import {  formatDate, truncateDescription } from '@/app/shared/helper';
 import { FeedbackDetails } from '@/app/shared/types';
 import Link from 'next/link';
 import FeedbackModal from './feedbackmodal';
@@ -62,7 +62,7 @@ function Feedbacks({ feedbackDetails }: { feedbackDetails: FeedbackDetails[] | u
                                 <span className='text-lg font-bold'>Feedback</span>
                                 {`: ${truncateDescription(feedback.comment, 40)}`}
                             </p>
-                            <p className="mb-2">{`Feedback Date: ${formatFeedbackDate(feedback.feedback_date)}`}</p>
+                            <p className="mb-2">{`Feedback Date: ${formatDate(feedback.feedback_date)}`}</p>
                             <h2 className=""><span className="text-lg font-bold"> In reference to submission:</span>{truncateDescription(feedback.submission.description, 40)}</h2>
                             <Link href={feedback.submission.document_path} className="text-blue-500 group-hover:text-white underline">
                                 View Document

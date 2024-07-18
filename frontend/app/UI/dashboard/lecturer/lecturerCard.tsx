@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { UserDetails } from "@/app/shared/types";
 import avatar from "/public/images/user.png"
 import Image from "next/image";
+import UploadAvatar from "../../uploadavatar";
 
 function LecturerCard({ userDetails, students }: {
     userDetails?: UserDetails | null | undefined,
@@ -10,6 +11,8 @@ function LecturerCard({ userDetails, students }: {
     const [showStudents, setShowStudents] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const studentCount = students?.length || 0;
+
+    const avatarUrl = userDetails?.profile_image || avatar;
 
     function handleClick() {
         setShowStudents(!showStudents);
@@ -31,8 +34,9 @@ function LecturerCard({ userDetails, students }: {
     return (
         <div className="flex flex-col p-4 rounded-lg relative">
             <div className="w-20 h-30 mx-auto mb-4">
-                <Image src={avatar.src} alt="avatar" width={300} height={300} className="w-full h-full rounded-full object-cover" />
+                <Image src={avatarUrl} alt="avatar" width={300} height={300} className="w-full h-full rounded-full object-cover" />
             </div>
+            {!userDetails?.profile_image && <UploadAvatar />}
             <div className="bg-gray-100 rounded-xl p-6">
                 <div className="mb-1 p-4 rounded-xl">
                     <div className='text-lg font-bold'>Name</div>

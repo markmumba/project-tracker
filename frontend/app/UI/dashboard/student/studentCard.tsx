@@ -19,7 +19,7 @@ function StudentCard({
 }) {
   const avatarUrl = userDetails?.profile_image || avatar;
 
-  console.log(userDetails);
+
 
   return (
     <>

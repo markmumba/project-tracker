@@ -9,7 +9,7 @@ export const truncateDescription = (description: string, maxLength: number) => {
     }
 };
 
-export function formatFeedbackDate(dateString: string) {
+export function formatDate(dateString: string) {
     const date = new Date(dateString);
     return date.toLocaleString('en-US', {
         weekday: 'long', // e.g., 'Monday'
