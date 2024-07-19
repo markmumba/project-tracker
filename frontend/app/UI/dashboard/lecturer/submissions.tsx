@@ -1,5 +1,5 @@
 import { useSubmissionStore } from '@/app/shared/store';
-import { LecturerSubmissionDetails, SubmissionDetails } from '@/app/shared/types';
+import { SubmissionDetails } from '@/app/shared/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
