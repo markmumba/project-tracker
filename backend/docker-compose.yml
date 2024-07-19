@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  backend:
+    build: .       # Build backend using Dockerfile in backend directory
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      - PORT=${PORT}
+
+  db:
+    image: postgres:13
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
