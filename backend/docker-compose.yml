@@ -2,6 +2,8 @@ version: "3.8"
 
 services:
   backend:
+    mem_limit: 2g
+    mem_reservation: 1g
     build: .       # Build backend using Dockerfile in backend directory
     ports:
       - "8080:8080"
@@ -13,6 +15,8 @@ services:
       - PORT=${PORT}
 
   db:
+    mem_limit: 2g
+    mem_reservation: 1g
     image: postgres:13
     restart: always
     env_file:

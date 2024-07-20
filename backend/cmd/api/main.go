@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
 	"github.com/markmumba/project-tracker/repository"
@@ -18,11 +16,7 @@ import (
 
 func main() {
 
-	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-	}
 	database.ConnectDB()
-	
 
 	database.DB.AutoMigrate(
 		&models.Role{},
@@ -46,7 +40,7 @@ func main() {
 	feedbackService := services.NewFeedbackService(feedbackRepository)
 
 	handler := routes.SetupRouter(userService, projectService, submissionService, feedbackService)
-	port, _ := strconv.Atoi(os.Getenv("PORT"))
+	port, _ := strconv.Atoi(os.Getenv("BACKEND_PORT"))
 
 	srv := &http.Server{
 		Addr:        fmt.Sprintf(":%d", port),
@@ -61,4 +55,3 @@ func main() {
 	}
 
 }
-

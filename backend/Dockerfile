@@ -1,4 +1,3 @@
-# Use the official Golang image as the build image
 FROM golang:1.18 AS builder
 
 # Set the Current Working Directory inside the container
@@ -14,13 +13,19 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o main ./cmd/api
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/api
 
+# Final stage
+FROM alpine:latest  
 
+# Set the Current Working Directory inside the container
+WORKDIR /root/
+
+# Copy the Pre-built binary file from the previous stage
+COPY --from=builder /app/main .
 
 # Expose port 8080 to the outside world
-EXPOSE 8080
+EXPOSE 8080 
 
 # Command to run the executable
 CMD ["./main"]
-
