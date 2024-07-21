@@ -4,7 +4,7 @@ import fetcher, { axiosInstance } from "@/app/fetcher/fetcher";
 import { CreateSubmissionFormData, ProjectDetails } from "@/app/shared/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 // TODO : Get also the time at which the submission is made 
 
@@ -12,7 +12,7 @@ function Submission() {
     const router = useRouter();
 
     const { data: project, error: projectError } = useSWR<ProjectDetails>("/projects", fetcher);
-   
+
 
     if (projectError) {
         console.log(projectError.response?.data);
@@ -30,7 +30,7 @@ function Submission() {
     console.log(formData);
 
     useEffect(() => {
-        const currentDate = new Date().toISOString();
+        const currentDate = new Date().toISOString().slice(0, 16);
         if (project) {
             setFormData({
                 project_id: project?.id ?? 0,
@@ -76,7 +76,12 @@ function Submission() {
                 document_path: '',
                 description: '',
             });
+
+            mutate('/submissions/student', async (currentData) => {
+                return currentData ? [...currentData, response.data] : [response.data];
+            }, false);
             router.push('/dashboard/student/submission');
+            mutate('/submissions/student');
         } catch (error) {
             console.error('Error creating project:', error);
         }

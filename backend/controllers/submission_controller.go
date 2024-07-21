@@ -1,7 +1,6 @@
 package controllers
 
 import (
-
 	"net/http"
 	"strconv"
 
@@ -88,13 +87,11 @@ func (sc *SubmissionController) UpdateSubmission(c echo.Context) error {
 }
 
 func (sc *SubmissionController) DeleteSubmission(c echo.Context) error {
-	var submissionParams models.Submission
-	err := c.Bind(&submissionParams)
+	submissionId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	id := submissionParams.ID
-	err = sc.submissionService.DeleteSubmission(uint(id))
+	err = sc.submissionService.DeleteSubmission(uint(submissionId))
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}

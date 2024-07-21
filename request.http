@@ -1,0 +1,31 @@
+POST http://localhost:8080/register 
+content-type: application/json
+
+{
+    "name": "Paul Mwaniki",
+    "email": "paulmwaniki@gmail.com",
+    "password": "qwerty1234",
+    "role_id":1
+}
+
+###
+POST http://localhost:8080/register 
+content-type: application/json
+
+{
+    "name": "Florence Kimani",
+    "email": "florencekimani@gmail.com",
+    "password": "qwerty1234",
+    "role_id":1
+}
+
+###
+POST http://localhost:8080/register 
+content-type: application/json
+
+{
+    "name": "Brian shaw",
+    "email": "brainshaw@gmail.com",
+    "password": "123456",
+    "role_id":1
+}

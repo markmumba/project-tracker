@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"errors"
+
 	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
 )
@@ -75,11 +77,15 @@ func (r *SubmissionRepositoryImpl) UpdateSubmission(submission *models.Submissio
 }
 
 func (r *SubmissionRepositoryImpl) DeleteSubmission(id uint) error {
-	var submission models.Submission
-	result := database.DB.Delete(&submission, id)
-	return result.Error
+    result := database.DB.Delete(&models.Submission{}, id)
+    if result.Error != nil {
+        return result.Error
+    }
+    if result.RowsAffected == 0 {
+        return errors.New("submission not found")
+    }
+    return nil
 }
-
 func (r *SubmissionRepositoryImpl) GetAllSubmissions() ([]models.Submission, error) {
 	var submissions []models.Submission
 	result := database.DB.Preload("Project").Preload("Student").Find(&submissions)

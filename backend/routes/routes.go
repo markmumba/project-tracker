@@ -67,7 +67,7 @@ func SetupRouter(
 		submissionGroup.GET("/lecturer", submissionController.GetSubmissionsByLecturer)
 		submissionGroup.PUT("/:id", submissionController.UpdateSubmission)
 		submissionGroup.GET("", submissionController.GetAllSubmissions)
-		submissionGroup.DELETE("", submissionController.DeleteSubmission)
+		submissionGroup.DELETE("/:id", submissionController.DeleteSubmission)
 	}
 
 	feedbackGroup := r.Group("/feedbacks")

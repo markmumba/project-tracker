@@ -1,8 +1,8 @@
 
-
-1.Add validation to register and login ie if password is wrong or email is wrong 
-2. Add the confirm password  input and make sure they are the same 
-3. Stop the user from creating any other project 
-4 add loading spinner to all button clicks first the create project,going to the submissions page,create a submission
-5.Once given feedback ,it should be below the submission with an update button below it 
- 
+[] making the avatar reload to show the new image
+[] adding the delete submission from the users side 
+[] making sure they can update a submission
+[] the same for lecturers where they can update and also delete their feedback 
+[] finishing up on communication 
+[] upading the authentication mechanism :use refresh token and http only access token 
+[] change everything to functions rather than const 

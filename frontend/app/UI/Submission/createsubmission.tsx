@@ -30,7 +30,7 @@ function SubmissionForm({ formData, handleSubmit, handleChange }:
                 <label className="block">
                     <span className="text-gray-700">Date:</span>
                     <input
-                        type="date"
+                        type="datetime-local"
                         name="submission_date"
                         value={formData.submission_date}
                         onChange={handleChange}
