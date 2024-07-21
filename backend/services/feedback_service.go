@@ -1,6 +1,7 @@
 package services
 
 import (
+
 	"github.com/markmumba/project-tracker/models"
 	"github.com/markmumba/project-tracker/repository"
 )
@@ -35,8 +36,26 @@ func (s *FeedbackService) GetFeedbackBySubmissionId(submissionId uint) ([]models
 	return s.FeedbackRepository.GetFeedbackBySubmissionId(submissionId)
 }
 
-func (s *FeedbackService) UpdateFeedback(feedback *models.Feedback) error {
-	return s.FeedbackRepository.UpdateFeedback(feedback)
+func (s *FeedbackService) UpdateFeedback(id uint, feedbackData *models.Feedback) (*models.Feedback, error) {
+    existingFeedback, err := s.FeedbackRepository.GetFeedback(id)
+    if err != nil {
+        return nil, err
+    }
+
+    // Update only the fields that are allowed to be updated
+    existingFeedback.Comment = feedbackData.Comment
+    existingFeedback.FeedbackDate = feedbackData.FeedbackDate
+
+    err = s.FeedbackRepository.UpdateFeedback(existingFeedback)
+    if err != nil {
+        return nil, err
+    }
+
+    return existingFeedback, nil
+}
+
+func (s *FeedbackService) GetFeedbackForSubmission(submissionID uint) (*models.Feedback, error) {
+    return s.FeedbackRepository.GetFeedbackForSubmission(submissionID)
 }
 
 func (s *FeedbackService) DeleteFeedback(id uint) error {

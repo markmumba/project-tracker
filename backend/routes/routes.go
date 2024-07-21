@@ -77,6 +77,7 @@ func SetupRouter(
 		feedbackGroup.GET("", feedbackController.GetAllFeedback)
 		feedbackGroup.PUT("/:id", feedbackController.UpdateFeedback)
 		feedbackGroup.DELETE("/:id", feedbackController.DeleteFeedback)
+		feedbackGroup.GET("/submission/:id", feedbackController.GetFeedbackForSubmission)
 	}
 
 	communicationGroup := r.Group("/communications")

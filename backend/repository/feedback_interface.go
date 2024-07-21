@@ -9,5 +9,6 @@ type FeedbackRepository interface {
 	GetAllFeedback() ([]models.Feedback, error)
 	GetFeedbackBySubmissionId(submissionId uint) ([]models.Feedback, error)
 	UpdateFeedback(feedback *models.Feedback) error
+	GetFeedbackForSubmission(id uint)(*models.Feedback ,error)
 	DeleteFeedback(id uint) error
 }

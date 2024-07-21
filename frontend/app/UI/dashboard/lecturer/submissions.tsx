@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Spinner from '../../spinner';
+import { formatDate } from '@/app/shared/helper';
 
 function Submissions({ lecturerSubmissions }: {
     lecturerSubmissions?: SubmissionDetails[] | undefined | null,
@@ -60,7 +61,7 @@ function Submissions({ lecturerSubmissions }: {
                                     <span className='text-lg font-bold'>Description:</span>
                                     {` ${truncateDescription(submission.description, 40)}`}
                                 </p>
-                                <p className="mb-2">{`Submission Date: ${submission.submission_date}`}</p>
+                                <p className="mb-2">{`Submission Date: ${formatDate(submission.submission_date)}`}</p>
                                 <h2>{`Project: ${submission.project.title}`}</h2>
                                 <h3 className="text-medium text-gray-400 group-hover:text-gray-100 ">{`Student: ${submission.student.name}`}</h3>
                                 <Link href={submission.document_path} className="text-blue-500 underline group-hover:text-white  ">
@@ -84,7 +85,7 @@ function Submissions({ lecturerSubmissions }: {
                                     <span className='text-lg font-bold'>Description:</span>
                                     {` ${truncateDescription(submission.description, 40)}`}
                                 </p>
-                                <p className="mb-2">{`Submission Date: ${submission.submission_date}`}</p>
+                                <p className="mb-2">{`Submission Date: ${formatDate(submission.submission_date)}`}</p>
                                 <h2>{`Project: ${submission.project.title}`}</h2>
                                 <h3 className="text-medium text-gray-400 group-hover:text-gray-100 ">{`Student: ${submission.student.name}`}</h3>
                                 <Link href={submission.document_path} className="text-blue-500 underline group-hover:text-white  ">

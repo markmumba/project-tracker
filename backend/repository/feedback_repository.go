@@ -1,8 +1,11 @@
 package repository
 
 import (
+	"errors"
+
 	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
+	"gorm.io/gorm"
 )
 
 type FeedbackRepositoryImpl struct{}
@@ -56,8 +59,28 @@ func (repo *FeedbackRepositoryImpl) GetFeedbackBySubmissionId(submissionId uint)
 }
 
 func (repo *FeedbackRepositoryImpl) UpdateFeedback(feedback *models.Feedback) error {
-	result := database.DB.Save(feedback)
-	return result.Error
+    result := database.DB.Model(feedback).Updates(map[string]interface{}{
+        "comment":       feedback.Comment,
+        "feedback_date": feedback.FeedbackDate,
+    })
+    return result.Error
+}
+
+func (repo *FeedbackRepositoryImpl) GetFeedbackForSubmission(submissionID uint) (*models.Feedback, error) {
+    var feedback models.Feedback
+    result := database.DB.
+        Where("submission_id = ?", submissionID).
+        Preload("Lecturer").
+        First(&feedback)
+
+    if result.Error != nil {
+        if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+            return nil, nil // No feedback found
+        }
+        return nil, result.Error
+    }
+
+    return &feedback, nil
 }
 
 func (repo *FeedbackRepositoryImpl) DeleteFeedback(id uint) error {
