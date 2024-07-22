@@ -8,13 +8,15 @@ import fetcher, { axiosInstance } from '@/app/fetcher/fetcher';
 import { formatDate } from '@/app/shared/helper';
 
 
-
 function SubmissionDetail() {
     const router = useRouter();
     const selectedSubmissionId = useSubmissionStore((state) => state.selectedSubmissionId);
     const [isLoading, setIsLoading] = useState(false);
     const [feedbackComment, setFeedbackComment] = useState('');
     const [feedback, setFeedback] = useState<FeedbackDetails | null>(null);
+
+    console.log(feedback);
+
     const { data: submission, error: submissionError, mutate: mutateSubmission } = useSWR<SubmissionDetails>(
         selectedSubmissionId ? `/submissions/${selectedSubmissionId}` : null,
         fetcher
@@ -30,6 +32,7 @@ function SubmissionDetail() {
         async function fetchFeedback() {
             if (submission && submission.reviewed) {
                 try {
+                    console.log('Fetching feedback for submission ID:', selectedSubmissionId);
                     const response = await axiosInstance.get(`/feedbacks/submission/${selectedSubmissionId}`, {
                         withCredentials: true,
                         headers: {
@@ -64,11 +67,16 @@ function SubmissionDetail() {
             };
 
             if (submission?.reviewed) {
-                // Update existing feedback
-                await axiosInstance.put(`/feedbacks/${feedback?.id}`, feedbackData, {
-                    withCredentials: true,
-                    headers: { 'Content-Type': 'application/json' },
-                });
+                if (feedback?.id) {
+                    // Update existing feedback
+                    console.log('Updating feedback with ID:', feedback.id);
+                    await axiosInstance.put(`/feedbacks/${feedback.id}`, feedbackData, {
+                        withCredentials: true,
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+                } else {
+                    console.error('Feedback ID is undefined');
+                }
             } else {
                 // Create new feedback
                 await axiosInstance.post('/feedbacks', feedbackData, {

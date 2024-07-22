@@ -69,10 +69,10 @@ function SubmissionModal({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div className="absolute inset-0 bg-black opacity-50"></div>
-            <div className="relative bg-sky-100 p-8 max-w-3xl  rounded-lg shadow-lg z-10">
+            <div className="relative bg-gray-100 p-8 max-w-6xl w-full rounded-lg shadow-lg z-10">
                 <h2 className="text-2xl font-bold mb-4">Submission Details</h2>
                 {isEditing ? (
-                    <form>
+                    <form className="w-full">
                         <div className="mb-4">
                             <label className="block text-sm font-bold mb-2" htmlFor="description">
                                 Description:
@@ -99,8 +99,8 @@ function SubmissionModal({
                             />
                         </div>
                         <div className="mb-4">
-                            <label className="block text-sm font-bold mb-2" htmlFor="documen_path">
-                                Submission Date:
+                            <label className="block text-sm font-bold mb-2" htmlFor="document_path">
+                                Document Path:
                             </label>
                             <input
                                 type="text"
@@ -149,6 +149,7 @@ function SubmissionModal({
                 </div>
             </div>
         </div>
+
     );
 }
 

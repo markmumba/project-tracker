@@ -71,6 +71,9 @@ func (repo *FeedbackRepositoryImpl) GetFeedbackForSubmission(submissionID uint) 
     result := database.DB.
         Where("submission_id = ?", submissionID).
         Preload("Lecturer").
+        Preload("Submission").
+        Preload("Submission.Project").
+        Preload("Submission.Student").
         First(&feedback)
 
     if result.Error != nil {
