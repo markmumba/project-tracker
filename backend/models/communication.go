@@ -1,15 +1,14 @@
 package models
 
-import (
-    "gorm.io/gorm"
-)
+import "time"
 
 type CommunicationHistory struct {
-    gorm.Model
-    ProjectID   uint   `json:"project_id"`
-    UserID      uint   `json:"user_id"`
-    Message     string `json:"message"`
-    MessageDate string `json:"message_date"`
-    Project     Project `gorm:"foreignKey:ProjectID"`
-    User        User    `gorm:"foreignKey:UserID"`
+
+	ID         uint      `gorm:"primaryKey"`
+	SenderID   uint      `json:"sender_id"`
+	ReceiverID uint      `json:"receiver_id"`
+	Message    string    `json:"message"`
+	Timestamp  time.Time `json:"timestamp"`
+	Sender     User      `gorm:"foreignKey:SenderID"`
+	Receiver   User      `gorm:"foreignKey:ReceiverID"`
 }

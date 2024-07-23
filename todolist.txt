@@ -3,6 +3,8 @@
 [x] adding the delete submission from the users side 
 [x] making sure they can update a submission
 [x] the same for lecturers where they can update and also delete their feedback 
+[] the update feedback does not work will dig deeper into that later 
+[] use uuid for ids 
 [] finishing up on communication 
 [] upading the authentication mechanism :use refresh token and http only access token 
 [] change everything to functions rather than const 

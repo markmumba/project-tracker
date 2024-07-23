@@ -46,7 +46,10 @@ func main() {
 	feedbackRepository := repository.NewFeedbackRepository()
 	feedbackService := services.NewFeedbackService(feedbackRepository)
 
-	handler := routes.SetupRouter(userService, projectService, submissionService, feedbackService)
+	communicationRepository := repository.NewCommunicationRepository()
+	communicationService := services.NewCommunicationService(communicationRepository)
+
+	handler := routes.SetupRouter(userService, projectService, submissionService, feedbackService, communicationService)
 	port, _ := strconv.Atoi(os.Getenv("BACKEND_PORT"))
 
 	srv := &http.Server{

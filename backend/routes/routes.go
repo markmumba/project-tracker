@@ -15,6 +15,7 @@ func SetupRouter(
 	projectService *services.ProjectService,
 	submissionService *services.SubmissionService,
 	feedbackService *services.FeedbackService,
+	communicationService *services.CommunicationService,
 ) *echo.Echo {
 	e := echo.New()
 
@@ -32,10 +33,13 @@ func SetupRouter(
 	projectController := controllers.NewProjectController(projectService)
 	submissionController := controllers.NewSubmissionController(submissionService)
 	feedbackController := controllers.NewFeedbackController(feedbackService)
+	communicationController := controllers.NewCommunicationContoller(communicationService)
+	websocketController := controllers.NewWebsocketController(*communicationService)
 
 	e.POST("/register", userController.CreateUser)
 	e.POST("/login", userController.Login)
 	e.GET("/logout", userController.Logout)
+	e.GET("/ws", websocketController.HandleWebsockets)
 
 	r := e.Group("")
 	r.Use(custommiddleware.Authentication)
@@ -82,8 +86,8 @@ func SetupRouter(
 
 	communicationGroup := r.Group("/communications")
 	{
-		communicationGroup.POST("/", controllers.CreateMessage)
-		communicationGroup.GET("/:project_id", controllers.GetCommunicationHistory)
+		communicationGroup.POST("", communicationController.SaveMessage)
+		communicationGroup.GET("", communicationController.GetMessagesBetweenUsers)
 	}
 
 	return e
