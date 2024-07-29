@@ -9,7 +9,7 @@ import (
 	"github.com/markmumba/project-tracker/auth"
 )
 
-var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
+var JwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 func Authentication(next echo.HandlerFunc) echo.HandlerFunc {
 
@@ -21,7 +21,7 @@ func Authentication(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		token, err := jwt.ParseWithClaims(cookie.Value, &auth.JwtCustomClaims{}, func(t *jwt.Token) (interface{}, error) {
-			return jwtSecret, nil
+			return JwtSecret, nil
 		})
 		if err != nil {
 			return c.JSON(http.StatusUnauthorized, echo.Map{"message": "unauthorized"})

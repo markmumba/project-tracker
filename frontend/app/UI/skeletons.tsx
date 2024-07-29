@@ -50,12 +50,12 @@ export function ProjectSkeleton() {
 
 export function DashboardSkeleton() {
   return (
-    <div className="border p-4">
+    <div className=" p-4">
       <div className="flex flex-col md:flex-row justify-between">
-        <div className="mb-4 md:mb-0 md:w-3/4 border p-4 flex-grow">
+        <div className="mb-4 md:mb-0 md:w-3/4  p-4 flex-grow">
           <ProjectSkeleton />
         </div>
-        <div className="md:w-1/4 border p-4">
+        <div className="md:w-1/4  p-4">
           <UserCardSkeleton />
         </div>
       </div>
@@ -66,12 +66,12 @@ export function DashboardSkeleton() {
 
 export function LecturerDashboardSkeleton() {
   return (
-    <div className="border p-4">
+    <div className=" p-4">
       <div className="flex flex-col md:flex-row justify-between">
-        <div className="mb-4 md:mb-0 md:w-3/4 border p-4 flex-grow">
+        <div className="mb-4 md:mb-0 md:w-3/4  p-4 flex-grow">
           <ProjectSkeleton />
         </div>
-        <div className="md:w-1/4 border p-4">
+        <div className="md:w-1/4  p-4">
           <UserCardSkeleton />
         </div>
       </div>

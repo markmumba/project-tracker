@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
 	"github.com/markmumba/project-tracker/repository"
@@ -15,6 +17,11 @@ import (
 )
 
 func main() {
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	database.ConnectDB()
 
@@ -39,8 +46,11 @@ func main() {
 	feedbackRepository := repository.NewFeedbackRepository()
 	feedbackService := services.NewFeedbackService(feedbackRepository)
 
-	handler := routes.SetupRouter(userService, projectService, submissionService, feedbackService)
-	port, _ := strconv.Atoi(os.Getenv("PORT"))
+	communicationRepository := repository.NewCommunicationRepository()
+	communicationService := services.NewCommunicationService(communicationRepository)
+
+	handler := routes.SetupRouter(userService, projectService, submissionService, feedbackService, communicationService)
+	port, _ := strconv.Atoi(os.Getenv("BACKEND_PORT"))
 
 	srv := &http.Server{
 		Addr:        fmt.Sprintf(":%d", port),
@@ -49,10 +59,9 @@ func main() {
 	}
 	fmt.Printf("server started on port : %v", port)
 	fmt.Println()
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 	if err != nil {
 		fmt.Println("server failed")
 	}
 
 }
-

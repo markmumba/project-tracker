@@ -19,13 +19,13 @@ const studentLinks = [
 
 const lecturerLinks = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
-  { name: 'Feedback', href: '/dashboard/feedback', icon: ChatBubbleBottomCenterTextIcon },
+  { name: 'Feedback', href: '/dashboard/lecturer/feedback', icon: ChatBubbleBottomCenterTextIcon },
   { name: 'Communicate', href: '/dashboard/communication', icon: UserGroupIcon },
 ];
 
 function NavLinks() {
   const pathname = usePathname();
-  const role = useUserStore((state) => state.role);
+  const role = useUserStore((state) => state.user?.role! );
 
   const links = role === 'lecturer' ? lecturerLinks : studentLinks;
 

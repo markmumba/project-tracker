@@ -1,17 +1,33 @@
 package services
 
 import (
-	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
+	"github.com/markmumba/project-tracker/repository"
 )
 
-func CreateMessage(message *models.CommunicationHistory) error {
-    result := database.DB.Create(message)
-    return result.Error
+type CommunicationService struct {
+	CommunicationRepository repository.CommunicationRepository
 }
 
-func GetCommunicationHistory(projectID uint) ([]models.CommunicationHistory, error) {
-    var messages []models.CommunicationHistory
-    result := database.DB.Where("project_id = ?", projectID).Find(&messages)
-    return messages, result.Error
+func NewCommunicationService(commRepo repository.CommunicationRepository) *CommunicationService {
+
+	return &CommunicationService{
+		CommunicationRepository: commRepo,
+	}
+}
+
+func (comm *CommunicationService) SaveMessage(message *models.CommunicationHistory) error {
+	err := comm.CommunicationRepository.SaveMessage(message)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (comm *CommunicationService) GetMessageBetweenUsers(senderID, receiverID uint) ([]models.CommunicationHistory, error) {
+	messages, err := comm.CommunicationRepository.GetMessagesBetweenUsers(senderID, receiverID)
+	if err != nil {
+		return nil, err
+	}
+	return messages, nil
 }

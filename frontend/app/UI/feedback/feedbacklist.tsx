@@ -37,6 +37,7 @@ function FeedbackList({ feedbackDetails }: { feedbackDetails: FeedbackDetails[] 
                                 <span className='text-lg font-bold'>Feedback</span>
                                 {`: ${truncateDescription(feedback.comment, 40)}`}
                             </p>
+                            <p className="text-gray-400 group-hover:text-white">Student: {feedback.submission.student.name}</p>
                             <p className="mb-2">{`Feedback Date: ${formatDate(feedback.feedback_date)}`}</p>
                             <h2 className=""><span className="text-lg font-bold"> In reference to submission:</span>{truncateDescription(feedback.submission.description, 40)}</h2>
                             <Link href={feedback.submission.document_path} className="text-blue-500 group-hover:text-white underline">

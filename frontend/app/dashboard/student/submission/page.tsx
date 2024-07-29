@@ -12,22 +12,28 @@ import useSWR from "swr";
 // TODO 6: add a search bar to filter submissions (future feature)
 
 function SubmissionPage() {
-    const { data: submissions, isLoading:submissionLoading,error: submissionError } = useSWR<SubmissionDetails[]>('/submissions/student', fetcher);
-    const {data :project, error: projectError} = useSWR<ProjectDetails>('/projects', fetcher);
-    console.log(submissions);
-    console.log(project);
-    
 
-    if (submissionLoading) {
-        return <p>Loading...</p>;
-    }
-    if (submissionError) {
-        console.log(submissionError.response?.data);
-    }
+  const { data: submissions, isLoading: submissionLoading, error: submissionError } = useSWR<SubmissionDetails[]>(
+    '/submissions/student',
+    fetcher,
+    { revalidateOnFocus: true } 
+  );
+
+  const { data: project, error: projectError } = useSWR<ProjectDetails>(
+    '/projects',
+    fetcher
+  );
+
+  if (submissionLoading) {
+    return <p>Loading...</p>;
+  }
+  if (submissionError) {
+    console.log(submissionError.response?.data);
+  }
 
   return (
     <div>
-        <Submissions submissions={submissions} project={project}/>
+      <Submissions submissions={submissions} project={project} />
     </div>
   );
 }
