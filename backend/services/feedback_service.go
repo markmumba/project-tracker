@@ -28,6 +28,11 @@ func (s *FeedbackService) GetFeedbackByStudent(studentID uint) (*[]models.Feedba
 	return s.FeedbackRepository.GetFeedbackByStudent(studentID)
 }
 
+func (s *FeedbackService) GetFeedbackByLecturer (LecturerID uint ) (*[]models.Feedback, error) {
+    return s.FeedbackRepository.GetFeedbackByLecturer(LecturerID)
+}
+
+
 func (s *FeedbackService) GetAllFeedback() ([]models.Feedback, error) {
 	return s.FeedbackRepository.GetAllFeedback()
 }

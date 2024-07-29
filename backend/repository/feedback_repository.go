@@ -46,6 +46,25 @@ func (repo *FeedbackRepositoryImpl) GetFeedbackByStudent(studentID uint) (*[]mod
     return &feedbacks, nil
 }
 
+func (repo *FeedbackRepositoryImpl) GetFeedbackByLecturer(lecturerID uint) (*[]models.Feedback, error) {
+    var feedbacks []models.Feedback
+    
+    err := database.DB.
+        Preload("Submission.Project").
+        Preload("Submission.Student").
+        Preload("Lecturer").
+        Joins("JOIN submissions ON feedbacks.submission_id = submissions.id").
+        Joins("JOIN projects ON submissions.project_id = projects.id").
+        Where("feedbacks.lecturer_id = ? OR projects.lecturer_id = ?", lecturerID, lecturerID).
+        Find(&feedbacks).Error
+
+    if err != nil {
+        return nil, err
+    }
+
+    return &feedbacks, nil
+}
+
 func (repo *FeedbackRepositoryImpl) GetAllFeedback() ([]models.Feedback, error) {
 	var feedbacks []models.Feedback
 	result := database.DB.Find(&feedbacks)

@@ -51,6 +51,20 @@ func (fc *FeedbackController) GetFeedbackByStudent(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, models.FeedbackToDTOs(*feedback))
 }
+func (fc *FeedbackController) GetFeedbackByLecturer (c echo.Context)error {
+
+	userID, err := helpers.ConvertUserID(c, "userId")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	feedback, err := fc.feedbackService.GetFeedbackByLecturer(uint(userID))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, models.FeedbackToDTOs(*feedback))
+
+}
 
 func (fc *FeedbackController) GetAllFeedback(c echo.Context) error {
 	feedbacks, err := fc.feedbackService.GetAllFeedback()

@@ -78,6 +78,7 @@ func SetupRouter(
 	{
 		feedbackGroup.POST("", feedbackController.CreateFeedback)
 		feedbackGroup.GET("/student", feedbackController.GetFeedbackByStudent)
+		feedbackGroup.GET("/lecturer", feedbackController.GetFeedbackByLecturer)
 		feedbackGroup.GET("", feedbackController.GetAllFeedback)
 		feedbackGroup.PUT("/:id", feedbackController.UpdateFeedback)
 		feedbackGroup.DELETE("/:id", feedbackController.DeleteFeedback)

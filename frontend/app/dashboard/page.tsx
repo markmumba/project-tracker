@@ -16,6 +16,7 @@ import {
   SubmissionDetails,
   UserDetails,
 } from "../shared/types";
+import ProgressBar from "../UI/progresbar";
 
 // TODO : can view due date of project
 // TODO : be alerted if the submission are not enough
@@ -28,10 +29,10 @@ function Dashboard() {
     data: userDetails,
     isLoading: userLoading,
     error: userError,
-  } = useSWR<UserDetails>(user ? null : "/users", fetcher);
+  } = useSWR<UserDetails>("/users", fetcher);
 
   useEffect(() => {
-    if (userDetails && !user) {
+    if (userDetails && (!user || JSON.stringify(user) !== JSON.stringify(userDetails))) {
       setUser(userDetails);
     }
   }, [userDetails, setUser, user]);
@@ -83,9 +84,9 @@ function Dashboard() {
     console.error(lecturerSubmissionError);
   }
 
-  console.log(submissions);
+  const reviewedSumbissions = submissions?.filter((submission) => submission.reviewed == true);
+  const submissionCount = reviewedSumbissions ? reviewedSumbissions.length : 0;
 
-  const submissionCount = submissions ? submissions.length : 0;
 
   if (!userDetails) {
     return <div>No user data available</div>;
@@ -112,27 +113,30 @@ function Dashboard() {
   }
 
   return (
-    <div className=" p-4">
-      <div className="flex flex-col relative md:flex-row justify-between">
-        <div className="mb-4 md:mb-0 md:w-3/4  p-4 flex-grow">
-          {projectDetails ? (
-            <>
-              <Project
-                projectDetails={projectDetails}
-                userDetails={userDetails}
-              />
-              <Feedbacks feedbackDetails={feedbackDetails} />
-            </>
-          ) : (
-            <NoProject userDetails={userDetails} />
-          )}
-        </div>
-        <div className="md:w-1/4  p-4">
-          <StudentCard
-            userDetails={userDetails}
-            projectDetails={projectDetails}
-            submissionCount={submissionCount}
-          />
+    <div>
+      <ProgressBar submissionCount={submissionCount} maxSubmissions={8} />
+      <div className=" p-4">
+        <div className="flex flex-col relative md:flex-row justify-between">
+          <div className="mb-4 md:mb-0 md:w-3/4  p-4 flex-grow">
+            {projectDetails ? (
+              <>
+                <Project
+                  projectDetails={projectDetails}
+                  userDetails={userDetails}
+                />
+                <Feedbacks feedbackDetails={feedbackDetails} />
+              </>
+            ) : (
+              <NoProject userDetails={userDetails} />
+            )}
+          </div>
+          <div className="md:w-1/4  p-4">
+            <StudentCard
+              userDetails={userDetails}
+              projectDetails={projectDetails}
+              submissionCount={submissionCount}
+            />
+          </div>
         </div>
       </div>
     </div>
