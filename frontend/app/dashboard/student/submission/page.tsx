@@ -16,7 +16,7 @@ function SubmissionPage() {
   const { data: submissions, isLoading: submissionLoading, error: submissionError } = useSWR<SubmissionDetails[]>(
     '/submissions/student',
     fetcher,
-    { revalidateOnFocus: true } // Add this option
+    { revalidateOnFocus: true } 
   );
 
   const { data: project, error: projectError } = useSWR<ProjectDetails>(
