@@ -34,12 +34,12 @@ func SetupRouter(
 	submissionController := controllers.NewSubmissionController(submissionService)
 	feedbackController := controllers.NewFeedbackController(feedbackService)
 	communicationController := controllers.NewCommunicationContoller(communicationService)
-	websocketController := controllers.NewWebsocketController(*communicationService)
+	websocketController := controllers.NewWebsocketController(*communicationService,*projectService)
 
 	e.POST("/register", userController.CreateUser)
 	e.POST("/login", userController.Login)
 	e.GET("/logout", userController.Logout)
-	e.GET("/ws", websocketController.HandleWebsockets)
+	e.GET("/ws",websocketController.HandleWebSocket)
 
 	r := e.Group("")
 	r.Use(custommiddleware.Authentication)
