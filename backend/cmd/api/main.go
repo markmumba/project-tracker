@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/markmumba/project-tracker/database"
 	"github.com/markmumba/project-tracker/models"
 	"github.com/markmumba/project-tracker/repository"
@@ -17,12 +16,6 @@ import (
 )
 
 func main() {
-
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	database.ConnectDB()
 
 	database.DB.AutoMigrate(
@@ -50,18 +43,27 @@ func main() {
 	communicationService := services.NewCommunicationService(communicationRepository)
 
 	handler := routes.SetupRouter(userService, projectService, submissionService, feedbackService, communicationService)
-	port, _ := strconv.Atoi(os.Getenv("BACKEND_PORT"))
+	
+	// Get port from environment variable with fallback to 8080
+	port := os.Getenv("BACKEND_PORT")
+	if port == "" {
+		port = "8080"
+		log.Println("No BACKEND_PORT specified, defaulting to 8080")
+	}
+
+	portNum, err := strconv.Atoi(port)
+	if err != nil {
+		log.Fatalf("Invalid port number: %v", err)
+	}
 
 	srv := &http.Server{
-		Addr:        fmt.Sprintf(":%d", port),
+		Addr:        fmt.Sprintf(":%d", portNum),
 		Handler:     handler,
 		ReadTimeout: time.Second * 10,
 	}
-	fmt.Printf("server started on port : %v", port)
-	fmt.Println()
-	err = srv.ListenAndServe()
-	if err != nil {
-		fmt.Println("server failed")
+	
+	log.Printf("Server starting on port: %v\n", portNum)
+	if err := srv.ListenAndServe(); err != nil {
+		log.Fatalf("Server failed to start: %v", err)
 	}
-
 }
